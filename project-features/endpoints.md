@@ -24,6 +24,8 @@
 13. [Admin - Audit Logs](#13-admin---audit-logs-endpoints)
 14. [Response Format](#response-format)
 15. [Error Codes](#error-codes)
+16. [Shared DTOs & Enums](#16-shared-dtos--enums)
+17. [Constants](#17-constants)
 
 ---
 
@@ -152,9 +154,7 @@ Returns the profile of the currently authenticated user.
     "email": "israel@example.com",
     "role": "EMPLOYEE",
     "isActive": true,
-    "createdAt": "2026-01-01T10:00:00.000Z",
-    "updatedAt": "2026-01-10T15:30:00.000Z"
-  }
+      }
 }
 ```
 
@@ -678,43 +678,140 @@ Resets a user's password.
 
 ### Clients
 
-| Method   | Endpoint                    | Description          |
-| :------- | :-------------------------- | :------------------- |
-| `GET`    | `/admin/clients`            | List clients         |
-| `POST`   | `/admin/clients`            | Create client        |
-| `GET`    | `/admin/clients/:id`        | Get client           |
-| `PUT`    | `/admin/clients/:id`        | Update client        |
-| `PUT`    | `/admin/clients/:id/status` | Change client status |
+#### `GET /admin/clients` 🛡️
 
-**DTOs:** `AdminCreateClientRequestDto`, `AdminUpdateClientRequestDto`, `ClientDto`, `ListClientsResponseDto`
+Lists all clients.
+
+**Response DTO:** `ListClientsResponseDto`
+
+#### `POST /admin/clients` 🛡️
+
+Creates a new client.
+
+| Parameter      | Location | Type   | Required | Description       |
+| :------------- | :------- | :----- | :------- | :---------------- |
+| `name`         | Body     | string | ✓        | Client name       |
+| `contactName`  | Body     | string |          | Contact person    |
+| `contactEmail` | Body     | string |          | Contact email     |
+| `contactPhone` | Body     | string |          | Contact phone     |
+
+**Request DTO:** `AdminCreateClientRequestDto`
+
+**Response DTO:** `ClientDto`
+
+#### `GET /admin/clients/:id` 🛡️
+
+Retrieves a single client.
+
+**Response DTO:** `ClientDto`
+
+#### `PUT /admin/clients/:id` 🛡️
+
+Updates client details.
+
+**Request DTO:** `AdminUpdateClientRequestDto`
+
+#### `PUT /admin/clients/:id/status` 🛡️
+
+Updates client status.
+
+| Parameter | Location     | Type         | Required | Description          |
+| :-------- | :----------- | :----------- | :------- | :------------------- |
+| `status`  | Body         | EntityStatus | ✓        | `ACTIVE` or `INACTIVE` |
 
 ---
 
 ### Projects
 
-| Method   | Endpoint                     | Description           |
-| :------- | :--------------------------- | :-------------------- |
-| `GET`    | `/admin/projects`            | List projects         |
-| `POST`   | `/admin/projects`            | Create project        |
-| `GET`    | `/admin/projects/:id`        | Get project           |
-| `PUT`    | `/admin/projects/:id`        | Update project        |
-| `PUT`    | `/admin/projects/:id/status` | Change project status |
+#### `GET /admin/projects` 🛡️
 
-**DTOs:** `AdminCreateProjectRequestDto`, `AdminUpdateProjectRequestDto`, `ProjectDto`, `ListProjectsResponseDto`
+Lists all projects.
+
+| Parameter  | Location | Type | Required | Description       |
+| :--------- | :------- | :--- | :------- | :---------------- |
+| `clientId` | Query    | UUID |          | Filter by client  |
+
+**Response DTO:** `ListProjectsResponseDto`
+
+#### `POST /admin/projects` 🛡️
+
+Creates a new project.
+
+| Parameter  | Location | Type   | Required | Description       |
+| :--------- | :------- | :----- | :------- | :---------------- |
+| `clientId` | Body     | UUID   | ✓        | Client ID         |
+| `name`     | Body     | string | ✓        | Project name      |
+
+**Request DTO:** `AdminCreateProjectRequestDto`
+
+**Response DTO:** `ProjectDto`
+
+#### `GET /admin/projects/:id` 🛡️
+
+Retrieves a single project.
+
+**Response DTO:** `ProjectDto`
+
+#### `PUT /admin/projects/:id` 🛡️
+
+Updates project details.
+
+**Request DTO:** `AdminUpdateProjectRequestDto`
+
+#### `PUT /admin/projects/:id/status` 🛡️
+
+Updates project status.
+
+| Parameter | Location     | Type         | Required | Description          |
+| :-------- | :----------- | :----------- | :------- | :------------------- |
+| `status`  | Body         | EntityStatus | ✓        | `ACTIVE` or `INACTIVE` |
 
 ---
 
 ### Tasks
 
-| Method   | Endpoint                  | Description        |
-| :------- | :------------------------ | :----------------- |
-| `GET`    | `/admin/tasks`            | List tasks         |
-| `POST`   | `/admin/tasks`            | Create task        |
-| `GET`    | `/admin/tasks/:id`        | Get task           |
-| `PUT`    | `/admin/tasks/:id`        | Update task        |
-| `PUT`    | `/admin/tasks/:id/status` | Change task status |
+#### `GET /admin/tasks` 🛡️
 
-**DTOs:** `AdminCreateTaskRequestDto`, `AdminUpdateTaskRequestDto`, `TaskDto`, `ListTasksResponseDto`
+Lists all tasks.
+
+| Parameter   | Location | Type | Required | Description       |
+| :---------- | :------- | :--- | :------- | :---------------- |
+| `projectId` | Query    | UUID |          | Filter by project |
+
+**Response DTO:** `ListTasksResponseDto`
+
+#### `POST /admin/tasks` 🛡️
+
+Creates a new task.
+
+| Parameter   | Location | Type   | Required | Description       |
+| :---------- | :------- | :----- | :------- | :---------------- |
+| `projectId` | Body     | UUID   | ✓        | Project ID        |
+| `name`      | Body     | string | ✓        | Task name         |
+
+**Request DTO:** `AdminCreateTaskRequestDto`
+
+**Response DTO:** `TaskDto`
+
+#### `GET /admin/tasks/:id` 🛡️
+
+Retrieves a single task.
+
+**Response DTO:** `TaskDto`
+
+#### `PUT /admin/tasks/:id` 🛡️
+
+Updates task details.
+
+**Request DTO:** `AdminUpdateTaskRequestDto`
+
+#### `PUT /admin/tasks/:id/status` 🛡️
+
+Updates task status.
+
+| Parameter | Location   | Type       | Required | Description      |
+| :-------- | :--------- | :--------- | :------- | :--------------- |
+| `status`  | Body       | TaskStatus | ✓        | `OPEN` or `CLOSED` |
 
 ---
 
@@ -1011,7 +1108,7 @@ Retrieves a single audit log entry with full details.
 
 ---
 
-## Response Format
+## 14. Response Format
 
 All API responses follow a consistent wrapper format.
 
@@ -1043,7 +1140,7 @@ All API responses follow a consistent wrapper format.
 
 ---
 
-## Error Codes
+## 15. Error Codes
 
 | Code            | HTTP Status | Description                        |
 | :-------------- | :---------- | :--------------------------------- |
@@ -1053,9 +1150,9 @@ All API responses follow a consistent wrapper format.
 | `WORKDAY_001`   | 400         | Day is locked                      |
 | `WORKDAY_002`   | 400         | Not fully allocated                |
 | `WORKDAY_003`   | 400         | Already submitted                  |
-| `TIMER_001`     | 400         | Timer already running              |
+| `TIMER_001`     | 409         | Timer already running              |
 | `TIMER_002`     | 400         | No active timer                    |
-| `VALIDATION_001`| 400         | Invalid date range                 |
+| `VALIDATION_001`| 400         | Validation error                   |
 | `VALIDATION_002`| 400         | Overlapping absence                |
 | `VALIDATION_003`| 400         | Missing required document          |
 | `NOT_FOUND`     | 404         | Resource not found                 |
@@ -1063,24 +1160,74 @@ All API responses follow a consistent wrapper format.
 
 ---
 
-## Enums Reference
+## 16. Shared DTOs & Enums
 
-| Enum Name        | Values                                                              |
-| :--------------- | :------------------------------------------------------------------ |
-| `UserRole`       | `EMPLOYEE`, `ADMIN`                                                 |
-| `EntityStatus`   | `ACTIVE`, `INACTIVE`                                                |
-| `TaskStatus`     | `OPEN`, `CLOSED`                                                    |
-| `WorkLocation`   | `OFFICE`, `CLIENT`, `HOME`                                          |
-| `AbsenceType`    | `VACATION`, `SICK`, `RESERVES`, `OTHER`                             |
-| `AbsenceStatus`  | `PENDING_DOCUMENT`, `SUBMITTED`                                     |
-| `WorkdayStatus`  | `FULL`, `MISSING`, `EXCEPTION`                                      |
-| `TimeEntrySource`| `MANUAL`, `TIMER`                                                   |
-| `AuditEntity`    | `USER`, `CLIENT`, `PROJECT`, `TASK`, `TASK_ASSIGNMENT`, `TIME_ENTRY`, `ABSENCE`, `MONTH_LOCK` |
-| `AuditAction`    | `CREATE`, `UPDATE`, `DELETE`, `STATUS_CHANGE`, `RESET_PASSWORD`, `LOCK_MONTH`, `UNLOCK_MONTH` |
+### Enums
+
+#### `UserRole`
+* `EMPLOYEE`
+* `ADMIN`
+
+#### `EntityStatus`
+* `ACTIVE`
+* `INACTIVE`
+
+#### `TaskStatus`
+* `OPEN`
+* `CLOSED`
+
+#### `WorkLocation`
+* `OFFICE`
+* `CLIENT`
+* `HOME`
+
+#### `AbsenceType`
+* `VACATION`
+* `SICK`
+* `RESERVES`
+* `OTHER`
+
+#### `AbsenceStatus`
+* `PENDING_DOCUMENT`
+* `SUBMITTED`
+
+#### `TimeEntrySource`
+* `MANUAL`
+* `TIMER`
+
+#### `AuditEntity`
+* `USER`
+* `CLIENT`
+* `PROJECT`
+* `TASK`
+* `TASK_ASSIGNMENT`
+* `TIME_ENTRY`
+* `ABSENCE`
+* `MONTH_LOCK`
+
+#### `AuditAction`
+* `CREATE`
+* `UPDATE`
+* `STATUS_CHANGE`
+* `RESET_PASSWORD`
+* `LOCK_MONTH`
+* `UNLOCK_MONTH`
+
+### Shared DTOs
+
+#### `PaginationDto`
+| Field        | Type    | Description            |
+| :----------- | :------ | :--------------------- |
+| `page`       | number  | Current page (1-based) |
+| `pageSize`   | number  | Items per page         |
+| `total`      | number  | Total items            |
+| `totalPages` | number  | Total pages            |
+| `hasNext`    | boolean | Has next page          |
+| `hasPrev`    | boolean | Has previous page      |
 
 ---
 
-## Constants
+## 17. Constants
 
 | Constant              | Value   | Description                  |
 | :-------------------- | :------ | :--------------------------- |
