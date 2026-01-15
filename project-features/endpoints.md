@@ -774,14 +774,22 @@ Lists all projects.
 
 Creates a new project.
 
-| Parameter  | Location | Type   | Required | Description       |
-| :--------- | :------- | :----- | :------- | :---------------- |
-| `clientId` | Body     | UUID   | ✓        | Client ID         |
-| `name`     | Body     | string | ✓        | Project name      |
+| Parameter   | Location | Type   | Required | Description                    |
+| :---------- | :------- | :----- | :------- | :----------------------------- |
+| `clientId`  | Body     | UUID   | ✓        | Client ID                      |
+| `name`      | Body     | string | ✓        | Project name                   |
+| `startDate` | Body     | Date   |          | Project start date (YYYY-MM-DD)|
+| `endDate`   | Body     | Date   |          | Project end date (YYYY-MM-DD)  |
 
 **Request DTO:** `AdminCreateProjectRequestDto`
 
 **Response DTO:** `ProjectDto`
+
+**Validation Rules:**
+
+| Rule | Validation | Error Code |
+| :--- | :--------- | :--------- |
+| 1 | If both dates provided, endDate must be >= startDate | `VALIDATION_001` |
 
 #### `GET /admin/projects/:id` 🛡️
 
@@ -793,7 +801,22 @@ Retrieves a single project.
 
 Updates project details.
 
+| Parameter   | Location | Type   | Required | Description                    |
+| :---------- | :------- | :----- | :------- | :----------------------------- |
+| `name`      | Body     | string |          | Project name                   |
+| `startDate` | Body     | Date   |          | Project start date (YYYY-MM-DD)|
+| `endDate`   | Body     | Date   |          | Project end date (YYYY-MM-DD)  |
+
 **Request DTO:** `AdminUpdateProjectRequestDto`
+
+**Response DTO:** `ProjectDto`
+
+**Validation Rules:**
+
+| Rule | Validation | Error Code |
+| :--- | :--------- | :--------- |
+| 1 | If both dates provided, endDate must be >= startDate | `VALIDATION_001` |
+| 2 | All child tasks must have dates within new project date range | `VALIDATION_001` |
 
 #### `PUT /admin/projects/:id/status` 🛡️
 
@@ -839,14 +862,23 @@ Lists all tasks.
 
 Creates a new task.
 
-| Parameter   | Location | Type   | Required | Description       |
-| :---------- | :------- | :----- | :------- | :---------------- |
-| `projectId` | Body     | UUID   | ✓        | Project ID        |
-| `name`      | Body     | string | ✓        | Task name         |
+| Parameter   | Location | Type   | Required | Description                 |
+| :---------- | :------- | :----- | :------- | :-------------------------- |
+| `projectId` | Body     | UUID   | ✓        | Project ID                  |
+| `name`      | Body     | string | ✓        | Task name                   |
+| `startDate` | Body     | Date   |          | Task start date (YYYY-MM-DD)|
+| `endDate`   | Body     | Date   |          | Task end date (YYYY-MM-DD)  |
 
 **Request DTO:** `AdminCreateTaskRequestDto`
 
 **Response DTO:** `TaskDto`
+
+**Validation Rules:**
+
+| Rule | Validation | Error Code |
+| :--- | :--------- | :--------- |
+| 1 | If both dates provided, endDate must be >= startDate | `VALIDATION_001` |
+| 2 | Task dates must be within parent project date range | `VALIDATION_001` |
 
 #### `GET /admin/tasks/:id` 🛡️
 
@@ -858,7 +890,22 @@ Retrieves a single task.
 
 Updates task details.
 
+| Parameter   | Location | Type   | Required | Description                 |
+| :---------- | :------- | :----- | :------- | :-------------------------- |
+| `name`      | Body     | string |          | Task name                   |
+| `startDate` | Body     | Date   |          | Task start date (YYYY-MM-DD)|
+| `endDate`   | Body     | Date   |          | Task end date (YYYY-MM-DD)  |
+
 **Request DTO:** `AdminUpdateTaskRequestDto`
+
+**Response DTO:** `TaskDto`
+
+**Validation Rules:**
+
+| Rule | Validation | Error Code |
+| :--- | :--------- | :--------- |
+| 1 | If both dates provided, endDate must be >= startDate | `VALIDATION_001` |
+| 2 | Task dates must be within parent project date range | `VALIDATION_001` |
 
 #### `PUT /admin/tasks/:id/status` 🛡️
 
@@ -867,6 +914,12 @@ Updates task status.
 | Parameter | Location   | Type       | Required | Description      |
 | :-------- | :--------- | :--------- | :------- | :--------------- |
 | `status`  | Body       | TaskStatus | ✓        | `OPEN` or `CLOSED` |
+
+**Validation Rules:**
+
+| Rule | Validation | Error Code |
+| :--- | :--------- | :--------- |
+| 1 | Cannot close task if it has associated time entries | `VALIDATION_001` |
 
 ---
 
