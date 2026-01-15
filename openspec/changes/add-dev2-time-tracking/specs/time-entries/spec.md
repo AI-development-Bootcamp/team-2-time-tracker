@@ -21,6 +21,41 @@ The system SHALL allow users to create manual time entries when no timer is runn
 - **WHEN** user attempts to create entry with a task not assigned to them
 - **THEN** response is `{ "error": { "code": "VALIDATION_001", "message": "Task not assigned" } }` with status 400
 
+#### Scenario: Future date blocked
+- **WHEN** user attempts to create entry with `workDate` in the future
+- **THEN** response is validation error with status 400
+
+#### Scenario: Past date allowed
+- **WHEN** user creates entry for a past date (not in locked month)
+- **THEN** entry is created successfully
+
+### Requirement: ReportType Behavior
+The system SHALL handle time entries differently based on the project's reportType (TOTAL_HOURS vs ENTRY_EXIT).
+
+#### Scenario: TOTAL_HOURS project entry
+- **WHEN** user creates entry for a task under a project with `reportType: TOTAL_HOURS`
+- **THEN** entry is created with startTime and endTime for that specific task, allowing multiple entries per day
+
+#### Scenario: ENTRY_EXIT project entry
+- **WHEN** user creates entry for a task under a project with `reportType: ENTRY_EXIT`
+- **THEN** entry represents workday entry/exit times, and only one entry per day is allowed for that project
+
+#### Scenario: ENTRY_EXIT single entry validation
+- **WHEN** user attempts to create second entry for ENTRY_EXIT project on the same date
+- **THEN** response is `{ "error": { "code": "VALIDATION_001", "message": "Only one entry per day allowed for ENTRY_EXIT projects" } }` with status 400
+
+#### Scenario: ENTRY_EXIT duration validation
+- **WHEN** user creates entry for ENTRY_EXIT project
+- **THEN** system validates that duration equals 540 minutes with tolerance of ±5 minutes for rounding (535-545 minutes accepted)
+
+#### Scenario: ENTRY_EXIT single entry per project
+- **WHEN** user has tasks from multiple ENTRY_EXIT projects
+- **THEN** user can create one entry per ENTRY_EXIT project per day (restriction is per-project, not global)
+
+#### Scenario: ENTRY_EXIT multiple projects same day
+- **WHEN** user creates entry for ENTRY_EXIT project A, then attempts entry for ENTRY_EXIT project B on same date
+- **THEN** second entry is created successfully (one entry per project allowed)
+
 ### Requirement: Time Entry Validation
 The system SHALL validate that end time is after start time and description is 10-500 characters.
 
@@ -62,6 +97,18 @@ The system SHALL allow users to update their own time entries if the month is no
 - **WHEN** user attempts to update entry in a locked month
 - **THEN** response is `{ "error": { "code": "WORKDAY_001" } }` with status 400
 
+#### Scenario: Cannot change workDate on update
+- **WHEN** user attempts to update entry with different `workDate`
+- **THEN** response is validation error with status 400 (workDate is immutable)
+
+#### Scenario: Can change taskId on update
+- **WHEN** user updates entry with different `taskId` (assigned to user)
+- **THEN** entry is updated with new task and workday summary is recalculated
+
+#### Scenario: Cannot change to unassigned task
+- **WHEN** user attempts to update entry with `taskId` not assigned to them
+- **THEN** response is `{ "error": { "code": "VALIDATION_001", "message": "Task not assigned" } }` with status 400
+
 ### Requirement: Delete Time Entry
 The system SHALL soft-delete time entries by setting is_deleted flag.
 
@@ -98,6 +145,26 @@ The system SHALL allow creating multiple time entries in a single request.
 #### Scenario: Batch validation failure
 - **WHEN** any entry in batch fails validation
 - **THEN** entire batch is rejected with validation errors
+
+#### Scenario: Batch same date requirement
+- **WHEN** user submits batch entries
+- **THEN** all entries must have the same `workDate` (validation error if mixed dates)
+
+#### Scenario: Batch time overlap detection
+- **WHEN** batch entries have overlapping time ranges for the same task
+- **THEN** system validates and rejects batch with error indicating overlapping times
+
+#### Scenario: Batch entries can overlap for different tasks
+- **WHEN** batch entries have overlapping time ranges but for different tasks
+- **THEN** entries are created successfully (overlaps allowed across different tasks)
+
+#### Scenario: Batch ENTRY_EXIT restriction
+- **WHEN** batch includes entries for ENTRY_EXIT project
+- **THEN** batch is rejected (ENTRY_EXIT projects allow only one entry per day)
+
+#### Scenario: Batch with mixed report types allowed
+- **WHEN** batch includes entries for both TOTAL_HOURS and ENTRY_EXIT projects
+- **THEN** entries are validated according to their respective project's reportType rules (ENTRY_EXIT entries must be one per project per day)
 
 ### Requirement: Time Entry Data Model
 The system SHALL store time entries with id, userId, workDate, location, startTime, endTime, durationMinutes, taskId, description, source, timerId (optional), soft delete fields, and timestamps.

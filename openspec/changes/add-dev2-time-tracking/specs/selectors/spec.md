@@ -69,6 +69,25 @@ The system SHALL cascade selection changes through the client-project-task hiera
 - **WHEN** user changes selected client
 - **THEN** project and task selections are cleared
 
+### Requirement: Auto-Select Timing
+The system SHALL trigger auto-selection at specific points in the component lifecycle.
+
+#### Scenario: Auto-select on data load
+- **WHEN** selector data is loaded and exactly one option exists
+- **THEN** that option is automatically selected immediately after data fetch completes
+
+#### Scenario: Auto-select cascade trigger
+- **WHEN** parent selector is selected (manually or auto) and child selector has one option
+- **THEN** child option is auto-selected after parent selection is confirmed
+
+#### Scenario: Auto-select undoable
+- **WHEN** option is auto-selected
+- **THEN** user can manually change the selection to a different option
+
+#### Scenario: Auto-select prevents manual selection
+- **WHEN** auto-select occurs
+- **THEN** dropdown still shows all options, allowing user to override if needed
+
 ### Requirement: User Assignments
 The system SHALL return all task assignments for the current user with task, project, and client details.
 
