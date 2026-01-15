@@ -107,6 +107,10 @@
 * `MANUAL`
 * `TIMER`
 
+### `ReportType`
+* `TOTAL_HOURS` - דיווח סכום שעות (שעת התחלה וסיום)
+* `ENTRY_EXIT` - דיווח כניסה/יציאה (שעת כניסה ושעת יציאה למשרד)
+
 ### `AuditEntity`
 * `USER`, `CLIENT`, `PROJECT`, `TASK`, `TASK_ASSIGNMENT`, `TIME_ENTRY`, `ABSENCE`, `MONTH_LOCK`
 
@@ -242,7 +246,12 @@
   "absenceMinutes": 0,
   "totalMinutes": 480,
   "balanceMinutes": -60,
-  "completionPercentage": 88
+  "completionPercentage": 88,
+  "isLocked": false,
+  "lockedMonthId": null,
+  "isSubmitted": false,
+  "submittedAt": null,
+  "requiresExactTotal": false
 }
 ```
 
@@ -464,7 +473,12 @@
   "id": "uuid",
   "userId": "uuid",
   "workDate": "2026-01-15",
-  "startedAt": "2026-01-15T09:00:00Z"
+  "startedAt": "2026-01-15T09:00:00Z",
+  "stoppedAt": null,
+  "durationMinutes": null,
+  "isRunning": true,
+  "createdAt": "2026-01-15T09:00:00Z",
+  "updatedAt": "2026-01-15T09:00:00Z"
 }
 ```
 
@@ -477,7 +491,7 @@
 ```json
 {
   "id": "uuid",
-  "user": { "id": "uuid", "fullName": "John Doe" },
+  "userId": "uuid",
   "type": "SICK",
   "startDate": "2026-02-01",
   "endDate": "2026-02-03",
@@ -485,6 +499,21 @@
   "status": "PENDING_DOCUMENT",
   "note": "Flu",
   "documents": [ /* AbsenceDocumentDto[] */ ],
+  "absenceDays": [ /* AbsenceDayDto[] */ ],
+  "createdAt": "2026-01-15T10:00:00Z",
+  "updatedAt": "2026-01-15T10:00:00Z"
+}
+```
+
+### `AbsenceDayDto`
+**Usage:** Server -> Client
+```json
+{
+  "id": "uuid",
+  "absenceRequestId": "uuid",
+  "userId": "uuid",
+  "workDate": "2026-02-01",
+  "minutes": 540,
   "createdAt": "2026-01-15T10:00:00Z"
 }
 ```
@@ -496,8 +525,9 @@
   "id": "uuid",
   "fileName": "cert.pdf",
   "fileUrl": "...",
-  "size": 102400,
+  "fileSize": 102400,
   "mimeType": "application/pdf",
+  "uploadedByUserId": "uuid",
   "uploadedAt": "2026-01-15T10:00:00Z"
 }
 ```
@@ -614,7 +644,7 @@
 ### `TaskSelectorDto`
 **Usage:** Server -> Client
 ```json
-{ "id": "uuid", "name": "Bug Fixes", "projectId": "uuid", "usageCount": 10 }
+{ "id": "uuid", "name": "Bug Fixes", "projectId": "uuid", "reportType": "TOTAL_HOURS", "usageCount": 10 }
 ```
 
 ### `UserAssignmentsDto`
@@ -637,7 +667,8 @@
   "name": "Design Review",
   "projectId": "uuid",
   "projectName": "Website Redesign",
-  "clientName": "Acme Corp"
+  "clientName": "Acme Corp",
+  "reportType": "TOTAL_HOURS"
 }
 ```
 
@@ -670,7 +701,9 @@
   "email": "jane@example.com",
   "role": "ADMIN",
   "isActive": true,
-  "createdAt": "2026-01-01T00:00:00Z"
+  "mustChangePassword": false,
+  "createdAt": "2026-01-01T00:00:00Z",
+  "updatedAt": "2026-01-01T00:00:00Z"
 }
 ```
 
@@ -742,10 +775,10 @@
 {
   "id": "uuid",
   "name": "Acme Corp",
-  "contactName": "Wile E. Coyote",
-  "contactEmail": "wile@acme.com",
+  "description": "Enterprise software client",
   "status": "ACTIVE",
-  "createdAt": "..."
+  "createdAt": "...",
+  "updatedAt": "..."
 }
 ```
 
@@ -756,7 +789,10 @@
   "id": "uuid",
   "name": "Rocket System",
   "clientId": "uuid",
-  "status": "ACTIVE"
+  "status": "ACTIVE",
+  "reportType": "TOTAL_HOURS",
+  "createdAt": "...",
+  "updatedAt": "..."
 }
 ```
 
@@ -767,7 +803,9 @@
   "id": "uuid",
   "name": "Guidance System",
   "projectId": "uuid",
-  "status": "OPEN"
+  "status": "OPEN",
+  "createdAt": "...",
+  "updatedAt": "..."
 }
 ```
 
@@ -776,7 +814,7 @@
 ```json
 {
   "name": "New Client",
-  "contactName": "Contact Person"
+  "description": "Optional client description"
 }
 ```
 
@@ -808,6 +846,12 @@
 **Usage:** Client -> Server
 ```json
 { "name": "Updated Project Name" }
+```
+
+### `AdminUpdateProjectReportTypeRequestDto`
+**Usage:** Client -> Server
+```json
+{ "reportType": "ENTRY_EXIT" }
 ```
 
 ### `ListProjectsResponseDto`
@@ -854,8 +898,8 @@
   "id": "uuid",
   "userId": "uuid",
   "taskId": "uuid",
-  "assignedBy": "admin-uuid",
-  "assignedAt": "..."
+  "assignedByAdminId": "admin-uuid",
+  "createdAt": "..."
 }
 ```
 
@@ -953,17 +997,25 @@
 }
 ```
 
+### `MonthLockDto`
+**Usage:** Server -> Client
+```json
+{
+  "id": "uuid",
+  "month": "2026-01-01",
+  "lockedAt": "...",
+  "lockedByAdminId": "admin-uuid",
+  "unlockedAt": null,
+  "unlockedByAdminId": null
+}
+```
+
 ### `LockMonthResponseDto`
 **Usage:** Server -> Client
 ```json
 {
   "success": true,
-  "data": {
-    "id": "uuid",
-    "month": "2026-01-01",
-    "lockedBy": "admin-uuid",
-    "lockedAt": "..."
-  }
+  "data": { /* MonthLockDto */ }
 }
 ```
 
@@ -990,7 +1042,7 @@
 ```json
 {
   "success": true,
-  "data": [ /* LockMonthResponseDto.data[] */ ]
+  "data": [ /* MonthLockDto[] */ ]
 }
 ```
 
@@ -1002,7 +1054,7 @@
   "data": {
     "month": "2026-01",
     "isLocked": true,
-    "lockedBy": "admin-id",
+    "lockedByAdminId": "admin-id",
     "lockedAt": "..."
   }
 }

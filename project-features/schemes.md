@@ -1,4 +1,11 @@
 -- =========================
+-- Global Constants (for reference in application code)
+-- =========================
+-- WORKDAY_MINUTES = 540 (9 hours)
+-- HALF_DAY_MINUTES = 270 (4.5 hours)
+-- FULL_DAY_MINUTES = 540 (9 hours)
+
+-- =========================
 -- Extensions
 -- =========================
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
@@ -35,6 +42,10 @@ DO $$ BEGIN
 EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 
 DO $$ BEGIN
+  CREATE TYPE report_type AS ENUM ('TOTAL_HOURS', 'ENTRY_EXIT');
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+
+DO $$ BEGIN
   CREATE TYPE audit_entity AS ENUM (
     'USER','CLIENT','PROJECT','TASK','TASK_ASSIGNMENT',
     'TIME_ENTRY','ABSENCE','MONTH_LOCK'
@@ -52,14 +63,15 @@ EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 -- Users
 -- =========================
 CREATE TABLE IF NOT EXISTS users (
-  id                uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  full_name         text NOT NULL,
-  email             text NOT NULL UNIQUE,
-  password_hash     text NOT NULL,
-  role              user_role NOT NULL DEFAULT 'EMPLOYEE',
-  is_active         boolean NOT NULL DEFAULT true,
-  created_at        timestamptz NOT NULL DEFAULT now(),
-  updated_at        timestamptz NOT NULL DEFAULT now()
+  id                    uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  full_name             text NOT NULL,
+  email                 text NOT NULL UNIQUE,
+  password_hash         text NOT NULL,
+  role                  user_role NOT NULL DEFAULT 'EMPLOYEE',
+  is_active             boolean NOT NULL DEFAULT true,
+  must_change_password  boolean NOT NULL DEFAULT true,
+  created_at            timestamptz NOT NULL DEFAULT now(),
+  updated_at            timestamptz NOT NULL DEFAULT now()
 );
 
 CREATE INDEX IF NOT EXISTS idx_users_is_active ON users(is_active);
@@ -71,9 +83,7 @@ CREATE INDEX IF NOT EXISTS idx_users_role ON users(role);
 CREATE TABLE IF NOT EXISTS clients (
   id            uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   name          text NOT NULL,
-  contact_name  text NULL,
-  contact_email text NULL,
-  contact_phone text NULL,
+  description   text NULL,
   status        entity_status NOT NULL DEFAULT 'ACTIVE',
   created_at    timestamptz NOT NULL DEFAULT now(),
   updated_at    timestamptz NOT NULL DEFAULT now()
@@ -87,6 +97,7 @@ CREATE TABLE IF NOT EXISTS projects (
   client_id   uuid NOT NULL REFERENCES clients(id),
   name        text NOT NULL,
   status      entity_status NOT NULL DEFAULT 'ACTIVE',
+  report_type report_type NOT NULL DEFAULT 'TOTAL_HOURS',
   created_at  timestamptz NOT NULL DEFAULT now(),
   updated_at  timestamptz NOT NULL DEFAULT now()
 );
@@ -203,7 +214,8 @@ CREATE TABLE IF NOT EXISTS time_entries (
   updated_at         timestamptz NOT NULL DEFAULT now(),
 
   CONSTRAINT chk_time_entries_time CHECK (end_time > start_time),
-  CONSTRAINT chk_time_entries_duration CHECK (duration_minutes > 0)
+  CONSTRAINT chk_time_entries_duration CHECK (duration_minutes > 0),
+  CONSTRAINT chk_time_entries_description_length CHECK (char_length(description) BETWEEN 10 AND 500)
 );
 
 CREATE INDEX IF NOT EXISTS idx_time_entries_user_date ON time_entries(user_id, work_date);
@@ -238,8 +250,8 @@ CREATE INDEX IF NOT EXISTS idx_absence_requests_status ON absence_requests(statu
 CREATE INDEX IF NOT EXISTS idx_absence_requests_type ON absence_requests(type);
 
 -- =========================
--- Absence Days (expanded to workdays only, excluding Fri/Sat in service)
--- minutes: 270 (half day) or 540 (full day)
+-- Absence Days (expanded to workdays only, excluding Fri/Sat - Israeli workweek is Sun-Thu)
+-- minutes: HALF_DAY_MINUTES (270) or FULL_DAY_MINUTES (540) - see global constants
 -- =========================
 CREATE TABLE IF NOT EXISTS absence_days (
   id                  uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -248,6 +260,7 @@ CREATE TABLE IF NOT EXISTS absence_days (
   work_date           date NOT NULL,
   minutes             int NOT NULL,
   created_at          timestamptz NOT NULL DEFAULT now(),
+  -- Uses global constants: HALF_DAY_MINUTES=270, FULL_DAY_MINUTES=540
   CONSTRAINT chk_absence_days_minutes CHECK (minutes IN (270, 540)),
   CONSTRAINT uq_absence_days_unique UNIQUE(user_id, work_date, absence_request_id)
 );

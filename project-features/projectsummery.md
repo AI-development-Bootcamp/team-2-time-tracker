@@ -6,23 +6,15 @@ The system is designed to provide a simple and efficient solution for managing a
 
 ## 2. Architecture & Technologies
 
-| Layer | Technology |
-|-------|------------|
-| Frontend | React (Mobile-first design) |
-| Backend | Node.js (Express/Fastify) |
-| Database | PostgreSQL (Relational) |
-| Infrastructure | Docker & Docker Compose |
-| CI/CD | GitHub Actions |
-| Deployment | Vercel (Frontend), Render/Railway (Backend/DB) |
-| API Documentation | Swagger / OpenAPI |
+look at stack file in the current folder
 
 ## 3. Data Entities
 
-- **Users**: Full name, email, password (encrypted), type (employee/admin), status (active/inactive).
+- **Users**: Full name, email, password (encrypted), type (employee/admin), isActive (boolean), mustChangePassword (boolean).
 - **Clients**: Client name, contact details, activity status.
 - **Projects**: Client association, project name, status.
 - **Tasks**: Project association, task description, status.
-- **Time Reports**: Date, hours (start/end), GPS location (optional), task association, text description.
+- **Time Reports**: Date, hours (start/end), location (OFFICE/CLIENT/HOME), task association, text description.
 - **Absences**: Type (vacation, sick, reserves, other), date range, document upload, approval status.
 - **Audit Log**: Documentation of admin changes (who changed, when, old value, new value).
 
@@ -32,7 +24,7 @@ The system is designed to provide a simple and efficient solution for managing a
 
 - **System Login**: Email and initial password authentication (created by admin).
 - **Password Change**: Mandatory password change on first login. No self-service password recovery mechanism.
-- **Sessions**: JWT authentication valid for 2 hours. (Refresh Token will be implemented in future versions).
+- **Sessions**: JWT authentication valid for 2 hours. Refresh tokens use stateless JWT with blacklisting for invalidation.
 
 ### 4.2. Time Reporting & Timer
 
@@ -61,6 +53,65 @@ The system is designed to provide a simple and efficient solution for managing a
   - **Block**: End time must be after start time.
   - **Warning**: Visual indicator if less or more than 9 hours reported (but saving is not blocked).
 - **Files**: Support for PDF and Image formats (JPG/PNG) with size limits.
+- **Description Length**: Minimum 10 characters, maximum 500 characters (enforced at DB level).
+
+## 5.1. Frontend Implementation Requirements
+
+### Auto-Select Single Item Logic
+When the user has only one available option in a selector dropdown, the system must automatically select it:
+
+| Selector | Condition | Action |
+|----------|-----------|--------|
+| Client | User assigned to tasks under only 1 client | Auto-select that client |
+| Project | Selected client has only 1 project with assigned tasks | Auto-select that project |
+| Task | Selected project has only 1 assigned task | Auto-select that task |
+
+**Cascade behavior**: When client is selected (auto or manual), check if project should auto-select. When project is selected, check if task should auto-select.
+
+### Timer Status Display Requirements
+When a timer is running, it must be **prominently visible** across the entire application:
+
+| Requirement | Description |
+|-------------|-------------|
+| **Position** | Fixed banner at the top of the screen, visible on ALL pages |
+| **Visual State** | Pulsing/animated indicator to show active recording |
+| **Real-time Counter** | Display elapsed time, updating every second |
+| **Quick Actions** | Stop button directly accessible from the banner |
+| **Persistence** | Banner remains visible during navigation between pages |
+
+### Workday Progress Indicator
+Visual feedback showing daily hour allocation status:
+
+| Status | Condition | Visual |
+|--------|-----------|--------|
+| **Incomplete** | total < 540 minutes | Red indicator |
+| **Complete** | total = 540 minutes | Green indicator |
+| **Over-reported** | total > 540 minutes | Orange/warning indicator |
+
+Where `total = workMinutes + absenceMinutes`
+
+## 5.2. Service Layer Validation Rules
+
+### Workday Submission (`POST /workday/:date/submit`)
+
+The service must validate the following rules before allowing submission:
+
+| Rule | Validation | Error Code |
+|------|------------|------------|
+| 1 | Month must not be locked | `WORKDAY_001` |
+| 2 | Total minutes (work + absence) must equal target (540) | `WORKDAY_002` |
+| 3 | Day must not already be submitted | `WORKDAY_003` |
+
+**Important**: Rule 2 is a **blocking** validation, not just a warning. The user cannot submit until all 540 minutes are allocated.
+
+### Time Entry Creation (`POST /time-entries`)
+
+| Rule | Validation | Error Code |
+|------|------------|------------|
+| 1 | Timer must NOT be running | `TIMER_001` |
+| 2 | Work date must not be in a locked month | `WORKDAY_001` |
+| 3 | Task must be assigned to the user | `VALIDATION_001` |
+| 4 | Description must be 10-500 characters | `VALIDATION_001` |
 
 ## 6. Quality & Development Requirements
 
@@ -204,16 +255,11 @@ time-tracking/
 │  │     │  ├─ monthClosure.controller.ts
 │  │     │  ├─ monthClosure.service.ts
 │  │     │  └─ monthClosure.repo.ts
-│  │     ├─ audit-log/
-│  │     │  ├─ auditLog.routes.ts
-│  │     │  ├─ auditLog.controller.ts
-│  │     │  ├─ auditLog.service.ts
-│  │     │  └─ auditLog.repo.ts
-│  │     └─ notifications/
-│  │        ├─ notifications.routes.ts
-│  │        ├─ notifications.controller.ts
-│  │        ├─ notifications.service.ts
-│  │        └─ notifications.repo.ts
+│  │     └─ audit-log/
+│  │        ├─ auditLog.routes.ts
+│  │        ├─ auditLog.controller.ts
+│  │        ├─ auditLog.service.ts
+│  │        └─ auditLog.repo.ts
 │  └─ tests/
 │     ├─ unit/
 │     └─ helpers/

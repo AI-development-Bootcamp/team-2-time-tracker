@@ -201,8 +201,16 @@ Submits the workday for approval. Fails if time is not fully allocated.
 
 **Response DTO:** `SubmitWorkdayResponseDto`
 
+**Validation Rules:**
+
+| Rule | Validation | Error Code |
+| :--- | :--------- | :--------- |
+| 1 | Month must not be locked | `WORKDAY_001` |
+| 2 | Total minutes (work + absence) must equal 540 | `WORKDAY_002` |
+| 3 | Day must not already be submitted | `WORKDAY_003` |
+
 > [!WARNING]
-> A day cannot be submitted if `unallocatedMinutes > 0`.
+> A day cannot be submitted if `unallocatedMinutes > 0`. This is a **blocking** validation - submission is rejected until all 540 minutes are allocated.
 
 ---
 
@@ -215,6 +223,13 @@ Cancels a previously submitted workday (only if month is not locked).
 | `date`    | Path     | Date | ✓        | `YYYY-MM-DD` format |
 
 **Response DTO:** `CancelWorkdayResponseDto`
+
+**Validation Rules:**
+
+| Rule | Validation | Error Code |
+| :--- | :--------- | :--------- |
+| 1 | Month must not be locked | `WORKDAY_001` |
+| 2 | Day must be currently submitted | `WORKDAY_004` |
 
 ---
 
@@ -249,6 +264,15 @@ Creates a new time entry.
 
 **Response DTO:** `UpsertTimeEntryResponseDto`
 
+**Validation Rules:**
+
+| Rule | Validation | Error Code |
+| :--- | :--------- | :--------- |
+| 1 | Timer must NOT be running | `TIMER_001` |
+| 2 | Work date must not be in a locked month | `WORKDAY_001` |
+| 3 | Task must be assigned to the user | `VALIDATION_001` |
+| 4 | Description must be 10-500 characters | `VALIDATION_001` |
+
 > [!IMPORTANT]
 > Manual entries can only be created when the timer is **not running**.
 
@@ -278,6 +302,14 @@ Updates an existing time entry.
 
 **Response DTO:** `UpsertTimeEntryResponseDto`
 
+**Validation Rules:**
+
+| Rule | Validation | Error Code |
+| :--- | :--------- | :--------- |
+| 1 | Entry must belong to the user | `AUTH_003` |
+| 2 | Work date must not be in a locked month | `WORKDAY_001` |
+| 3 | If description provided, must be 10-500 characters | `VALIDATION_001` |
+
 ---
 
 ### `DELETE /time-entries/:id` 👤
@@ -289,6 +321,13 @@ Soft-deletes a time entry.
 | `id`      | Path     | UUID | ✓        | Time entry ID |
 
 **Response DTO:** `DeleteTimeEntryResponseDto`
+
+**Validation Rules:**
+
+| Rule | Validation | Error Code |
+| :--- | :--------- | :--------- |
+| 1 | Entry must belong to the user | `AUTH_003` |
+| 2 | Work date must not be in a locked month | `WORKDAY_001` |
 
 ---
 
@@ -688,12 +727,10 @@ Lists all clients.
 
 Creates a new client.
 
-| Parameter      | Location | Type   | Required | Description       |
-| :------------- | :------- | :----- | :------- | :---------------- |
-| `name`         | Body     | string | ✓        | Client name       |
-| `contactName`  | Body     | string |          | Contact person    |
-| `contactEmail` | Body     | string |          | Contact email     |
-| `contactPhone` | Body     | string |          | Contact phone     |
+| Parameter     | Location | Type   | Required | Description              |
+| :------------ | :------- | :----- | :------- | :----------------------- |
+| `name`        | Body     | string | ✓        | Client name              |
+| `description` | Body     | string |          | Optional description     |
 
 **Request DTO:** `AdminCreateClientRequestDto`
 
@@ -765,6 +802,24 @@ Updates project status.
 | Parameter | Location     | Type         | Required | Description          |
 | :-------- | :----------- | :----------- | :------- | :------------------- |
 | `status`  | Body         | EntityStatus | ✓        | `ACTIVE` or `INACTIVE` |
+
+---
+
+#### `PUT /admin/projects/:id/report-type` 🛡️
+
+Updates the project's report type (determines how employees report time for this project).
+
+| Parameter    | Location | Type       | Required | Description                          |
+| :----------- | :------- | :--------- | :------- | :----------------------------------- |
+| `reportType` | Body     | ReportType | ✓        | `TOTAL_HOURS` or `ENTRY_EXIT`        |
+
+**Request DTO:** `AdminUpdateProjectReportTypeRequestDto`
+
+**Response DTO:** `ProjectDto`
+
+> [!NOTE]
+> - `TOTAL_HOURS`: Employee reports start time and end time for each task (סכום שעות)
+> - `ENTRY_EXIT`: Employee reports entry and exit times for the workday (כניסה/יציאה)
 
 ---
 
@@ -1147,14 +1202,16 @@ All API responses follow a consistent wrapper format.
 | `AUTH_001`      | 401         | Invalid credentials                |
 | `AUTH_002`      | 401         | Token expired                      |
 | `AUTH_003`      | 403         | Insufficient permissions           |
-| `WORKDAY_001`   | 400         | Day is locked                      |
-| `WORKDAY_002`   | 400         | Not fully allocated                |
+| `WORKDAY_001`   | 400         | Day/Month is locked                |
+| `WORKDAY_002`   | 400         | Not fully allocated (must equal 540 minutes) |
 | `WORKDAY_003`   | 400         | Already submitted                  |
+| `WORKDAY_004`   | 400         | Day not submitted (cannot cancel)  |
 | `TIMER_001`     | 409         | Timer already running              |
 | `TIMER_002`     | 400         | No active timer                    |
-| `VALIDATION_001`| 400         | Validation error                   |
+| `VALIDATION_001`| 400         | Validation error (field constraints)|
 | `VALIDATION_002`| 400         | Overlapping absence                |
 | `VALIDATION_003`| 400         | Missing required document          |
+| `VALIDATION_004`| 400         | Task not assigned to user          |
 | `NOT_FOUND`     | 404         | Resource not found                 |
 | `SERVER_ERROR`  | 500         | Internal server error              |
 
@@ -1195,6 +1252,10 @@ All API responses follow a consistent wrapper format.
 * `MANUAL`
 * `TIMER`
 
+#### `ReportType`
+* `TOTAL_HOURS` 
+* `ENTRY_EXIT` 
+
 #### `AuditEntity`
 * `USER`
 * `CLIENT`
@@ -1233,9 +1294,12 @@ All API responses follow a consistent wrapper format.
 | :-------------------- | :------ | :--------------------------- |
 | `WORKDAY_MINUTES`     | `540`   | 9 hours in minutes           |
 | `HALF_DAY_MINUTES`    | `270`   | 4.5 hours in minutes         |
+| `FULL_DAY_MINUTES`    | `540`   | Full day absence in minutes  |
 | `TOKEN_EXPIRY_SECONDS`| `7200`  | JWT access token (2 hours)   |
 | `REFRESH_TOKEN_DAYS`  | `30`    | Refresh token validity       |
 | `MAX_FILE_SIZE_MB`    | `10`    | Max upload file size         |
+
+> **Note:** Workweek is Sunday-Thursday (Israeli calendar). Friday and Saturday are excluded from workday calculations.
 
 ---
 
