@@ -73,22 +73,22 @@
 ## 2. Authentication Implementation
 
 ### 2.1 Backend Auth Module
-- [ ] 2.1.1 Create `auth.routes.ts` with endpoints
-- [ ] 2.1.2 Create `auth.controller.ts`
-- [ ] 2.1.3 Create `auth.service.ts` (login, logout, refresh, change-password)
-- [ ] 2.1.4 Create `auth.repo.ts` (user lookup, token blacklist)
-- [ ] 2.1.5 Implement JWT token generation with 2-hour expiry
-- [ ] 2.1.6 Implement refresh token with blacklist invalidation
-- [ ] 2.1.7 Implement bcrypt password hashing (12 rounds)
-- [ ] 2.1.8 Create `auth.middleware.ts` (JWT validation, role check, active check)
+- [x] 2.1.1 Create `auth.routes.ts` with endpoints
+- [x] 2.1.2 Create `auth.controller.ts`
+- [x] 2.1.3 Create `auth.service.ts` (login, logout, refresh, change-password)
+- [x] 2.1.4 Create `auth.repo.ts` (user lookup, token blacklist)
+- [x] 2.1.5 Implement JWT token generation with 2-hour expiry
+- [x] 2.1.6 Implement refresh token with blacklist invalidation
+- [x] 2.1.7 Implement bcrypt password hashing (12 rounds)
+- [x] 2.1.8 Create `auth.middleware.ts` (JWT validation, role check, active check)
 
 ### 2.2 Auth Endpoints
-- [ ] 2.2.1 Implement `POST /auth/login`
-- [ ] 2.2.2 Implement `POST /auth/refresh`
-- [ ] 2.2.3 Implement `POST /auth/change-password`
-- [ ] 2.2.4 Implement `GET /auth/me`
-- [ ] 2.2.5 Implement `POST /auth/logout`
-- [ ] 2.2.6 Implement `GET /health` (health check)
+- [x] 2.2.1 Implement `POST /auth/login`
+- [x] 2.2.2 Implement `POST /auth/refresh`
+- [x] 2.2.3 Implement `POST /auth/change-password`
+- [x] 2.2.4 Implement `GET /auth/me`
+- [x] 2.2.5 Implement `POST /auth/logout`
+- [x] 2.2.6 Implement `GET /health` (health check)
 
 ### 2.3 Frontend Auth Implementation
 - [ ] 2.3.1 Create `LoginPage.tsx` with form
@@ -102,44 +102,42 @@
 ## 3. User Management
 
 ### 3.1 Backend Users Module
-- [ ] 3.1.1 Create `users.routes.ts`
-- [ ] 3.1.2 Create `users.controller.ts`
-- [ ] 3.1.3 Create `users.service.ts`
-- [ ] 3.1.4 Create `users.repo.ts`
+- [x] 3.1.1 Create `users.routes.ts`
+- [x] 3.1.2 Create `users.controller.ts`
+- [x] 3.1.3 Create `users.service.ts`
+- [x] 3.1.4 Create `users.repo.ts`
 
-### 3.2 Profile Endpoint
-- [ ] 3.2.1 Implement `GET /profile` (current user profile)
 
 ## 4. Shared UI Components
 
 ### 4.1 Base Components
-- [ ] 4.1.1 Create Button component (with Radix)
-- [ ] 4.1.2 Create Input component (with RTL support)
-- [ ] 4.1.3 Create Modal/Dialog component (Radix Dialog)
-- [ ] 4.1.4 Create Toast/Notification component (Radix Toast)
-- [ ] 4.1.5 Create Form components integration (react-hook-form + Zod)
-- [ ] 4.1.6 Create CSS design tokens (colors, spacing, typography)
+- [x] 4.1.1 Create Button component (with Radix)
+- [x] 4.1.2 Create Input component (with RTL support)
+- [x] 4.1.3 Create Modal/Dialog component (Radix Dialog)
+- [x] 4.1.4 Create Toast/Notification component (Radix Toast)
+- [x] 4.1.5 Create Form components integration (react-hook-form + Zod)
+- [x] 4.1.6 Create CSS design tokens (colors, spacing, typography)
 
 ### 4.2 Auth Components
-- [ ] 4.2.1 Create LoginForm component
-- [ ] 4.2.2 Create PasswordChangeForm component
+- [x] 4.2.1 Create LoginForm component
+- [x] 4.2.2 Create PasswordChangeForm component
 
 ## 5. Testing
 
 ### 5.1 Backend Tests
-- [ ] 5.1.1 Configure Vitest for backend
-- [ ] 5.1.2 Create test helpers (mock Prisma, test database)
-- [ ] 5.1.3 Write unit tests for auth.service.ts
-- [ ] 5.1.4 Write integration tests for auth endpoints
-- [ ] 5.1.5 Achieve minimum 60% coverage for auth module
+- [x] 5.1.1 Configure Vitest for backend
+- [x] 5.1.2 Create test helpers (mock Prisma, test database)
+- [x] 5.1.3 Write unit tests for auth.service.ts
+- [x] 5.1.4 Write integration tests for auth endpoints
+- [x] 5.1.5 Achieve minimum 60% coverage for auth module
 
 ### 5.2 Frontend Tests
-- [ ] 5.2.1 Write tests for LoginPage
-- [ ] 5.2.2 Write tests for auth store
-- [ ] 5.2.3 Write tests for ProtectedRoute
+- [x] 5.2.1 Write tests for LoginPage
+- [x] 5.2.2 Write tests for auth store
+- [x] 5.2.3 Write tests for ProtectedRoute
 
 ## 6. Documentation
 
 ### 6.1 API Documentation
-- [ ] 6.1.1 Document auth endpoints in Swagger
-- [ ] 6.1.2 Create README.md with setup instructions
+- [x] 6.1.1 Document auth endpoints in Swagger
+- [x] 6.1.2 Create README.md with setup instructions

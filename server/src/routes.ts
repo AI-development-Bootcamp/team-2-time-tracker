@@ -1,19 +1,21 @@
 import { Router } from 'express';
 import * as swaggerUi from 'swagger-ui-express';
 import { swaggerSpec } from './config/swagger';
+import { authRouter } from './modules/auth/auth.routes';
+import { usersRouter } from './modules/users/users.routes';
 
 const router: Router = Router();
 
 // Health Check
 router.get('/health', (_req, res) => {
-    res.json({ status: 'ok', timestamp: new Date().toISOString() });
+    res.json({ status: 'ok', timestamp: new Date().toISOString(), version: '1.0.0' });
 });
 
 // Swagger Docs
 router.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-// API Routes will be mounted here in future tasks
-// router.use('/auth', authRoutes);
-// router.use('/users', usersRoutes);
+// API Routes
+router.use('/auth', authRouter);
+router.use('/admin/users', usersRouter);
 
 export { router };
