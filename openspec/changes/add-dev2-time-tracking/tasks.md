@@ -25,18 +25,21 @@
 
 ### 2.3 Timer Business Logic
 - [ ] 2.3.1 Validate only one timer running per user
-- [ ] 2.3.2 Calculate elapsed time server-side
+- [ ] 2.3.2 Calculate elapsed time server-side based on startedAt and current server time
 - [ ] 2.3.3 Convert timer to time entry on stop
 - [ ] 2.3.4 Prevent timer start if month is locked
+- [ ] 2.3.5 Validate workDate is today (not past or future)
+- [ ] 2.3.6 Ensure elapsed time calculation uses server-side computation (frontend displays server-calculated value)
 
 ### 2.4 Frontend Timer Implementation
 - [ ] 2.4.1 Create `TimerCard.tsx` component
 - [ ] 2.4.2 Create timer Zustand store (`timer.store.ts`)
 - [ ] 2.4.3 Implement real-time counter display (updates every second)
-- [ ] 2.4.4 Create fixed timer banner component (visible on all pages)
+- [ ] 2.4.4 Create fixed timer banner component (visible on all pages, following Figma design)
 - [ ] 2.4.5 Implement pulsing/animated active indicator
 - [ ] 2.4.6 Add quick stop button in banner
 - [ ] 2.4.7 Handle timer persistence across page navigation
+- [ ] 2.4.8 Ensure banner follows Figma design specifications for positioning and styling
 
 ## 3. Time Entries Implementation
 
@@ -62,6 +65,13 @@
 - [ ] 3.3.5 Validate month is not locked
 - [ ] 3.3.6 Calculate duration_minutes automatically
 - [ ] 3.3.7 Recalculate workday summary on entry CRUD
+- [ ] 3.3.8 Validate future dates are blocked
+- [ ] 3.3.9 Implement ReportType-specific validation (ENTRY_EXIT single entry per project per day)
+- [ ] 3.3.10 Validate ENTRY_EXIT entries are within 535-545 minutes (540 ± 5 minutes tolerance)
+- [ ] 3.3.11 Implement batch entry same-date validation
+- [ ] 3.3.12 Implement batch entry time overlap detection (reject overlaps for same task, allow for different tasks)
+- [ ] 3.3.13 Validate workDate is immutable on update
+- [ ] 3.3.14 Allow taskId change on update (with assignment validation)
 
 ### 3.4 Frontend Time Entry Components
 - [ ] 3.4.1 Create `TimeEntryForm.tsx` (modal for add/edit)
@@ -87,13 +97,17 @@
 - [ ] 4.3.2 Validate total equals 540 before submit
 - [ ] 4.3.3 Validate month not locked
 - [ ] 4.3.4 Validate day not already submitted
-- [ ] 4.3.5 Update workday status (FULL/MISSING/EXCEPTION)
+- [ ] 4.3.5 Update workday status (FULL/MISSING/EXCEPTION) on retrieval and entry/absence changes
+- [ ] 4.3.6 Implement automatic workday creation on first entry/absence
+- [ ] 4.3.7 Implement immediate lock propagation when month is locked
+- [ ] 4.3.8 Handle workday retrieval for dates with no entries (return calculated default values, create on-the-fly)
+- [ ] 4.3.9 Validate timer is stopped before allowing workday submission
 
 ### 4.4 Frontend Workday Components
 - [ ] 4.4.1 Create `WorkdayProgress.tsx` component
-- [ ] 4.4.2 Implement progress bar with color coding (red/green/orange)
+- [ ] 4.4.2 Implement progress bar with color coding (red/green/orange, following Figma design)
 - [ ] 4.4.3 Create daily summary card
-- [ ] 4.4.4 Create monthly calendar view component
+- [ ] 4.4.4 Create monthly calendar view component (show all days, mark weekends appropriately)
 - [ ] 4.4.5 Create workday store (`workday.store.ts`)
 
 ## 5. Selectors Implementation
@@ -118,9 +132,11 @@
 
 ### 5.4 Frontend Selector Components
 - [ ] 5.4.1 Create `FrequentSelectors.tsx` (cascading dropdowns)
-- [ ] 5.4.2 Implement auto-select when single option
+- [ ] 5.4.2 Implement auto-select when single option (trigger after data fetch)
 - [ ] 5.4.3 Implement cascade behavior (client -> project -> task)
 - [ ] 5.4.4 Add frequency sorting toggle
+- [ ] 5.4.5 Ensure auto-select is undoable by user
+- [ ] 5.4.6 Implement cascade auto-select (parent selection triggers child check)
 
 ## 6. Dashboard Page
 
