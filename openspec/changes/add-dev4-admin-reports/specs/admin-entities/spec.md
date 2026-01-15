@@ -56,6 +56,26 @@ The system SHALL allow admins to perform CRUD operations on projects.
 - **WHEN** admin submits `PUT /admin/projects/:id/report-type` with reportType
 - **THEN** project reportType is updated and audit log is created
 
+### Requirement: Project Date Management
+The system SHALL allow admins to set and validate project date ranges.
+
+#### Scenario: Create project with dates
+- **WHEN** admin submits `POST /admin/projects` with startDate and endDate
+- **THEN** project is created with validated date range
+
+#### Scenario: Invalid project date range
+- **WHEN** admin submits project with endDate < startDate
+- **THEN** response is validation error with code VALIDATION_001
+
+#### Scenario: Update project dates
+- **WHEN** admin updates project dates
+- **THEN** system validates all child tasks are within new date range
+- **THEN** response is error if any tasks fall outside new range
+
+#### Scenario: Project dates are optional
+- **WHEN** admin creates or updates project without dates
+- **THEN** project is saved with NULL date values
+
 ### Requirement: Task Management
 The system SHALL allow admins to perform CRUD operations on tasks.
 
@@ -82,6 +102,35 @@ The system SHALL allow admins to perform CRUD operations on tasks.
 #### Scenario: Update task status
 - **WHEN** admin submits `PUT /admin/tasks/:id/status` with status
 - **THEN** task status is updated and audit log is created
+
+#### Scenario: Cannot close task with time entries
+- **WHEN** admin attempts to close a task (status = CLOSED) that has associated time entries
+- **THEN** response is validation error with code VALIDATION_001
+- **THEN** error message explains that task has logged time
+
+### Requirement: Task Date Management
+The system SHALL allow admins to set task dates within project boundaries.
+
+#### Scenario: Create task with dates
+- **WHEN** admin submits `POST /admin/tasks` with startDate and endDate
+- **THEN** task dates are validated against parent project dates
+
+#### Scenario: Task dates outside project range
+- **WHEN** admin submits task with dates outside parent project date range
+- **THEN** response is validation error with code VALIDATION_001
+- **THEN** error message explains task dates must be within project dates
+
+#### Scenario: Invalid task date range
+- **WHEN** admin submits task with endDate < startDate
+- **THEN** response is validation error with code VALIDATION_001
+
+#### Scenario: Task dates are optional
+- **WHEN** admin creates or updates task without dates
+- **THEN** task is saved with NULL date values
+
+#### Scenario: Task dates validation with NULL project dates
+- **WHEN** parent project has NULL dates
+- **THEN** task dates can be any valid range (no parent constraint)
 
 ### Requirement: Soft Delete Pattern
 The system SHALL use soft delete (status change) for all entities instead of physical deletion.

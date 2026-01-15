@@ -19,8 +19,13 @@ Administrators need comprehensive tools to manage the system, view reports, and 
 
 ### Entity Management
 - CRUD operations for clients, projects, and tasks
-- Status management (ACTIVE/INACTIVE)
+- Status management (ACTIVE/INACTIVE for clients/projects, OPEN/CLOSED for tasks)
 - Project report type configuration (TOTAL_HOURS vs ENTRY_EXIT)
+- **Date range management for projects and tasks**
+  - Projects can have optional start/end dates
+  - Tasks can have optional start/end dates (must be within project range if both are set)
+  - Date validation: endDate >= startDate
+  - Prevent closing tasks with existing time entries
 - Soft delete pattern (status-based, no physical deletion)
 
 ### Task Assignments

@@ -98,8 +98,11 @@ CREATE TABLE IF NOT EXISTS projects (
   name        text NOT NULL,
   status      entity_status NOT NULL DEFAULT 'ACTIVE',
   report_type report_type NOT NULL DEFAULT 'TOTAL_HOURS',
+  start_date  date NULL,
+  end_date    date NULL,
   created_at  timestamptz NOT NULL DEFAULT now(),
-  updated_at  timestamptz NOT NULL DEFAULT now()
+  updated_at  timestamptz NOT NULL DEFAULT now(),
+  CONSTRAINT chk_project_dates CHECK (end_date IS NULL OR start_date IS NULL OR end_date >= start_date)
 );
 
 CREATE INDEX IF NOT EXISTS idx_projects_client_status ON projects(client_id, status);
@@ -110,8 +113,11 @@ CREATE TABLE IF NOT EXISTS tasks (
   project_id  uuid NOT NULL REFERENCES projects(id),
   name        text NOT NULL,
   status      task_status NOT NULL DEFAULT 'OPEN',
+  start_date  date NULL,
+  end_date    date NULL,
   created_at  timestamptz NOT NULL DEFAULT now(),
-  updated_at  timestamptz NOT NULL DEFAULT now()
+  updated_at  timestamptz NOT NULL DEFAULT now(),
+  CONSTRAINT chk_task_dates CHECK (end_date IS NULL OR start_date IS NULL OR end_date >= start_date)
 );
 
 CREATE INDEX IF NOT EXISTS idx_tasks_project_status ON tasks(project_id, status);
