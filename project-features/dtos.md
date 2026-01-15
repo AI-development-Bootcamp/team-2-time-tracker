@@ -791,6 +791,8 @@
   "clientId": "uuid",
   "status": "ACTIVE",
   "reportType": "TOTAL_HOURS",
+  "startDate": "2026-01-01",
+  "endDate": "2026-12-31",
   "createdAt": "...",
   "updatedAt": "..."
 }
@@ -804,6 +806,8 @@
   "name": "Guidance System",
   "projectId": "uuid",
   "status": "OPEN",
+  "startDate": "2026-01-01",
+  "endDate": "2026-03-31",
   "createdAt": "...",
   "updatedAt": "..."
 }
@@ -838,14 +842,20 @@
 ```json
 {
   "clientId": "uuid",
-  "name": "New Project"
+  "name": "New Project",
+  "startDate": "2026-01-01",
+  "endDate": "2026-12-31"
 }
 ```
 
 ### `AdminUpdateProjectRequestDto`
 **Usage:** Client -> Server
 ```json
-{ "name": "Updated Project Name" }
+{
+  "name": "Updated Project Name",
+  "startDate": "2026-01-01",
+  "endDate": "2026-12-31"
+}
 ```
 
 ### `AdminUpdateProjectReportTypeRequestDto`
@@ -868,14 +878,20 @@
 ```json
 {
   "projectId": "uuid",
-  "name": "New Task"
+  "name": "New Task",
+  "startDate": "2026-01-01",
+  "endDate": "2026-03-31"
 }
 ```
 
 ### `AdminUpdateTaskRequestDto`
 **Usage:** Client -> Server
 ```json
-{ "name": "Updated Task Name" }
+{
+  "name": "Updated Task Name",
+  "startDate": "2026-01-01",
+  "endDate": "2026-03-31"
+}
 ```
 
 ### `ListTasksResponseDto`

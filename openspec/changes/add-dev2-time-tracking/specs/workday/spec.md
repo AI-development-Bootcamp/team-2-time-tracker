@@ -28,6 +28,21 @@ The system SHALL calculate workday status based on total allocated minutes.
 - **WHEN** `totalMinutes` exceeds 540
 - **THEN** status is `EXCEPTION`
 
+### Requirement: Workday Status Calculation Timing
+The system SHALL calculate workday status whenever workday summary is retrieved or when entries/absences are created, updated, or deleted.
+
+#### Scenario: Status calculated on retrieval
+- **WHEN** workday summary is retrieved via `GET /workday/:date`
+- **THEN** status is calculated based on current `totalMinutes` value
+
+#### Scenario: Status updated on entry change
+- **WHEN** time entry is created, updated, or deleted
+- **THEN** workday status is recalculated and updated in database
+
+#### Scenario: Status updated on absence change
+- **WHEN** absence is created, updated, or deleted
+- **THEN** workday status is recalculated and updated in database
+
 ### Requirement: Submit Workday
 The system SHALL allow users to submit a workday only when exactly 540 minutes are allocated.
 
@@ -46,6 +61,10 @@ The system SHALL allow users to submit a workday only when exactly 540 minutes a
 #### Scenario: Already submitted blocked
 - **WHEN** user attempts to submit an already submitted day
 - **THEN** response is `{ "error": { "code": "WORKDAY_003", "message": "Already submitted" } }` with status 400
+
+#### Scenario: Submit with timer running blocked
+- **WHEN** user attempts to submit workday while timer is still running
+- **THEN** response is `{ "error": { "code": "TIMER_001", "message": "Timer must be stopped before submitting workday" } }` with status 409
 
 ### Requirement: Cancel Workday Submission
 The system SHALL allow users to cancel a submitted workday if the month is not locked.
@@ -72,6 +91,18 @@ The system SHALL provide a monthly calendar view showing daily status for each w
 #### Scenario: Calendar day status
 - **WHEN** calendar is retrieved
 - **THEN** each day shows `date`, `status`, `isLocked`, `isSubmitted`, `minutes`
+
+#### Scenario: Calendar shows all days
+- **WHEN** monthly calendar is requested
+- **THEN** response includes all days of the month, including weekends
+
+#### Scenario: Weekend display
+- **WHEN** calendar includes Friday or Saturday
+- **THEN** those days show `status: EXCEPTION` or special indicator (not counted in workday calculations)
+
+#### Scenario: Calendar workday filtering
+- **WHEN** calendar is displayed
+- **THEN** only Sunday-Thursday days are included in workday calculations and status indicators
 
 ### Requirement: Workday Progress Display
 The system SHALL display a visual progress indicator showing daily hour allocation status.
@@ -105,3 +136,19 @@ The system SHALL store workday summaries with userId, workDate, targetMinutes, w
 #### Scenario: Lock propagation
 - **WHEN** month is locked
 - **THEN** all workdays in that month have `isLocked: true` and `lockedMonthId` set
+
+#### Scenario: Lock propagation timing
+- **WHEN** month is locked
+- **THEN** all existing workdays in that month are immediately updated with `isLocked: true`
+
+#### Scenario: New workday in locked month
+- **WHEN** user attempts to create entry/absence in locked month
+- **THEN** creation is blocked before workday summary would be created
+
+#### Scenario: Workday auto-creation
+- **WHEN** first time entry or absence is created for a date
+- **THEN** workday summary is automatically created with default values
+
+#### Scenario: Workday view before entries
+- **WHEN** user requests workday for a date with no entries or absences
+- **THEN** response contains calculated workday summary with `workMinutes: 0`, `absenceMinutes: 0`, `status: MISSING` (workday record is created on-the-fly, not persisted until first entry/absence)

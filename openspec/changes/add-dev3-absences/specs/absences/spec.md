@@ -151,3 +151,140 @@ The system SHALL store individual absence days with id, absenceRequestId, userId
 #### Scenario: Cascade delete
 - **WHEN** absence request is deleted
 - **THEN** related absence_days are automatically deleted (CASCADE)
+
+## ADDED Requirements - Document Management
+
+### Requirement: Document Upload
+The system SHALL allow users to upload documents to absence requests.
+
+#### Scenario: Upload document to absence
+- **WHEN** user uploads document via `POST /absences/:id/documents`
+- **THEN** file is stored in IDrive e2 at path `/absences/{userId}/{absenceId}/{uuid}-{timestamp}.{ext}`
+- **AND** document metadata is saved to `absence_documents` table
+
+#### Scenario: File type validation
+- **WHEN** user uploads file with unsupported type
+- **THEN** response is `{ "error": { "code": "VALIDATION_001", "message": "Invalid file type" } }` with status 400
+
+#### Scenario: File size validation
+- **WHEN** user uploads file larger than 10MB
+- **THEN** response is `{ "error": { "code": "VALIDATION_001", "message": "File size exceeds 10MB" } }` with status 400
+
+#### Scenario: Upload updates status
+- **WHEN** document uploaded to absence with status PENDING_DOCUMENT
+- **THEN** absence status changes to SUBMITTED
+
+### Requirement: Document Storage (IDrive e2)
+The system SHALL store uploaded documents in IDrive e2 S3-compatible storage.
+
+#### Scenario: S3-compatible upload
+- **WHEN** document is uploaded
+- **THEN** file is stored using AWS SDK v3 S3 client
+- **AND** file URL is stored in `absence_documents.file_url`
+
+#### Scenario: Unique file naming
+- **WHEN** document is uploaded
+- **THEN** file name is generated as `{uuid}-{timestamp}.{ext}`
+- **AND** file path includes userId and absenceId for organization
+
+### Requirement: Document Download
+The system SHALL allow users to download their absence documents.
+
+#### Scenario: Download with signed URL
+- **WHEN** user requests `GET /absences/:id/documents/:docId/download`
+- **THEN** system generates signed URL from IDrive e2
+- **AND** returns redirect to signed URL or streams file content
+
+#### Scenario: Download authorization
+- **WHEN** user attempts to download document not belonging to them
+- **THEN** response is `{ "error": { "code": "AUTH_003" } }` with status 403
+
+### Requirement: Document Deletion
+The system SHALL allow users to delete their absence documents.
+
+#### Scenario: Delete document
+- **WHEN** user submits `DELETE /absences/:id/documents/:docId`
+- **THEN** file is deleted from IDrive e2
+- **AND** record is deleted from `absence_documents` table
+
+#### Scenario: Delete updates status
+- **WHEN** last document deleted from SICK/RESERVES absence
+- **THEN** absence status changes to PENDING_DOCUMENT
+
+### Requirement: Month Lock Exception for Documents
+The system SHALL allow document upload even when month is locked.
+
+#### Scenario: Upload to locked month
+- **WHEN** user uploads document to absence in locked month
+- **THEN** upload succeeds (bypasses month lock validation)
+- **AND** document metadata is saved
+
+### Requirement: Document Listing
+The system SHALL list all documents attached to an absence request.
+
+#### Scenario: List documents
+- **WHEN** user requests `GET /absences/:id/documents`
+- **THEN** response contains array of documents with metadata (id, fileName, mimeType, fileSize, uploadedAt)
+
+## ADDED Requirements - UI Components
+
+### Requirement: Hebrew Date Picker
+The system SHALL provide Hebrew-localized date picker component.
+
+#### Scenario: Hebrew locale display
+- **WHEN** date picker is rendered
+- **THEN** month names displayed in Hebrew (e.g., "נובמבר 2025")
+- **AND** day names displayed in Hebrew (e.g., "יום א'", "יום ב'")
+- **AND** week starts from right (RTL layout)
+
+#### Scenario: Weekend exclusion in UI
+- **WHEN** date picker is rendered
+- **THEN** Friday and Saturday are disabled and visually distinguished
+
+#### Scenario: Range selection visual feedback
+- **WHEN** user selects date range
+- **THEN** start and end dates have blue circle
+- **AND** dates between have light blue background
+- **AND** workday count is displayed (e.g., "סה"כ ימי דיווח: 2 ימים")
+
+### Requirement: Document Uploader Component
+The system SHALL provide drag-and-drop document uploader.
+
+#### Scenario: Drag-and-drop upload
+- **WHEN** user drags file over dropzone
+- **THEN** dropzone shows visual feedback
+- **WHEN** user drops file
+- **THEN** file validation runs
+- **AND** upload starts if valid
+
+#### Scenario: Upload progress display
+- **WHEN** document is uploading
+- **THEN** progress indicator is displayed
+- **AND** upload can be tracked by user
+
+#### Scenario: Document status display
+- **WHEN** no document uploaded
+- **THEN** UI displays "חסר קובץ"
+- **WHEN** document uploaded
+- **THEN** UI displays file name with appropriate icon
+
+### Requirement: Absence Type Dropdown
+The system SHALL display absence types with emoji icons.
+
+#### Scenario: Type selection with emojis
+- **WHEN** dropdown is opened
+- **THEN** options displayed with emojis:
+  - "מחלה 😷"
+  - "חופשה 🏝️"
+  - "חצי יום ⏰"
+  - "יום מלא 🗓️"
+  - "מילואים 🪖"
+
+### Requirement: Mobile-First Responsive Design
+The system SHALL provide mobile-optimized absence reporting interface.
+
+#### Scenario: Mobile layout
+- **WHEN** UI is rendered on mobile device
+- **THEN** components are optimized for touch interaction
+- **AND** layout adapts to small screen size
+- **AND** all interactive elements have sufficient touch target size (min 44x44px)

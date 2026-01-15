@@ -13,6 +13,14 @@ The system SHALL track timer state on the server to ensure continuity even if th
 - **WHEN** user logs in with an active timer
 - **THEN** timer status shows running with correct elapsed time
 
+#### Scenario: Timer continues across midnight
+- **WHEN** timer is started before midnight and continues past midnight
+- **THEN** timer continues running and elapsed time is calculated correctly (timer is associated with original workDate, not current date)
+
+#### Scenario: Cannot start timer for different date while one running
+- **WHEN** timer is running for today and user attempts to start timer for tomorrow
+- **THEN** response is `{ "error": { "code": "TIMER_001", "message": "Timer already running" } }` with status 409
+
 ### Requirement: Start Timer
 The system SHALL allow users to start a timer for the current day only.
 
@@ -22,6 +30,10 @@ The system SHALL allow users to start a timer for the current day only.
 
 #### Scenario: Cannot start timer for past date
 - **WHEN** user attempts to start timer for a past date
+- **THEN** response is validation error with status 400
+
+#### Scenario: Cannot start timer for future date
+- **WHEN** user attempts to start timer with `workDate` in the future
 - **THEN** response is validation error with status 400
 
 #### Scenario: Cannot start if timer already running
@@ -43,6 +55,14 @@ The system SHALL allow users to stop a running timer and automatically create a 
 - **WHEN** user stops timer without providing `taskId`
 - **THEN** response is validation error with status 400
 
+#### Scenario: Stop requires location
+- **WHEN** user stops timer without providing `location`
+- **THEN** response is validation error with status 400
+
+#### Scenario: Stop requires description
+- **WHEN** user stops timer without providing `description` or with description less than 10 characters
+- **THEN** response is validation error with status 400
+
 #### Scenario: No active timer
 - **WHEN** user attempts to stop timer with no timer running
 - **THEN** response is `{ "error": { "code": "TIMER_002", "message": "No active timer" } }` with status 400
@@ -52,7 +72,11 @@ The system SHALL return the current timer status including whether running and e
 
 #### Scenario: Timer running status
 - **WHEN** user requests `GET /timer/status` with active timer
-- **THEN** response contains `isRunning: true`, `timer` object, and `elapsedMinutes`
+- **THEN** response contains `isRunning: true`, `timer` object, and `elapsedMinutes` calculated server-side
+
+#### Scenario: Timer elapsed time calculation
+- **WHEN** timer status is requested
+- **THEN** `elapsedMinutes` is calculated server-side based on `startedAt` and current server time
 
 #### Scenario: No timer status
 - **WHEN** user requests `GET /timer/status` with no active timer
@@ -90,6 +114,14 @@ The system SHALL display a fixed banner at the top of all pages when a timer is 
 #### Scenario: Quick stop action
 - **WHEN** user clicks stop button in banner
 - **THEN** stop timer modal opens to collect task, location, description
+
+#### Scenario: Banner persistent visibility
+- **WHEN** timer is running and user navigates between pages
+- **THEN** banner remains visible on all pages following Figma design specifications
+
+#### Scenario: Banner responsive design
+- **WHEN** timer is running on mobile device
+- **THEN** banner adapts to mobile layout per Figma design
 
 ### Requirement: Timer Data Model
 The system SHALL store timer data with id, userId, workDate, startedAt, stoppedAt, durationMinutes, and isRunning fields.
