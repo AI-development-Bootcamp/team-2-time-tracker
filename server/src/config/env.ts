@@ -1,25 +1,22 @@
-// Load environment variables from .env file into process.env
-import 'dotenv/config';
+import dotenv from 'dotenv';
 import { z } from 'zod';
 
-// Define the schema for required environment variables with validation
+dotenv.config();
+
 const envSchema = z.object({
-  // Server port - defaults to 3000 if not specified
-  PORT: z.coerce.number().default(3000),
-  // Runtime environment - affects logging and error handling
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
-  // Frontend URL for CORS - defaults to Vite dev server
-  CORS_ORIGIN: z.string().default('http://localhost:5173'),
+  PORT: z.string().default('3000'),
+  DATABASE_URL: z.string().optional(), // Make optional initially until DB setup
+  JWT_SECRET: z.string().min(1, 'JWT_SECRET is required'),
+  JWT_EXPIRES_IN: z.string().default('2h'),
+  CORS_ORIGIN: z.string().default('*'),
 });
 
-// Validate environment variables against the schema
-const parsed = envSchema.safeParse(process.env);
+const parsedEnv = envSchema.safeParse(process.env);
 
-// Exit early if required variables are missing or invalid
-if (!parsed.success) {
-  console.error('Invalid environment variables:', parsed.error.format());
+if (!parsedEnv.success) {
+  console.error('Invalid environment variables:', parsedEnv.error.format());
   process.exit(1);
 }
 
-// Export validated and typed config object
-export const config = parsed.data;
+export const env = parsedEnv.data;
