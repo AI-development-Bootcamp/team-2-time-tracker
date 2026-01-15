@@ -111,4 +111,4 @@
 |------|---------|
 | Docker + Docker Compose | Containerization |
 | GitHub Actions | CI |
-| Vercel / Render / Railway | CD |
+| Render  | CD |
