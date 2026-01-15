@@ -91,13 +91,13 @@
 - [x] 2.2.6 Implement `GET /health` (health check)
 
 ### 2.3 Frontend Auth Implementation
-- [ ] 2.3.1 Create `LoginPage.tsx` with form
-- [ ] 2.3.2 Create `ChangePasswordPage.tsx`
-- [ ] 2.3.3 Create auth Zustand store (`auth.store.ts`)
-- [ ] 2.3.4 Implement axios interceptors for JWT refresh
-- [ ] 2.3.5 Create `ProtectedRoute` wrapper component
-- [ ] 2.3.6 Implement auth redirects (login -> dashboard, no-auth -> login)
-- [ ] 2.3.7 Create Layout shell component with navigation
+- [x] 2.3.1 Create `LoginPage.tsx` with form
+- [x] 2.3.2 Create `ChangePasswordPage.tsx`
+- [x] 2.3.3 Create auth Zustand store (`auth.store.ts`)
+- [x] 2.3.4 Implement axios interceptors for JWT refresh
+- [x] 2.3.5 Create `ProtectedRoute` wrapper component
+- [x] 2.3.6 Implement auth redirects (login -> dashboard, no-auth -> login)
+- [x] 2.3.7 Create Layout shell component with navigation
 
 ## 3. User Management
 

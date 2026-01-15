@@ -5,6 +5,30 @@
         "paths": {
             "@/*": [
                 "src/*"
+            ],
+            "@client/ui": [
+                "../../packages/ui/src/index.ts"
+            ],
+            "@client/ui/*": [
+                "../../packages/ui/src/*"
+            ],
+            "@client/api-client": [
+                "../../packages/api-client/src/index.ts"
+            ],
+            "@client/api-client/*": [
+                "../../packages/api-client/src/*"
+            ],
+            "@client/utils": [
+                "../../packages/utils/src/index.ts"
+            ],
+            "@client/utils/*": [
+                "../../packages/utils/src/*"
+            ],
+            "@shared/types": [
+                "../../../shared/types/src/index.ts"
+            ],
+            "@shared/types/*": [
+                "../../../shared/types/src/*"
             ]
         }
     },
