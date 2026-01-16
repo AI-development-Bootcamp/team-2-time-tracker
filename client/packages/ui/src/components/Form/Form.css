@@ -1,0 +1,49 @@
+/**
+ * Form Component Styles
+ * Uses BEM naming convention
+ */
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.form__field {
+    margin-bottom: 0;
+}
+
+.form__actions {
+    display: flex;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-sm);
+}
+
+.form__actions--start {
+    justify-content: flex-start;
+}
+
+.form__actions--center {
+    justify-content: center;
+}
+
+.form__actions--end {
+    justify-content: flex-end;
+}
+
+.form__actions--stretch {
+    flex-direction: column;
+}
+
+.form__actions--stretch>* {
+    width: 100%;
+}
+
+/* RTL Support */
+[dir="rtl"] .form__actions--start {
+    justify-content: flex-end;
+}
+
+[dir="rtl"] .form__actions--end {
+    justify-content: flex-start;
+}

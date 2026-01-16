@@ -1,0 +1,5 @@
+@import '@client/ui/styles/rtl.css';
+
+* {
+    box-sizing: border-box;
+}
