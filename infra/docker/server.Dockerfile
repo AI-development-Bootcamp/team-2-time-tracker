@@ -1,38 +1,45 @@
-FROM node:20-alpine AS base
-
+# Build stage
+FROM node:20-alpine AS builder
+RUN apk add --no-cache openssl
 RUN corepack enable && corepack prepare pnpm@latest --activate
-
 WORKDIR /app
 
-# Install dependencies
-FROM base AS deps
+# Copy all package files for workspace
 COPY package.json pnpm-workspace.yaml pnpm-lock.yaml* ./
 COPY server/package.json ./server/
 COPY shared/types/package.json ./shared/types/
+
+# Install all dependencies
 RUN pnpm install --frozen-lockfile
 
-# Build
-FROM base AS builder
-COPY --from=deps /app/node_modules ./node_modules
-COPY --from=deps /app/server/node_modules ./server/node_modules
-COPY --from=deps /app/shared/types/node_modules ./shared/types/node_modules
+# Copy source code
 COPY . .
+
+# Build shared types and server
 RUN pnpm --filter @shared/types build
+RUN cd server && npx prisma generate
 RUN pnpm --filter server build
 
-# Production
-FROM base AS runner
+# Production stage
+FROM node:20-alpine AS runner
+RUN apk add --no-cache openssl
+RUN corepack enable && corepack prepare pnpm@latest --activate
+WORKDIR /app
+
 ENV NODE_ENV=production
 
-COPY --from=builder /app/package.json ./
+# Copy built artifacts and node_modules from builder
+COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/server/dist ./server/dist
-COPY --from=builder /app/server/package.json ./server/
+COPY --from=builder /app/server/node_modules ./server/node_modules
 COPY --from=builder /app/shared/types/dist ./shared/types/dist
-COPY --from=builder /app/shared/types/package.json ./shared/types/
 COPY --from=builder /app/server/prisma ./server/prisma
+COPY --from=builder /app/server/package.json ./server/package.json
+COPY --from=builder /app/package.json ./package.json
 
 WORKDIR /app/server
-RUN pnpm install --prod
 
 EXPOSE 3000
-CMD ["node", "dist/app.js"]
+
+# Run migrations and start server
+CMD ["sh", "-c", "npx prisma migrate deploy && npx tsx dist/app.js"]
