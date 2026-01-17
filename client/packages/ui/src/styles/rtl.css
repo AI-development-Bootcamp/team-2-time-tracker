@@ -1,0 +1,23 @@
+/* RTL Base Styles */
+html {
+  direction: rtl;
+}
+
+body {
+  font-family: 'Heebo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f5f5f5;
+}
+
+/* Common RTL overrides */
+.ltr {
+  direction: ltr;
+}
+
+input[type="number"],
+input[type="email"],
+input[type="tel"] {
+  direction: ltr;
+  text-align: right;
+}

@@ -1,30 +1,51 @@
 name: CI
 
 on:
-  pull_request:
-    branches: ["main", "development"]
-    paths-ignore:
-      - "**/*.md"
-      - "**/*.txt"
-      - "docs/**"
-      - "README*"
-
   push:
-    branches: ["main", "development"]
-    paths-ignore:
-      - "**/*.md"
-      - "**/*.txt"
-      - "docs/**"
-      - "README*"
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
 
 jobs:
-  ci:
+  lint-test-build:
     runs-on: ubuntu-latest
+    
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: "20"
-          cache: "npm"
-      - run: npm ci
-      - run: npm test
+          node-version: '20'
+          
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9
+          
+      - name: Get pnpm store directory
+        shell: bash
+        run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+            
+      - name: Install dependencies
+        run: pnpm install
+        
+      - name: Lint
+        run: pnpm lint
+        
+      - name: Build shared types
+        run: pnpm --filter @shared/types build
+        
+      - name: Build server
+        run: pnpm --filter server build
+        
+      - name: Test
+        run: pnpm test

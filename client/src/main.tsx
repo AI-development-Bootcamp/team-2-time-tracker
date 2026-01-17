@@ -1,0 +1,18 @@
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import { App } from './App';
+import './styles/globals.css';
+
+// Get root element for React mounting
+const rootElement = document.getElementById('root');
+
+if (!rootElement) {
+  throw new Error('Root element not found');
+}
+
+// Create React root and render app in StrictMode for development warnings
+createRoot(rootElement).render(
+  <StrictMode>
+    <App />
+  </StrictMode>
+);

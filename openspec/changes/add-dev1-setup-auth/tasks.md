@@ -1,0 +1,143 @@
+# Tasks: Developer 1 - Infrastructure Setup, Authentication & User Management
+
+## 1. Infrastructure Setup
+
+### 1.1 Monorepo Structure
+- [x] 1.1.1 Initialize root `package.json` with pnpm workspaces
+- [x] 1.1.2 Create `pnpm-workspace.yaml` configuration
+- [x] 1.1.3 Create `tsconfig.base.json` with path aliases
+- [x] 1.1.4 Configure ESLint (`.eslintrc.js`) for TypeScript
+- [x] 1.1.5 Configure Prettier (`.prettierrc`)
+- [x] 1.1.6 Create comprehensive `.gitignore`
+- [x] 1.1.7 Create PR template (`.github/pull_request_template.md`)
+
+### 1.2 Shared Types Package
+- [x] 1.2.1 Create `shared/types/package.json` with `@shared/types` name
+- [x] 1.2.2 Create `shared/types/tsconfig.json`
+- [x] 1.2.3 Create enums: `roles.enum.ts`, `entityStatus.enum.ts`, `absenceType.enum.ts`, `absenceStatus.enum.ts`, `locationType.enum.ts`, `auditAction.enum.ts`, `timeEntrySource.enum.ts`, `reportType.enum.ts`
+- [x] 1.2.4 Create constants: `workday.constants.ts` (WORKDAY_MINUTES=540, HALF_DAY_MINUTES=270)
+- [x] 1.2.5 Create auth DTOs: `auth.dto.ts`
+- [x] 1.2.6 Create users DTOs: `users.dto.ts`
+- [x] 1.2.7 Create shared Zod schemas: `auth.schema.ts`
+- [x] 1.2.8 Create barrel export `index.ts`
+- [x] 1.2.9 Configure build with tsup or tsc
+
+### 1.3 Backend Setup
+- [x] 1.3.1 Create `server/package.json` with dependencies
+- [x] 1.3.2 Create `server/tsconfig.json` extending base
+- [x] 1.3.3 Create `server/src/app.ts` (Express bootstrap)
+- [x] 1.3.4 Create `server/src/routes.ts` (route aggregator)
+- [x] 1.3.5 Create `server/src/config/env.ts` (Zod-validated environment)
+- [x] 1.3.6 Create `server/src/config/jwt.ts`
+- [x] 1.3.7 Create `server/src/config/swagger.ts` (OpenAPI setup)
+- [x] 1.3.8 Create `server/src/config/upload.ts` (file size/types)
+- [x] 1.3.9 Configure Winston/Pino logger (`server/src/shared/logger.ts`)
+- [x] 1.3.10 Create custom error classes (`server/src/shared/errors.ts`)
+- [x] 1.3.11 Create pagination utilities (`server/src/shared/pagination.ts`)
+- [x] 1.3.12 Create time utilities (`server/src/shared/time.ts`)
+
+### 1.4 Database Setup
+- [x] 1.4.1 Initialize Prisma (`npx prisma init`)
+- [x] 1.4.2 Create `prisma/schema.prisma` with User model
+- [x] 1.4.3 Create `server/src/db/index.ts` (Prisma client singleton)
+- [x] 1.4.4 Create initial migration for users table
+- [x] 1.4.5 Create `server/src/db/seed.ts` with admin user
+
+### 1.5 Middleware Setup
+- [x] 1.5.1 Create `error.middleware.ts` (global error handler)
+- [x] 1.5.2 Create `requestId.middleware.ts`
+- [x] 1.5.3 Create `validate.middleware.ts` (Zod validation)
+- [x] 1.5.4 Configure helmet security middleware
+- [x] 1.5.5 Configure CORS middleware
+- [x] 1.5.6 Configure express-rate-limit
+- [x] 1.5.7 Configure cookie-parser
+
+### 1.6 DevOps Setup
+- [x] 1.6.1 Create `infra/compose.yml` (PostgreSQL, app services)
+- [x] 1.6.2 Create `infra/docker/server.Dockerfile`
+- [x] 1.6.3 Create `.github/workflows/ci.yml` (lint, test, build)
+- [x] 1.6.4 Create root scripts (dev, build, test, migrate)
+- [x] 1.6.5 Create `.env.example` template
+
+### 1.7 Frontend Base Setup
+- [x] 1.7.1 Create `client/package.json` with workspaces
+- [x] 1.7.2 Create `client/tsconfig.base.json`
+- [x] 1.7.3 Create `client/packages/api-client/` (axios instance, interceptors)
+- [x] 1.7.4 Create `client/packages/ui/` (shared components structure)
+- [x] 1.7.5 Create `client/packages/utils/` (date, format utilities)
+- [x] 1.7.6 Setup Vite for `client/apps/employee/`
+- [x] 1.7.7 Setup Vite for `client/apps/admin/`
+- [x] 1.7.8 Configure RTL CSS base (`rtl.css`)
+- [x] 1.7.9 Configure Vitest for frontend testing
+
+## 2. Authentication Implementation
+
+### 2.1 Backend Auth Module
+- [x] 2.1.1 Create `auth.routes.ts` with endpoints
+- [x] 2.1.2 Create `auth.controller.ts`
+- [x] 2.1.3 Create `auth.service.ts` (login, logout, refresh, change-password)
+- [x] 2.1.4 Create `auth.repo.ts` (user lookup, token blacklist)
+- [x] 2.1.5 Implement JWT token generation with 2-hour expiry
+- [x] 2.1.6 Implement refresh token with blacklist invalidation
+- [x] 2.1.7 Implement bcrypt password hashing (12 rounds)
+- [x] 2.1.8 Create `auth.middleware.ts` (JWT validation, role check, active check)
+
+### 2.2 Auth Endpoints
+- [x] 2.2.1 Implement `POST /auth/login`
+- [x] 2.2.2 Implement `POST /auth/refresh`
+- [x] 2.2.3 Implement `POST /auth/change-password`
+- [x] 2.2.4 Implement `GET /auth/me`
+- [x] 2.2.5 Implement `POST /auth/logout`
+- [x] 2.2.6 Implement `GET /health` (health check)
+
+### 2.3 Frontend Auth Implementation
+- [x] 2.3.1 Create `LoginPage.tsx` with form
+- [x] 2.3.2 Create `ChangePasswordPage.tsx`
+- [x] 2.3.3 Create auth Zustand store (`auth.store.ts`)
+- [x] 2.3.4 Implement axios interceptors for JWT refresh
+- [x] 2.3.5 Create `ProtectedRoute` wrapper component
+- [x] 2.3.6 Implement auth redirects (login -> dashboard, no-auth -> login)
+- [x] 2.3.7 Create Layout shell component with navigation
+
+## 3. User Management
+
+### 3.1 Backend Users Module
+- [x] 3.1.1 Create `users.routes.ts`
+- [x] 3.1.2 Create `users.controller.ts`
+- [x] 3.1.3 Create `users.service.ts`
+- [x] 3.1.4 Create `users.repo.ts`
+
+
+## 4. Shared UI Components
+
+### 4.1 Base Components
+- [x] 4.1.1 Create Button component (with Radix)
+- [x] 4.1.2 Create Input component (with RTL support)
+- [x] 4.1.3 Create Modal/Dialog component (Radix Dialog)
+- [x] 4.1.4 Create Toast/Notification component (Radix Toast)
+- [x] 4.1.5 Create Form components integration (react-hook-form + Zod)
+- [x] 4.1.6 Create CSS design tokens (colors, spacing, typography)
+
+### 4.2 Auth Components
+- [x] 4.2.1 Create LoginForm component
+- [x] 4.2.2 Create PasswordChangeForm component
+
+## 5. Testing
+
+### 5.1 Backend Tests
+- [x] 5.1.1 Configure Vitest for backend
+- [x] 5.1.2 Create test helpers (mock Prisma, test database)
+- [x] 5.1.3 Write unit tests for auth.service.ts
+- [x] 5.1.4 Write integration tests for auth endpoints
+- [x] 5.1.5 Achieve minimum 60% coverage for auth module
+
+### 5.2 Frontend Tests
+- [x] 5.2.1 Write tests for LoginPage
+- [x] 5.2.2 Write tests for auth store
+- [x] 5.2.3 Write tests for ProtectedRoute
+
+## 6. Documentation
+
+### 6.1 API Documentation
+- [x] 6.1.1 Document auth endpoints in Swagger
+- [x] 6.1.2 Create README.md with setup instructions

@@ -1,0 +1,23 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "noEmit": false,
+    "allowImportingTsExtensions": false,
+    "baseUrl": ".",
+    "paths": {
+      "@shared/types": [
+        "../shared/types/src"
+      ]
+    }
+  },
+  "references": [
+    {
+      "path": "../shared/types"
+    }
+  ],
+  "include": [
+    "src/**/*"
+  ]
+}

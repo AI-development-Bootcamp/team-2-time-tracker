@@ -1,0 +1,43 @@
+{
+  "compilerOptions": {
+    // Output target - ESNext for modern browsers
+    "target": "ESNext",
+    // Module system - ESNext for native ES modules
+    "module": "ESNext",
+    // How modules are resolved - Bundler mode for Vite
+    "moduleResolution": "Bundler",
+    // Available APIs - ESNext + DOM for browser environment
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    // Enable JSX transformation - react-jsx for React 17+ new JSX transform
+    "jsx": "react-jsx",
+    // Enable all strict type-checking options
+    "strict": true,
+    // Allow default imports from CommonJS modules
+    "esModuleInterop": true,
+    // Skip type checking of declaration files for speed
+    "skipLibCheck": true,
+    // Ensure consistent file name casing across OS
+    "forceConsistentCasingInFileNames": true,
+    // Allow importing JSON files
+    "resolveJsonModule": true,
+    // Ensure each file can be transpiled independently
+    "isolatedModules": true,
+    // Don't emit JS files - Vite handles this
+    "noEmit": true,
+    // Error on unused local variables
+    "noUnusedLocals": true,
+    // Error on unused function parameters
+    "noUnusedParameters": true,
+    // Error on switch fallthrough without break
+    "noFallthroughCasesInSwitch": true,
+    // Path alias for cleaner imports
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
+  },
+  // Files to include
+  "include": ["src"],
+  // Files to exclude
+  "exclude": ["node_modules", "dist"]
+}
