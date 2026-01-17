@@ -3,6 +3,7 @@ import * as swaggerUi from 'swagger-ui-express';
 import { swaggerSpec } from './config/swagger';
 import { authRouter } from './modules/auth/auth.routes';
 import { usersRouter } from './modules/users/users.routes';
+import { timerRouter } from './modules/timer/timer.routes';
 
 const router: Router = Router();
 
@@ -17,5 +18,7 @@ router.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 // API Routes
 router.use('/auth', authRouter);
 router.use('/admin/users', usersRouter);
+router.use('/timer', timerRouter);
 
 export { router };
+

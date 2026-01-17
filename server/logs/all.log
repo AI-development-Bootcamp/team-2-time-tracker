@@ -7,3 +7,40 @@
 2026-01-15 16:12:09 [35mhttp[39m: [35m::ffff:127.0.0.1 - - [15/Jan/2026:14:12:09 +0000] "GET /api/docs/swagger-ui-standalone-preset.js HTTP/1.1" 200 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"[39m
 2026-01-15 16:12:09 [35mhttp[39m: [35m::ffff:127.0.0.1 - - [15/Jan/2026:14:12:09 +0000] "GET /api/docs/swagger-ui-bundle.js HTTP/1.1" 200 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"[39m
 2026-01-15 16:12:09 [35mhttp[39m: [35m::ffff:127.0.0.1 - - [15/Jan/2026:14:12:09 +0000] "GET /api/docs/favicon-16x16.png HTTP/1.1" 200 665 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"[39m
+2026-01-17 21:05:27 [32minfo[39m: [32mServer running on port 3000 in development mode[39m
+2026-01-17 21:05:27 [32minfo[39m: [32mDocs available at http://localhost:3000/api/docs[39m
+2026-01-17 21:07:40 [32minfo[39m: [32mServer running on port 3000 in development mode[39m
+2026-01-17 21:07:40 [32minfo[39m: [32mDocs available at http://localhost:3000/api/docs[39m
+2026-01-17 21:10:09 [31merror[39m: [31mUnexpected Error: [39m
+[31mInvalid `prisma.user.findUnique()` invocation in[39m
+[31mC:\Users\omri\Desktop\projects\team-2-time-tracker\server\src\modules\auth\auth.repo.ts:14:24[39m
+
+[31m  11  * @returns The user if found, null otherwise[39m
+[31m  12  */[39m
+[31m  13 export async function findUserByEmail(email: string) {[39m
+[31m→ 14     return prisma.user.findUnique([39m
+[31m[39m
+2026-01-17 21:10:09 [35mhttp[39m: [35m::1 - - [17/Jan/2026:19:10:09 +0000] "POST /api/auth/login HTTP/1.1" 500 74 "-" "node"[39m
+2026-01-17 21:12:57 [35mhttp[39m: [35m::1 - - [17/Jan/2026:19:12:57 +0000] "GET /api/health HTTP/1.1" 200 72 "-" "node"[39m
+2026-01-17 21:28:41 [31merror[39m: [31mUnexpected Error: [39m
+[31mInvalid `prisma.user.findUnique()` invocation in[39m
+[31mC:\Users\omri\Desktop\projects\team-2-time-tracker\server\src\modules\auth\auth.repo.ts:14:24[39m
+
+[31m  11  * @returns The user if found, null otherwise[39m
+[31m  12  */[39m
+[31m  13 export async function findUserByEmail(email: string) {[39m
+[31m→ 14     return prisma.user.findUnique([39m
+[31m[39m
+2026-01-17 21:28:41 [35mhttp[39m: [35m::1 - - [17/Jan/2026:19:28:41 +0000] "POST /api/auth/login HTTP/1.1" 500 74 "-" "node"[39m
+2026-01-17 21:30:32 [32minfo[39m: [32mServer running on port 3000 in development mode[39m
+2026-01-17 21:30:32 [32minfo[39m: [32mDocs available at http://localhost:3000/api/docs[39m
+2026-01-17 21:31:08 [31merror[39m: [31mUnexpected Error: [39m
+[31mInvalid `prisma.user.findUnique()` invocation in[39m
+[31mC:\Users\omri\Desktop\projects\team-2-time-tracker\server\src\modules\auth\auth.repo.ts:14:24[39m
+
+[31m  11  * @returns The user if found, null otherwise[39m
+[31m  12  */[39m
+[31m  13 export async function findUserByEmail(email: string) {[39m
+[31m→ 14     return prisma.user.findUnique([39m
+[31mUser was denied access on the database `(not available)`[39m
+2026-01-17 21:31:08 [35mhttp[39m: [35m::1 - - [17/Jan/2026:19:31:08 +0000] "POST /api/auth/login HTTP/1.1" 500 74 "-" "node"[39m

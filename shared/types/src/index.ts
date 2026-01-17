@@ -14,6 +14,9 @@ export * from './constants/workday.constants';
 // DTOs
 export * from './dtos/auth.dto';
 export * from './dtos/users.dto';
+export * from './dtos/timer.dto';
 
 // Schemas
 export * from './zod/auth.schema';
+export * from './zod/timer.schema';
+

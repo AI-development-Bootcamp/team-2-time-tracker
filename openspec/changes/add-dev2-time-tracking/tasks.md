@@ -3,43 +3,43 @@
 ## 1. Database Schema
 
 ### 1.1 Prisma Models
-- [ ] 1.1.1 Add Timer model to `prisma/schema.prisma`
-- [ ] 1.1.2 Add TimeEntry model with soft delete fields
-- [ ] 1.1.3 Add WorkdaySummary model
-- [ ] 1.1.4 Create migration for timer, time_entries, workday_summaries tables
-- [ ] 1.1.5 Add necessary indexes for query optimization
+- [x] 1.1.1 Add Timer model to `prisma/schema.prisma`
+- [x] 1.1.2 Add TimeEntry model with soft delete fields
+- [x] 1.1.3 Add WorkdaySummary model
+- [x] 1.1.4 Create migration for timer, time_entries, workday_summaries tables
+- [x] 1.1.5 Add necessary indexes for query optimization
 
 ## 2. Timer Implementation
 
 ### 2.1 Backend Timer Module
-- [ ] 2.1.1 Create `timer.routes.ts`
-- [ ] 2.1.2 Create `timer.controller.ts`
-- [ ] 2.1.3 Create `timer.service.ts`
-- [ ] 2.1.4 Create `timer.repo.ts`
+- [x] 2.1.1 Create `timer.routes.ts`
+- [x] 2.1.2 Create `timer.controller.ts`
+- [x] 2.1.3 Create `timer.service.ts`
+- [x] 2.1.4 Create `timer.repo.ts`
 
 ### 2.2 Timer Endpoints
-- [ ] 2.2.1 Implement `POST /timer/start` (start timer for today)
-- [ ] 2.2.2 Implement `POST /timer/stop` (stop timer, create entry)
-- [ ] 2.2.3 Implement `GET /timer/status` (get current timer status)
-- [ ] 2.2.4 Implement `DELETE /timer/cancel` (cancel without saving)
+- [x] 2.2.1 Implement `POST /timer/start` (start timer for today)
+- [x] 2.2.2 Implement `POST /timer/stop` (stop timer, create entry)
+- [x] 2.2.3 Implement `GET /timer/status` (get current timer status)
+- [x] 2.2.4 Implement `DELETE /timer/cancel` (cancel without saving)
 
 ### 2.3 Timer Business Logic
-- [ ] 2.3.1 Validate only one timer running per user
-- [ ] 2.3.2 Calculate elapsed time server-side based on startedAt and current server time
-- [ ] 2.3.3 Convert timer to time entry on stop
-- [ ] 2.3.4 Prevent timer start if month is locked
-- [ ] 2.3.5 Validate workDate is today (not past or future)
-- [ ] 2.3.6 Ensure elapsed time calculation uses server-side computation (frontend displays server-calculated value)
+- [x] 2.3.1 Validate only one timer running per user
+- [x] 2.3.2 Calculate elapsed time server-side based on startedAt and current server time
+- [x] 2.3.3 Convert timer to time entry on stop
+- [x] 2.3.4 Prevent timer start if month is locked
+- [x] 2.3.5 Validate workDate is today (not past or future)
+- [x] 2.3.6 Ensure elapsed time calculation uses server-side computation (frontend displays server-calculated value)
 
 ### 2.4 Frontend Timer Implementation
-- [ ] 2.4.1 Create `TimerCard.tsx` component
-- [ ] 2.4.2 Create timer Zustand store (`timer.store.ts`)
-- [ ] 2.4.3 Implement real-time counter display (updates every second)
-- [ ] 2.4.4 Create fixed timer banner component (visible on all pages, following Figma design)
-- [ ] 2.4.5 Implement pulsing/animated active indicator
-- [ ] 2.4.6 Add quick stop button in banner
-- [ ] 2.4.7 Handle timer persistence across page navigation
-- [ ] 2.4.8 Ensure banner follows Figma design specifications for positioning and styling
+- [x] 2.4.1 Create `TimerCard.tsx` component
+- [x] 2.4.2 Create timer Zustand store (`timer.store.ts`)
+- [x] 2.4.3 Implement real-time counter display (updates every second)
+- [x] 2.4.4 Create fixed timer banner component (visible on all pages, following Figma design)
+- [x] 2.4.5 Implement pulsing/animated active indicator
+- [x] 2.4.6 Add quick stop button in banner
+- [x] 2.4.7 Handle timer persistence across page navigation
+- [x] 2.4.8 Ensure banner follows Figma design specifications for positioning and styling
 
 ## 3. Time Entries Implementation
 

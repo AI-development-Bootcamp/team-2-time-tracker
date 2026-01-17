@@ -1,0 +1,27 @@
+2026-01-17 21:10:09 [31merror[39m: [31mUnexpected Error: [39m
+[31mInvalid `prisma.user.findUnique()` invocation in[39m
+[31mC:\Users\omri\Desktop\projects\team-2-time-tracker\server\src\modules\auth\auth.repo.ts:14:24[39m
+
+[31m  11  * @returns The user if found, null otherwise[39m
+[31m  12  */[39m
+[31m  13 export async function findUserByEmail(email: string) {[39m
+[31m→ 14     return prisma.user.findUnique([39m
+[31m[39m
+2026-01-17 21:28:41 [31merror[39m: [31mUnexpected Error: [39m
+[31mInvalid `prisma.user.findUnique()` invocation in[39m
+[31mC:\Users\omri\Desktop\projects\team-2-time-tracker\server\src\modules\auth\auth.repo.ts:14:24[39m
+
+[31m  11  * @returns The user if found, null otherwise[39m
+[31m  12  */[39m
+[31m  13 export async function findUserByEmail(email: string) {[39m
+[31m→ 14     return prisma.user.findUnique([39m
+[31m[39m
+2026-01-17 21:31:08 [31merror[39m: [31mUnexpected Error: [39m
+[31mInvalid `prisma.user.findUnique()` invocation in[39m
+[31mC:\Users\omri\Desktop\projects\team-2-time-tracker\server\src\modules\auth\auth.repo.ts:14:24[39m
+
+[31m  11  * @returns The user if found, null otherwise[39m
+[31m  12  */[39m
+[31m  13 export async function findUserByEmail(email: string) {[39m
+[31m→ 14     return prisma.user.findUnique([39m
+[31mUser was denied access on the database `(not available)`[39m
