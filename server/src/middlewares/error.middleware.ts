@@ -20,6 +20,7 @@ export const errorMiddleware = (
         return;
     }
 
+
     logger.error(`Unexpected Error: ${err.message}`, { stack: err.stack });
     res.status(500).json({
         success: false,

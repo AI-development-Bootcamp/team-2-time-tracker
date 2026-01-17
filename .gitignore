@@ -28,6 +28,19 @@ Thumbs.db
 *.swp
 *.swo
 
+# Security & generated
+debug_output.txt
+*.log
+*.pem
+*.key
+*.crt
+env
 
-# Logs
-nul
+# Typescript
+*.tsbuildinfo
+
+# Assets/Misc
+logs/
+tmp/
+temp/
+server/logs/
