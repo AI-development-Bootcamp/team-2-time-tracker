@@ -10,11 +10,11 @@
     "clean": "rm -rf node_modules **/*/node_modules"
   },
   "devDependencies": {
-    "typescript": "^5.0.0",
-    "eslint": "^8.0.0",
-    "prettier": "^3.0.0",
-    "tsup": "^8.0.0",
-    "tsx": "^4.0.0"
+    "eslint": "^9.39.2",
+    "prettier": "^3.8.0",
+    "tsup": "^8.5.1",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
   },
   "engines": {
     "node": ">=18.0.0",
