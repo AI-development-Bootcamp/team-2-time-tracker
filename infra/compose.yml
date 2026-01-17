@@ -34,8 +34,31 @@ services:
       postgres:
         condition: service_healthy
     volumes:
-      - ../server:/app/server
       - /app/server/node_modules
+
+  admin:
+    build:
+      context: ..
+      dockerfile: infra/docker/admin.Dockerfile
+      args:
+        VITE_API_URL: ${VITE_API_URL:-http://localhost:3000}
+    container_name: timetracker-admin
+    ports:
+      - "5173:80"
+    depends_on:
+      - server
+
+  employee:
+    build:
+      context: ..
+      dockerfile: infra/docker/employee.Dockerfile
+      args:
+        VITE_API_URL: ${VITE_API_URL:-http://localhost:3000}
+    container_name: timetracker-employee
+    ports:
+      - "5174:80"
+    depends_on:
+      - server
 
 volumes:
   postgres_data:
