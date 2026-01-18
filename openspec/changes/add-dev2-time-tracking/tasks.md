@@ -72,20 +72,20 @@
 - [x] 3.11 Implement `POST /time-entries/batch` (batch create)
 
 ### Business Logic
-- [ ] 3.12 Validate timer is not running before manual entry
-- [ ] 3.13 Validate end_time > start_time
-- [ ] 3.14 Validate description length (10-500 chars)
-- [ ] 3.15 Validate task is assigned to user
-- [ ] 3.16 Validate month is not locked
-- [ ] 3.17 Calculate duration_minutes automatically
-- [ ] 3.18 Recalculate workday summary on entry CRUD
-- [ ] 3.19 Validate future dates are blocked
-- [ ] 3.20 Implement ReportType-specific validation (ENTRY_EXIT single entry per project per day)
-- [ ] 3.21 Validate ENTRY_EXIT entries are within 535-545 minutes (540 ± 5 tolerance)
-- [ ] 3.22 Implement batch entry same-date validation
-- [ ] 3.23 Implement batch entry time overlap detection (reject for same task, allow for different)
-- [ ] 3.24 Validate workDate is immutable on update
-- [ ] 3.25 Allow taskId change on update (with assignment validation)
+- [x] 3.12 Validate timer is not running before manual entry
+- [x] 3.13 Validate end_time > start_time
+- [x] 3.14 Validate description length (10-500 chars)
+- [x] 3.15 Validate task is assigned to user
+- [x] 3.16 Validate month is not locked
+- [x] 3.17 Calculate duration_minutes automatically
+- [x] 3.18 Recalculate workday summary on entry CRUD
+- [x] 3.19 Validate future dates are blocked
+- [x] 3.20 Implement ReportType-specific validation (ENTRY_EXIT single entry per project per day)
+- [x] 3.21 Validate ENTRY_EXIT entries are within 535-545 minutes (540 ± 5 tolerance)
+- [x] 3.22 Implement batch entry same-date validation
+- [x] 3.23 Implement batch entry time overlap detection (reject for same task, allow for different)
+- [x] 3.24 Validate workDate is immutable on update
+- [x] 3.25 Allow taskId change on update (with assignment validation)
 
 ### Frontend
 - [ ] 3.26 Create `TimeEntryForm.tsx` (modal for add/edit)

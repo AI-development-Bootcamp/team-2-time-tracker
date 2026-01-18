@@ -112,16 +112,52 @@ export async function createTimeEntry(
         throw new BadRequestError('Cannot create entry: month is locked');
     }
 
-    // Validate task is assigned to user
+    // Validate task is assigned to user and fetch task with project info
     const taskAssignment = await timeReportsRepo.findTaskAssignment(userId, taskId);
     if (!taskAssignment) {
         throw new BadRequestError('Task is not assigned to you');
+    }
+
+    // Fetch the task with project to check reportType
+    const task = await prisma.task.findUnique({
+        where: { id: taskId },
+        include: {
+            project: true,
+        },
+    });
+
+    if (!task) {
+        throw new BadRequestError('Task not found');
     }
 
     // Validate endTime > startTime
     const durationMinutes = calculateDuration(startTime, endTime);
     if (durationMinutes <= 0) {
         throw new BadRequestError('End time must be after start time');
+    }
+
+    // ENTRY_EXIT validation
+    if (task.project.reportType === 'ENTRY_EXIT') {
+        // Validate duration is within 540 ± 5 minutes (535-545)
+        if (durationMinutes < 535 || durationMinutes > 545) {
+            throw new BadRequestError('ENTRY_EXIT entries must be between 535-545 minutes (540 ± 5 min tolerance)');
+        }
+
+        // Check if an entry already exists for this project on this date
+        const existingEntry = await prisma.timeEntry.findFirst({
+            where: {
+                userId,
+                workDate: workDateObj,
+                isDeleted: false,
+                task: {
+                    projectId: task.projectId,
+                },
+            },
+        });
+
+        if (existingEntry) {
+            throw new BadRequestError('Only one entry per day allowed for ENTRY_EXIT projects');
+        }
     }
 
     // Validate description length
@@ -226,6 +262,7 @@ export async function updateTimeEntry(
     userId: string,
     entryId: string,
     updateData: {
+        workDate?: string; // Accept but reject if provided
         startTime?: string;
         endTime?: string;
         location?: string;
@@ -233,6 +270,11 @@ export async function updateTimeEntry(
         description?: string;
     }
 ) {
+    // Validate workDate is not being changed (immutable)
+    if (updateData.workDate !== undefined) {
+        throw new BadRequestError('Cannot change workDate on existing entry (workDate is immutable)');
+    }
+
     // Find existing entry
     const existingEntry = await timeReportsRepo.findTimeEntryById(entryId);
 
@@ -250,11 +292,32 @@ export async function updateTimeEntry(
         throw new BadRequestError('Cannot update entry: month is locked');
     }
 
-    // Validate task assignment if taskId is being changed
+    // Validate task assignment if taskId is being changed, and fetch task info
+    let task;
     if (updateData.taskId && updateData.taskId !== existingEntry.taskId) {
         const taskAssignment = await timeReportsRepo.findTaskAssignment(userId, updateData.taskId);
         if (!taskAssignment) {
             throw new BadRequestError('Task is not assigned to you');
+        }
+
+        // Fetch new task with project info
+        task = await prisma.task.findUnique({
+            where: { id: updateData.taskId },
+            include: { project: true },
+        });
+
+        if (!task) {
+            throw new BadRequestError('Task not found');
+        }
+    } else {
+        // Fetch current task with project info
+        task = await prisma.task.findUnique({
+            where: { id: existingEntry.taskId },
+            include: { project: true },
+        });
+
+        if (!task) {
+            throw new BadRequestError('Task not found');
         }
     }
 
@@ -275,6 +338,33 @@ export async function updateTimeEntry(
 
     if (newDurationMinutes <= 0) {
         throw new BadRequestError('End time must be after start time');
+    }
+
+    // ENTRY_EXIT validation
+    if (task.project.reportType === 'ENTRY_EXIT') {
+        // Validate duration is within 540 ± 5 minutes (535-545)
+        if (newDurationMinutes < 535 || newDurationMinutes > 545) {
+            throw new BadRequestError('ENTRY_EXIT entries must be between 535-545 minutes (540 ± 5 min tolerance)');
+        }
+
+        // If taskId is changing, check no other entry exists for the new project on this date
+        if (updateData.taskId && updateData.taskId !== existingEntry.taskId) {
+            const existingProjectEntry = await prisma.timeEntry.findFirst({
+                where: {
+                    userId,
+                    workDate: existingEntry.workDate,
+                    isDeleted: false,
+                    id: { not: entryId }, // Exclude current entry
+                    task: {
+                        projectId: task.projectId,
+                    },
+                },
+            });
+
+            if (existingProjectEntry) {
+                throw new BadRequestError('Only one entry per day allowed for ENTRY_EXIT projects');
+            }
+        }
     }
 
     const oldDurationMinutes = existingEntry.durationMinutes;
@@ -493,14 +583,66 @@ export async function batchCreateTimeEntries(
         throw new BadRequestError('Cannot create entries: month is locked');
     }
 
-    // Validate all tasks and detect overlaps
+    // Validate all tasks and fetch details with project info
     const taskIds = entries.map(e => e.taskId);
     const uniqueTaskIds = [...new Set(taskIds)];
+    const taskMap = new Map();
 
     for (const taskId of uniqueTaskIds) {
         const assignment = await timeReportsRepo.findTaskAssignment(userId, taskId);
         if (!assignment) {
             throw new BadRequestError(`Task ${taskId} is not assigned to you`);
+        }
+
+        const task = await prisma.task.findUnique({
+            where: { id: taskId },
+            include: { project: true }
+        });
+
+        if (!task) {
+            throw new BadRequestError(`Task ${taskId} not found`);
+        }
+        taskMap.set(taskId, task);
+    }
+
+    // Validate ENTRY_EXIT restrictions regarding duplicates within batch and existing DB entries
+    const entryExitProjectsInBatch = new Set<string>();
+
+    for (const entry of entries) {
+        const task = taskMap.get(entry.taskId);
+        if (task.project.reportType === 'ENTRY_EXIT') {
+            const durationMinutes = calculateDuration(entry.startTime, entry.endTime);
+
+            // Validate duration
+            if (durationMinutes < 535 || durationMinutes > 545) {
+                throw new BadRequestError(`ENTRY_EXIT entry for task '${task.name}' must be between 535-545 minutes`);
+            }
+
+            // Check duplicates within batch
+            if (entryExitProjectsInBatch.has(task.projectId)) {
+                throw new BadRequestError(`Batch contains multiple entries for ENTRY_EXIT project '${task.project.name}'. Only one allowed per day.`);
+            }
+            entryExitProjectsInBatch.add(task.projectId);
+        }
+    }
+
+    // Check against existing DB entries for ENTRY_EXIT projects
+    if (entryExitProjectsInBatch.size > 0) {
+        const existingEntries = await prisma.timeEntry.findMany({
+            where: {
+                userId,
+                workDate: workDateObj,
+                isDeleted: false,
+                task: {
+                    projectId: { in: Array.from(entryExitProjectsInBatch) }
+                }
+            },
+            include: { task: { include: { project: true } } }
+        });
+
+        if (existingEntries.length > 0) {
+            const projectNames = existingEntries.map(e => e.task.project.name).join(', ');
+            throw new BadRequestError(`Entry already exists for ENTRY_EXIT project(s): ${projectNames}. Only one per day allowed.`);
         }
     }
 
