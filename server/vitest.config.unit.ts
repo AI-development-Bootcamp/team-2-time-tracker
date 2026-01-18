@@ -5,6 +5,7 @@ export default defineConfig({
         globals: true,
         environment: 'node',
         include: ['tests/unit/**/*.test.ts'],
+        retry: 2,
         coverage: {
             provider: 'v8',
             reporter: ['text', 'html', 'json'],

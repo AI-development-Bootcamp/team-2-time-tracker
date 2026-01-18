@@ -54,3 +54,29 @@
 2026-01-18 15:45:14 [33mwarn[39m: [33mOperational Error: Validation failed: Invalid email format[39m
 2026-01-18 15:45:14 [33mwarn[39m: [33mOperational Error: Invalid or expired refresh token[39m
 2026-01-18 15:45:14 [33mwarn[39m: [33mOperational Error: No token provided[39m
+2026-01-18 15:45:44 [33mwarn[39m: [33mOperational Error: Invalid credentials[39m
+2026-01-18 15:45:45 [33mwarn[39m: [33mOperational Error: Invalid credentials[39m
+2026-01-18 15:45:45 [33mwarn[39m: [33mOperational Error: Validation failed: Invalid input: expected string, received undefined[39m
+2026-01-18 15:45:45 [33mwarn[39m: [33mOperational Error: Validation failed: Invalid email format[39m
+2026-01-18 15:45:45 [33mwarn[39m: [33mOperational Error: Invalid or expired refresh token[39m
+2026-01-18 15:45:45 [33mwarn[39m: [33mOperational Error: No token provided[39m
+2026-01-18 15:46:06 [33mwarn[39m: [33mOperational Error: Invalid credentials[39m
+2026-01-18 15:46:06 [33mwarn[39m: [33mOperational Error: Validation failed: Invalid input: expected string, received undefined[39m
+2026-01-18 15:46:06 [33mwarn[39m: [33mOperational Error: Validation failed: Invalid email format[39m
+2026-01-18 15:46:06 [33mwarn[39m: [33mOperational Error: Invalid or expired refresh token[39m
+2026-01-18 15:46:06 [33mwarn[39m: [33mOperational Error: No token provided[39m
+2026-01-18 15:46:24 [33mwarn[39m: [33mOperational Error: Invalid credentials[39m
+2026-01-18 15:46:24 [33mwarn[39m: [33mOperational Error: Invalid credentials[39m
+2026-01-18 15:46:24 [33mwarn[39m: [33mOperational Error: Validation failed: Invalid input: expected string, received undefined[39m
+2026-01-18 15:46:24 [33mwarn[39m: [33mOperational Error: Validation failed: Invalid email format[39m
+2026-01-18 15:46:24 [33mwarn[39m: [33mOperational Error: Invalid or expired refresh token[39m
+2026-01-18 15:46:24 [33mwarn[39m: [33mOperational Error: Invalid or expired refresh token[39m
+2026-01-18 15:46:24 [33mwarn[39m: [33mOperational Error: User account is not active[39m
+2026-01-18 15:46:24 [33mwarn[39m: [33mOperational Error: No token provided[39m
+2026-01-18 15:46:24 [33mwarn[39m: [33mOperational Error: User account is not active[39m
+2026-01-18 15:46:27 [33mwarn[39m: [33mOperational Error: Invalid credentials[39m
+2026-01-18 15:46:27 [33mwarn[39m: [33mOperational Error: Invalid credentials[39m
+2026-01-18 15:46:27 [33mwarn[39m: [33mOperational Error: Validation failed: Invalid input: expected string, received undefined[39m
+2026-01-18 15:46:27 [33mwarn[39m: [33mOperational Error: Validation failed: Invalid email format[39m
+2026-01-18 15:46:27 [33mwarn[39m: [33mOperational Error: Invalid or expired refresh token[39m
+2026-01-18 15:46:28 [33mwarn[39m: [33mOperational Error: No token provided[39m

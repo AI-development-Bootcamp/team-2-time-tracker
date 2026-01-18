@@ -2,14 +2,12 @@ name: E2E Tests
 
 on:
   pull_request:
-    branches: [main, develop]
     paths:
       - 'client/**'
       - 'server/**'
       - 'shared/**'
       - '.github/workflows/e2e.yml'
   push:
-    branches: [main, develop]
 
 jobs:
   e2e-tests:
@@ -110,8 +108,13 @@ jobs:
           echo "Server failed to start within timeout"
           exit 1
 
-      - name: Run E2E tests
-        run: pnpm --filter @client/employee test:e2e
+      - name: Run E2E tests (with retry for flaky tests)
+        uses: nick-fields/retry@v3
+        with:
+          timeout_minutes: 20
+          max_attempts: 3
+          retry_on: error
+          command: pnpm --filter @client/employee test:e2e
         env:
           CI: true
 

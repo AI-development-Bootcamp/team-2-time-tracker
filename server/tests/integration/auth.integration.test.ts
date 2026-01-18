@@ -133,8 +133,7 @@ describe('Auth Integration Tests', () => {
                     email: 'refresh@example.com',
                     password: hashedPassword,
                     fullName: 'Refresh',
-                    lastName: 'Test',
-                    role: 'EMPLOYEE',
+                                        role: 'EMPLOYEE',
                     isActive: true,
                 },
             });
@@ -176,8 +175,7 @@ describe('Auth Integration Tests', () => {
                     email: 'me@example.com',
                     password: hashedPassword,
                     fullName: 'Me',
-                    lastName: 'Test',
-                    role: 'EMPLOYEE',
+                                        role: 'EMPLOYEE',
                     isActive: true,
                 },
             });
@@ -216,8 +214,7 @@ describe('Auth Integration Tests', () => {
                     email: 'logout@example.com',
                     password: hashedPassword,
                     fullName: 'Logout',
-                    lastName: 'Test',
-                    role: 'EMPLOYEE',
+                                        role: 'EMPLOYEE',
                     isActive: true,
                 },
             });

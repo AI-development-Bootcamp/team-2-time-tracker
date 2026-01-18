@@ -2,9 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main, develop]
   pull_request:
-    branches: [main, develop]
 
 jobs:
   lint-test-build:
@@ -86,6 +84,22 @@ jobs:
       - name: Build client apps
         run: pnpm --filter './client/apps/*' build
 
+      - name: Upload server build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: server-build
+          path: server/dist/
+          retention-days: 30
+
+      - name: Upload client build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: client-builds
+          path: |
+            client/apps/*/dist/
+            client/packages/*/dist/
+          retention-days: 30
+
       - name: Run unit tests
         run: pnpm --filter server test:unit:coverage
 
@@ -96,7 +110,7 @@ jobs:
           files: ./server/coverage/coverage-final.json
           flags: unit-tests
           name: unit-tests-coverage
-          fail_ci_if_error: false
+          fail_ci_if_error: true
           token: ${{ secrets.CODECOV_TOKEN }}
 
       - name: Run integration tests
@@ -109,5 +123,5 @@ jobs:
           files: ./server/coverage/coverage-final.json
           flags: integration-tests
           name: integration-tests-coverage
-          fail_ci_if_error: false
+          fail_ci_if_error: true
           token: ${{ secrets.CODECOV_TOKEN }}

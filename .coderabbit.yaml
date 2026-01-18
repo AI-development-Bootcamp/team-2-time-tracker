@@ -1,0 +1,85 @@
+# CodeRabbit Configuration
+# This file configures CodeRabbit to automatically review all PRs
+
+# Language and communication
+language: he  # Hebrew for Israeli team
+early_access: false
+
+# Review settings
+reviews:
+  # Review profile - can be "chill", "assertive", or "aggressive"
+  profile: assertive
+
+  # Request changes workflow - CodeRabbit can request changes on PRs
+  request_changes_workflow: true
+
+  # High level summary
+  high_level_summary: true
+
+  # Poem - disable fun poems in reviews
+  poem: false
+
+  # Review status - always review
+  review_status: true
+
+  # Collapse walkthrough
+  collapse_walkthrough: false
+
+  # Auto-review
+  auto_review:
+    enabled: true
+    # Auto-review drafts
+    drafts: false
+    # Review base branches
+    base_branches:
+      - main
+      - develop
+
+# Chat settings
+chat:
+  auto_reply: true
+
+# Knowledge base - paths to important documentation
+knowledge_base:
+  - "README.md"
+  - "CLAUDE.md"
+  - ".github/**/*.md"
+  - "docs/**/*.md"
+
+# Path-based instructions for more focused reviews
+path_instructions:
+  - path: "server/**/*.ts"
+    instructions: |
+      - Review for TypeScript best practices
+      - Check for proper error handling
+      - Verify Prisma usage is correct
+      - Ensure proper typing
+      - Check for security vulnerabilities (SQL injection, XSS, etc.)
+
+  - path: "client/**/*.tsx"
+    instructions: |
+      - Review React best practices
+      - Check for proper hooks usage
+      - Verify accessibility (a11y)
+      - Check for performance issues (unnecessary re-renders)
+
+  - path: "**/*.test.ts"
+    instructions: |
+      - Verify test coverage
+      - Check test quality and clarity
+      - Ensure proper mocking
+      - Verify edge cases are tested
+
+  - path: ".github/workflows/**"
+    instructions: |
+      - Review CI/CD pipeline changes carefully
+      - Check for security issues in workflows
+      - Verify proper use of secrets
+
+# Tone instructions
+tone_instructions: |
+  - Be professional and constructive
+  - Focus on code quality and best practices
+  - Suggest improvements with explanations
+  - Highlight security concerns
+  - Be specific with examples
