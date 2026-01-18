@@ -13,9 +13,43 @@ import * as absencesSchemas from './absences.schemas';
 const router: Router = Router();
 
 /**
- * @route POST /absences
- * @desc Create new absence request
- * @access Private
+ * @swagger
+ * /absences:
+ *   post:
+ *     summary: Create new absence request
+ *     tags: [Absences]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - type
+ *               - startDate
+ *               - endDate
+ *               - isHalfDay
+ *             properties:
+ *               type:
+ *                 type: string
+ *                 enum: [VACATION, SICK, RESERVES, OTHER]
+ *               startDate:
+ *                 type: string
+ *                 format: date
+ *               endDate:
+ *                 type: string
+ *                 format: date
+ *               isHalfDay:
+ *                 type: boolean
+ *               note:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Absence created successfully
+ *       400:
+ *         description: Invalid input or overlapping absence
  */
 router.post(
     '/',
@@ -25,9 +59,27 @@ router.post(
 );
 
 /**
- * @route GET /absences
- * @desc List user's absences with pagination
- * @access Private
+ * @swagger
+ * /absences:
+ *   get:
+ *     summary: List user's absences with pagination
+ *     tags: [Absences]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *       - in: query
+ *         name: pageSize
+ *         schema:
+ *           type: integer
+ *           default: 20
+ *     responses:
+ *       200:
+ *         description: List of absences
  */
 router.get(
     '/',
@@ -37,9 +89,24 @@ router.get(
 );
 
 /**
- * @route GET /absences/:id
- * @desc Get single absence by ID
- * @access Private
+ * @swagger
+ * /absences/{id}:
+ *   get:
+ *     summary: Get single absence by ID
+ *     tags: [Absences]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Absence details
+ *       404:
+ *         description: Absence not found
  */
 router.get(
     '/:id',
@@ -49,9 +116,44 @@ router.get(
 );
 
 /**
- * @route PUT /absences/:id
- * @desc Update absence request
- * @access Private
+ * @swagger
+ * /absences/{id}:
+ *   put:
+ *     summary: Update absence request
+ *     tags: [Absences]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               type:
+ *                 type: string
+ *                 enum: [VACATION, SICK, RESERVES, OTHER]
+ *               startDate:
+ *                 type: string
+ *                 format: date
+ *               endDate:
+ *                 type: string
+ *                 format: date
+ *               isHalfDay:
+ *                 type: boolean
+ *               note:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Absence updated successfully
+ *       404:
+ *         description: Absence not found
  */
 router.put(
     '/:id',
@@ -62,9 +164,24 @@ router.put(
 );
 
 /**
- * @route DELETE /absences/:id
- * @desc Delete absence request
- * @access Private
+ * @swagger
+ * /absences/{id}:
+ *   delete:
+ *     summary: Delete absence request
+ *     tags: [Absences]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Absence deleted successfully
+ *       404:
+ *         description: Absence not found
  */
 router.delete(
     '/:id',
@@ -76,9 +193,32 @@ router.delete(
 // Document Management Routes
 
 /**
- * @route POST /absences/:id/documents
- * @desc Upload document for absence request
- * @access Private
+ * @swagger
+ * /absences/{id}/documents:
+ *   post:
+ *     summary: Upload document for absence request
+ *     tags: [Absences]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               file:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       200:
+ *         description: Document uploaded successfully
  */
 router.post(
     '/:id/documents',
@@ -89,9 +229,22 @@ router.post(
 );
 
 /**
- * @route GET /absences/:id/documents
- * @desc List documents for absence request
- * @access Private
+ * @swagger
+ * /absences/{id}/documents:
+ *   get:
+ *     summary: List documents for absence request
+ *     tags: [Absences]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: List of documents
  */
 router.get(
     '/:id/documents',
@@ -101,9 +254,29 @@ router.get(
 );
 
 /**
- * @route GET /absences/:id/documents/:docId/download
- * @desc Download document
- * @access Private
+ * @swagger
+ * /absences/{id}/documents/{docId}/download:
+ *   get:
+ *     summary: Download document
+ *     tags: [Absences]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *       - in: path
+ *         name: docId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Document file
+ *       404:
+ *         description: Document not found
  */
 router.get(
     '/:id/documents/:docId/download',
@@ -113,9 +286,29 @@ router.get(
 );
 
 /**
- * @route DELETE /absences/:id/documents/:docId
- * @desc Delete document from absence request
- * @access Private
+ * @swagger
+ * /absences/{id}/documents/{docId}:
+ *   delete:
+ *     summary: Delete document from absence request
+ *     tags: [Absences]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *       - in: path
+ *         name: docId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Document deleted successfully
+ *       404:
+ *         description: Document not found
  */
 router.delete(
     '/:id/documents/:docId',
