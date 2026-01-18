@@ -6,6 +6,15 @@ import { usersRouter } from './modules/users/users.routes';
 
 const router: Router = Router();
 
+// Root - API info
+router.get('/', (_req, res) => {
+    res.json({
+        name: 'Time Tracker API',
+        version: '1.0.0',
+        docs: '/api/docs'
+    });
+});
+
 // Health Check
 router.get('/health', (_req, res) => {
     res.json({ status: 'ok', timestamp: new Date().toISOString(), version: '1.0.0' });
