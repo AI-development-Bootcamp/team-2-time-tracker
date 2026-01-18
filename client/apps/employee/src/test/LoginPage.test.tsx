@@ -20,7 +20,7 @@ vi.mock('../../app/stores/auth.store', () => ({
 
 // Mock LoginForm component
 vi.mock('@client/ui', () => ({
-    LoginForm: ({ onSubmit, isLoading, error }: any) => (
+    LoginForm: ({ onSubmit, isLoading, error }: { onSubmit: (data: { email: string; password: string }) => void; isLoading: boolean; error?: string }) => (
         <form data-testid="login-form" onSubmit={(e) => { e.preventDefault(); onSubmit({ email: 'test@example.com', password: 'password123' }); }}>
             {error && <div data-testid="error">{error}</div>}
             <button type="submit" disabled={isLoading}>
