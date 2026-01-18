@@ -1,5 +1,24 @@
 # Tasks: Developer 4 - Admin Panel & Reporting
 
+## 0. Admin Authentication
+
+### 0.1 Backend Admin Auth (extends existing auth module)
+- [x] 0.1.1 Create `admin/auth/auth.routes.ts` with admin login endpoint
+- [x] 0.1.2 Create `admin/auth/auth.controller.ts`
+- [x] 0.1.3 Create `admin/auth/auth.service.ts` that wraps existing auth service
+- [x] 0.1.4 Implement `POST /admin/auth/login` - calls existing login and rejects non-ADMIN users
+- [x] 0.1.5 Implement `POST /admin/auth/refresh` - reuse existing refresh logic
+- [x] 0.1.6 Implement `GET /admin/auth/me` - reuse existing me logic with requireAdmin
+
+### 0.2 Frontend Admin Login
+- [ ] 0.2.1 Create `LoginPage.tsx` component with email/password form
+- [ ] 0.2.2 Create `useAuth` hook or auth store (Zustand)
+- [ ] 0.2.3 Implement login API call to `/admin/auth/login`
+- [ ] 0.2.4 Store auth token and user info in state/localStorage
+- [ ] 0.2.5 Create `AuthGuard.tsx` component to protect admin routes
+- [ ] 0.2.6 Redirect unauthenticated users to login page
+- [ ] 0.2.7 Add logout functionality
+
 ## 1. Database Schema
 
 ### 1.1 Prisma Models
