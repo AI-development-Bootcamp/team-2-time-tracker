@@ -104,15 +104,19 @@ export const useAuthStore = create<AuthState>()(
                 checkAuth: async () => {
                     const token = localStorage.getItem('accessToken');
                     if (!token) {
-                        set({ isAuthenticated: false, user: null });
+                        set({ isAuthenticated: false, user: null, isLoading: false });
                         return;
                     }
 
+                    // Set loading state to prevent race conditions during auth check
+                    set({ isLoading: true });
+                    
                     try {
                         const user = await authApi.getMe();
                         set({
                             user,
                             isAuthenticated: true,
+                            isLoading: false,
                             // Ensure tokens are synced if they were set externally or by interceptor
                             token: localStorage.getItem('accessToken'),
                             refreshToken: localStorage.getItem('refreshToken')
@@ -122,7 +126,13 @@ export const useAuthStore = create<AuthState>()(
                         // If checkAuth fails (e.g. 401 even after retry), clear session
                         localStorage.removeItem('accessToken');
                         localStorage.removeItem('refreshToken');
-                        set({ isAuthenticated: false, user: null, token: null, refreshToken: null });
+                        set({ 
+                            isAuthenticated: false, 
+                            user: null, 
+                            token: null, 
+                            refreshToken: null,
+                            isLoading: false 
+                        });
                     }
                 },
 
