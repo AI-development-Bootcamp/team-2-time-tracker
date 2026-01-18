@@ -1,0 +1,112 @@
+/**
+ * AbsencePage styles
+ */
+
+.absence-page {
+    width: 100%;
+    min-height: 100vh;
+    background-color: var(--color-background);
+    padding: var(--spacing-md);
+}
+
+.absence-page__wrapper {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: var(--color-background);
+}
+
+.absence-page__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+    position: relative;
+}
+
+.absence-page__header-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--spacing-xs);
+    margin-inline: var(--spacing-md);
+}
+
+.absence-page__title {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-semibold);
+    color: #6b7280;
+    margin: 0;
+    text-align: right;
+}
+
+.absence-page__subtitle {
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-normal);
+    color: var(--color-text-secondary);
+    margin: 0;
+    text-align: right;
+}
+
+.absence-page__close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    color: var(--color-text-secondary);
+    font-size: 28px;
+    line-height: 1;
+    cursor: pointer;
+    border-radius: var(--radius-full);
+    transition: background-color var(--transition-fast), color var(--transition-fast);
+    position: absolute;
+    left: var(--spacing-md);
+}
+
+.absence-page__spacer {
+    width: 32px;
+    height: 32px;
+}
+
+.absence-page__close:hover {
+    background-color: var(--color-gray-100);
+    color: var(--color-text-primary);
+}
+
+.absence-page__content {
+    padding: var(--spacing-md);
+    width: 100%;
+}
+
+.absence-page__search-zone {
+    background-color: #fce7f3; /* Pink background */
+    padding: var(--spacing-lg);
+    margin-top: var(--spacing-lg);
+    min-height: 100px;
+    width: 100%;
+}
+
+/* Mobile Responsive */
+@media (min-width: 640px) {
+    .absence-page {
+        padding: var(--spacing-lg);
+    }
+
+    .absence-page__header {
+        padding: var(--spacing-lg);
+    }
+
+    .absence-page__content {
+        padding: var(--spacing-lg);
+    }
+
+    .absence-page__search-zone {
+        padding: var(--spacing-xl);
+    }
+}
+
