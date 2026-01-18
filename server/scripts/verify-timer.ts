@@ -11,12 +11,12 @@ async function main() {
 
     // 1. Setup Test Data
     console.log('📦 Setting up test data...');
-    
+
     // Ensure Admin
     const adminEmail = 'admin@example.com';
     let admin = await prisma.user.findUnique({ where: { email: adminEmail } });
     if (!admin) {
-        const hashedAdminPwd = await bcrypt.hash('Password1!', 10);
+        const hashedAdminPwd = await bcrypt.hash(process.env.DEFAULT_SEED_PASSWORD!, 10);
         admin = await prisma.user.create({
             data: {
                 email: adminEmail,
@@ -30,10 +30,10 @@ async function main() {
 
     // Ensure Employee
     const email = 'timer_test@example.com';
-    const password = 'Password1!';
+    const password = process.env.DEFAULT_SEED_PASSWORD;
     let user = await prisma.user.findUnique({ where: { email } });
     if (!user) {
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const hashedPassword = await bcrypt.hash(password!, 10);
         user = await prisma.user.create({
             data: {
                 email,
@@ -75,14 +75,14 @@ async function main() {
     const apiCall = async (method: string, path: string, body?: any, token?: string) => {
         const headers: any = { 'Content-Type': 'application/json' };
         if (token) headers['Authorization'] = `Bearer ${token}`;
-        
+
         try {
             const res = await fetch(`${API_URL}${path}`, {
                 method,
                 headers,
                 body: body ? JSON.stringify(body) : undefined,
             });
-            
+
             const text = await res.text();
             let data;
             try {
@@ -113,7 +113,7 @@ async function main() {
     }
 
     // 3. Clean up
-    try { await apiCall('DELETE', '/timer/cancel', undefined, token); } catch (e) {}
+    try { await apiCall('DELETE', '/timer/cancel', undefined, token); } catch (e) { }
 
     // 4. Test Start
     console.log('⏱️  Testing Start Timer...');

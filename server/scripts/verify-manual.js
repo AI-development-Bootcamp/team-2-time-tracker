@@ -2,7 +2,10 @@
 // Simple verification script using native fetch
 // Run with: node scripts/verify-manual.js
 
+require('dotenv').config();
+
 async function main() {
+    const DEFAULT_PASSWORD = process.env.DEFAULT_SEED_PASSWORD;
     const API_URL = 'http://localhost:3000/api';
     console.log('🚀 Starting Manual Verification...');
 
@@ -11,21 +14,21 @@ async function main() {
     const loginRes = await fetch(`${API_URL}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: 'admin@example.com', password: 'Password1!' })
+        body: JSON.stringify({ email: 'admin@example.com', password: DEFAULT_PASSWORD })
     });
-    
+
     if (!loginRes.ok) {
         console.error('❌ Login failed:', await loginRes.text());
         process.exit(1);
     }
-    
+
     const loginData = await loginRes.json();
     const token = loginData.data.token;
     console.log('✅ Logged in.');
 
-    const headers = { 
+    const headers = {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}` 
+        'Authorization': `Bearer ${token}`
     };
 
     // 2. Clean up (Cancel any running timer)
@@ -53,7 +56,7 @@ async function main() {
     const statusRes = await fetch(`${API_URL}/timer/status`, { headers });
     const statusData = await statusRes.json();
     console.log('✅ Status:', statusData.data);
-    
+
     if (!statusData.data.isRunning) {
         console.error('❌ Expected timer to be running!');
         process.exit(1);
@@ -66,7 +69,7 @@ async function main() {
     // Actually, seed creates data but we need to know the IDs.
     // Minimal verification: Login -> Start -> Status -> Cancel. This proves the Timer Module works.
     // Stop requires Task ID. I'll skip Stop for now unless I can fetch tasks.
-    
+
     // 5. Cancel Timer (Cleanup)
     console.log('\n🔄 Cancelling Timer...');
     const cancelRes = await fetch(`${API_URL}/timer/cancel`, { method: 'DELETE', headers });

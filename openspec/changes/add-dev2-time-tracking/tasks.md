@@ -45,12 +45,12 @@
 - [x] 2.22 Ensure banner follows Figma design specifications
 
 ### DTOs & Testing
-- [ ] 2.23 Create `timer.dto.ts` in @shared/types
-- [ ] 2.24 Create Zod schemas for timer operations
-- [ ] 2.25 Write unit tests for timer.service.ts
-- [ ] 2.26 Write integration tests for timer endpoints
-- [ ] 2.27 Write tests for TimerCard component
-- [ ] 2.28 Document timer endpoints in Swagger
+- [x] 2.23 Create `timer.dto.ts` in @shared/types
+- [x] 2.24 Create Zod schemas for timer operations
+- [x] 2.25 Write unit tests for timer.service.ts
+- [x] 2.26 Write integration tests for timer endpoints
+- [x] 2.27 Write tests for TimerCard component
+- [x] 2.28 Document timer endpoints in Swagger
 
 ---
 
@@ -88,19 +88,19 @@
 - [x] 3.25 Allow taskId change on update (with assignment validation)
 
 ### Frontend
-- [ ] 3.26 Create `TimeEntryForm.tsx` (modal for add/edit)
-- [ ] 3.27 Create `TimeEntryList.tsx` component
-- [ ] 3.28 Create time entry history page
+- [x] 3.26 Create `TimeEntryForm.tsx` (modal for add/edit)
+- [x] 3.27 Create `TimeEntryList.tsx` component
+- [x] 3.28 Create time entry history page
 - [ ] 3.29 Implement inline editing in list
-- [ ] 3.30 Add delete confirmation dialog
+- [x] 3.30 Add delete confirmation dialog
 
 ### DTOs & Testing
-- [ ] 3.31 Create `timeReports.dto.ts` in @shared/types
-- [ ] 3.32 Create Zod schemas for time entry operations
-- [ ] 3.33 Write unit tests for timeReports.service.ts
-- [ ] 3.34 Write integration tests for time-entries endpoints
-- [ ] 3.35 Write tests for TimeEntryForm component
-- [ ] 3.36 Document time-entries endpoints in Swagger
+- [x] 3.31 Create `timeReports.dto.ts` in @shared/types
+- [x] 3.32 Create Zod schemas for time entry operations
+- [x] 3.33 Write unit tests for timeReports.service.ts
+- [x] 3.34 Write integration tests for time-entries endpoints
+- [ ] 3.35 Write tests for TimeEntryForm component (blocked by 3.26)
+- [x] 3.36 Document time-entries endpoints in Swagger
 
 ---
 

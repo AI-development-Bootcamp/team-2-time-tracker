@@ -3,6 +3,7 @@ import { ToastProvider } from '@client/ui';
 import ProtectedRoute from './components/ProtectedRoute';
 import Layout from './components/Layout';
 import LoginPage from './pages/LoginPage';
+import { TimeEntryHistoryPage } from './pages/TimeEntryHistoryPage';
 import ChangePasswordPage from './pages/ChangePasswordPage';
 
 import '@client/ui/styles/tokens.css';
@@ -18,6 +19,7 @@ function App() {
                     <Route element={<ProtectedRoute />}>
                         <Route element={<Layout />}>
                             <Route path="/" element={<div className="p-4">ברוכים הבאים למערכת דיווח שעות</div>} />
+                            <Route path="/history" element={<TimeEntryHistoryPage />} />
                             <Route path="/change-password" element={<ChangePasswordPage />} />
                             {/* Add more protected routes here */}
                         </Route>

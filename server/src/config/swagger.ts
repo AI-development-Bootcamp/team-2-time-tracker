@@ -20,6 +20,8 @@ const options: swaggerJsdoc.Options = {
         ],
         tags: [
             { name: 'Auth', description: 'Authentication endpoints' },
+            { name: 'Timer', description: 'Timer management endpoints' },
+            { name: 'Time Entries', description: 'Time entry management endpoints' },
             { name: 'Admin - Users', description: 'Admin user management endpoints' },
             { name: 'Health', description: 'Health check endpoints' },
         ],
@@ -39,7 +41,7 @@ const options: swaggerJsdoc.Options = {
                     required: ['email', 'password'],
                     properties: {
                         email: { type: 'string', format: 'email', example: 'user@example.com' },
-                        password: { type: 'string', minLength: 8, example: 'Password123!' },
+                        password: { type: 'string', minLength: 8, example: env.DEFAULT_SEED_PASSWORD },
                         rememberMe: { type: 'boolean', default: false },
                     },
                 },
@@ -83,8 +85,8 @@ const options: swaggerJsdoc.Options = {
                     type: 'object',
                     required: ['currentPassword', 'newPassword'],
                     properties: {
-                        currentPassword: { type: 'string', example: 'OldPassword123!' },
-                        newPassword: { type: 'string', minLength: 8, example: 'NewPassword123!' },
+                        currentPassword: { type: 'string', example: env.DEFAULT_SEED_PASSWORD },
+                        newPassword: { type: 'string', minLength: 8, example: env.DEFAULT_SEED_PASSWORD },
                     },
                 },
                 LogoutRequest: {

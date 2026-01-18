@@ -11,6 +11,7 @@ import { logger } from './shared/logger';
 import { AppError } from './shared/errors';
 import { requestIdMiddleware } from './middlewares/requestId.middleware';
 import { errorMiddleware } from './middlewares/error.middleware';
+import { seedDatabase } from './db/seed';
 
 export const createApp = (): Express => {
     const app = express();
@@ -60,7 +61,8 @@ export const createApp = (): Express => {
 // Start Server if run directly
 if (require.main === module) {
     const app = createApp();
-    app.listen(env.PORT, () => {
+    app.listen(env.PORT, async () => {
+        await seedDatabase();
         logger.info(`Server running on port ${env.PORT} in ${env.NODE_ENV} mode`);
         logger.info(`Docs available at http://localhost:${env.PORT}/api/docs`);
     });

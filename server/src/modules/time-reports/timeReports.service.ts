@@ -173,7 +173,7 @@ export async function createTimeEntry(
     const endTimeObj = parseTimeWithDate(workDateObj, endTime);
 
     // Use transaction to create entry and update workday summary
-    const result = await prisma.$transaction(async (tx) => {
+    const result = await prisma.$transaction(async (tx: any) => {
         // Create time entry
         const timeEntry = await tx.timeEntry.create({
             data: {
@@ -394,7 +394,7 @@ export async function updateTimeEntry(
     }
 
     // Use transaction to update entry and workday summary
-    const result = await prisma.$transaction(async (tx) => {
+    const result = await prisma.$transaction(async (tx: any) => {
         const updatedEntry = await tx.timeEntry.update({
             where: { id: entryId },
             data: updateObj,
@@ -466,7 +466,7 @@ export async function deleteTimeEntry(userId: string, entryId: string) {
     }
 
     // Use transaction to soft delete and update workday summary
-    await prisma.$transaction(async (tx) => {
+    await prisma.$transaction(async (tx: any) => {
         await tx.timeEntry.update({
             where: { id: entryId },
             data: {
@@ -641,7 +641,7 @@ export async function batchCreateTimeEntries(
         });
 
         if (existingEntries.length > 0) {
-            const projectNames = existingEntries.map(e => e.task.project.name).join(', ');
+            const projectNames = existingEntries.map((e: { task: { project: { name: string } } }) => e.task.project.name).join(', ');
             throw new BadRequestError(`Entry already exists for ENTRY_EXIT project(s): ${projectNames}. Only one per day allowed.`);
         }
     }
@@ -666,7 +666,7 @@ export async function batchCreateTimeEntries(
     // Create all entries in transaction
     let totalMinutes = 0;
 
-    const result = await prisma.$transaction(async (tx) => {
+    const result = await prisma.$transaction(async (tx: any) => {
         const createdEntries = [];
 
         for (const entryData of entries) {

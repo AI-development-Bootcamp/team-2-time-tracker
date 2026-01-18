@@ -2,12 +2,22 @@
   "extends": "../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "./dist",
-    "rootDir": "./src",
+    "rootDir": "..",
     "noEmit": false,
     "allowImportingTsExtensions": false,
-    "baseUrl": "."
+    "baseUrl": ".",
+    "paths": {
+      "@shared/types": [
+        "../shared/types/src/index.ts"
+      ],
+      "@shared/types/*": [
+        "../shared/types/src/*"
+      ]
+    }
   },
   "include": [
-    "src/**/*"
+    "src/**/*",
+    "../shared/types/src/**/*",
+    "prisma.config.ts"
   ]
 }

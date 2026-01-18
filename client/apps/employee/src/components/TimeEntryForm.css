@@ -1,0 +1,19 @@
+.time-entry-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+.time-entry-form__row {
+    display: flex;
+    gap: var(--space-4);
+}
+
+.time-entry-form__row > * {
+    flex: 1;
+}
+
+.time-entry-form__textarea {
+    min-height: 100px;
+    resize: vertical;
+}

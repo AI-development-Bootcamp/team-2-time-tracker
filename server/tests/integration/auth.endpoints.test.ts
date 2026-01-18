@@ -63,6 +63,8 @@ beforeAll(() => {
     app.use(errorMiddleware);
 });
 
+const TEST_PASSWORD = process.env.DEFAULT_SEED_PASSWORD;
+
 describe('Auth Endpoints', () => {
     beforeEach(() => {
         resetPrismaMocks();
@@ -78,7 +80,7 @@ describe('Auth Endpoints', () => {
 
             const response = await request(app)
                 .post('/api/auth/login')
-                .send({ email: 'test@example.com', password: 'password123' });
+                .send({ email: 'test@example.com', password: TEST_PASSWORD });
 
             expect(response.status).toBe(200);
             expect(response.body.success).toBe(true);
@@ -92,7 +94,7 @@ describe('Auth Endpoints', () => {
 
             const response = await request(app)
                 .post('/api/auth/login')
-                .send({ email: 'wrong@example.com', password: 'password123' });
+                .send({ email: 'wrong@example.com', password: TEST_PASSWORD });
 
             expect(response.status).toBe(401);
             expect(response.body.success).toBe(false);
@@ -101,7 +103,7 @@ describe('Auth Endpoints', () => {
         it('should return 400 for missing email', async () => {
             const response = await request(app)
                 .post('/api/auth/login')
-                .send({ password: 'password123' });
+                .send({ password: TEST_PASSWORD });
 
             expect(response.status).toBe(400);
         });
@@ -109,7 +111,7 @@ describe('Auth Endpoints', () => {
         it('should return 400 for invalid email format', async () => {
             const response = await request(app)
                 .post('/api/auth/login')
-                .send({ email: 'not-an-email', password: 'password123' });
+                .send({ email: 'not-an-email', password: TEST_PASSWORD });
 
             expect(response.status).toBe(400);
         });

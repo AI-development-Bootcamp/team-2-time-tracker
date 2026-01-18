@@ -8,6 +8,15 @@
         "esModuleInterop": true,
         "allowSyntheticDefaultImports": true,
         "noEmit": true,
+        "baseUrl": ".",
+        "paths": {
+            "@shared/types": [
+                "../../../shared/types/src/index.ts"
+            ],
+            "@shared/types/*": [
+                "../../../shared/types/src/*"
+            ]
+        },
         "types": [
             "vite/client"
         ]

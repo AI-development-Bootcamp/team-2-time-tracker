@@ -1,4 +1,5 @@
 import { WorkLocation } from '../enums/locationType.enum';
+import { TimeEntryDto } from './timeReports.dto';
 
 /**
  * Timer data transfer object
@@ -42,31 +43,6 @@ export interface StopTimerRequestDto {
     description: string;
 }
 
-/**
- * Time entry with task info (used in stop timer response)
- */
-export interface TimeEntryDto {
-    id: string;
-    workDate: string;
-    startTime: string;
-    endTime: string;
-    durationMinutes: number;
-    location: WorkLocation;
-    description: string;
-    source: 'MANUAL' | 'TIMER';
-    task: {
-        id: string;
-        name: string;
-        project: {
-            id: string;
-            name: string;
-        };
-        client: {
-            id: string;
-            name: string;
-        };
-    };
-}
 
 /**
  * Response DTO for stopping a timer
