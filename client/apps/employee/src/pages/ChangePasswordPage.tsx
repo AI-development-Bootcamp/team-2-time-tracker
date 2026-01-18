@@ -19,11 +19,8 @@ export default function ChangePasswordPage() {
                 confirmPassword: data.confirmPassword,
             });
             navigate('/');
-        } catch (error: unknown) {
-            const errorMessage = error && typeof error === 'object' && 'response' in error
-                ? (error.response as { data?: { error?: string } })?.data?.error || 'Password change failed'
-                : 'Password change failed';
-            setPageError(errorMessage);
+        } catch (error: any) {
+            setPageError(error.response?.data?.error || 'Password change failed');
         } finally {
             setIsSubmitting(false);
         }

@@ -6,28 +6,37 @@
  */
 
 import * as authService from '../../auth/auth.service';
-import { ForbiddenError } from '../../../shared/errors';
+import { findUserByEmail } from '../../users/users.repo';
+import { ForbiddenError, UnauthorizedError } from '../../../shared/errors';
 
 const ADMIN_ROLE = 'ADMIN';
 
 /**
- * @description Authenticates an admin user. Uses the existing auth service login
- * and rejects non-ADMIN users.
+ * @description Authenticates an admin user. Validates role BEFORE issuing tokens
+ * to prevent orphaned tokens for non-admin users.
  * @param {string} email - Admin's email address
  * @param {string} password - Admin's password
  * @param {boolean} [rememberMe=false] - Extend refresh token expiry
  * @returns {Promise<LoginResponse>} Login response with tokens and user info
- * @throws {UnauthorizedError} When credentials are invalid
+ * @throws {UnauthorizedError} When credentials are invalid or user not found
  * @throws {ForbiddenError} When user is not an ADMIN
  * @example
  * const result = await adminLogin('admin@example.com', 'Password123!');
  */
 export async function adminLogin(email: string, password: string, rememberMe = false) {
-    const result = await authService.login(email, password, rememberMe);
+    // Validate role BEFORE calling authService.login to prevent token creation for non-admins
+    const user = await findUserByEmail(email);
 
-    if (result.user.role !== ADMIN_ROLE) {
+    if (!user) {
+        throw new UnauthorizedError('Invalid credentials');
+    }
+
+    if (user.role !== ADMIN_ROLE) {
         throw new ForbiddenError('Access denied. Admin privileges required.');
     }
+
+    // Now that role is validated, proceed with login (which validates password)
+    const result = await authService.login(email, password, rememberMe);
 
     return result;
 }

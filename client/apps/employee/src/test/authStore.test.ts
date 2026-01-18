@@ -49,9 +49,8 @@ const createAuthStore = () => {
                     isLoading: false,
                 };
                 return response;
-            } catch (error: unknown) {
-                const errorMessage = error instanceof Error ? error.message : 'An error occurred';
-                state = { ...state, isLoading: false, error: errorMessage };
+            } catch (error: any) {
+                state = { ...state, isLoading: false, error: error.message };
                 throw error;
             }
         },

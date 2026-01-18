@@ -11,13 +11,13 @@
 - [x] 0.1.6 Implement `GET /admin/auth/me` - reuse existing me logic with requireAdmin
 
 ### 0.2 Frontend Admin Login
-- [ ] 0.2.1 Create `LoginPage.tsx` component with email/password form
-- [ ] 0.2.2 Create `useAuth` hook or auth store (Zustand)
-- [ ] 0.2.3 Implement login API call to `/admin/auth/login`
-- [ ] 0.2.4 Store auth token and user info in state/localStorage
-- [ ] 0.2.5 Create `AuthGuard.tsx` component to protect admin routes
-- [ ] 0.2.6 Redirect unauthenticated users to login page
-- [ ] 0.2.7 Add logout functionality
+- [x] 0.2.1 Create `LoginPage.tsx` component with email/password form
+- [x] 0.2.2 Create `useAuth` hook or auth store (Zustand)
+- [x] 0.2.3 Implement login API call to `/admin/auth/login`
+- [x] 0.2.4 Store auth token and user info in state/localStorage
+- [x] 0.2.5 Create `AuthGuard.tsx` component to protect admin routes
+- [x] 0.2.6 Redirect unauthenticated users to login page
+- [x] 0.2.7 Add logout functionality
 
 ## 1. Database Schema
 

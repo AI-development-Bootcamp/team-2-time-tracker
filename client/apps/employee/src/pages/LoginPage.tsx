@@ -19,7 +19,7 @@ export default function LoginPage() {
         try {
             await login(data);
             // Navigation handled by effect
-        } catch {
+        } catch (err) {
             // Error set in store
         }
     };

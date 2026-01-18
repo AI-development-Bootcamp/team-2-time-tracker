@@ -54,12 +54,9 @@ export const useAuthStore = create<AuthState>()(
                             mustChangePassword: response.mustChangePassword,
                             isLoading: false,
                         });
-                    } catch (error: unknown) {
-                        const errorMessage = error && typeof error === 'object' && 'response' in error
-                            ? (error.response as { data?: { error?: string } })?.data?.error || 'Login failed'
-                            : 'Login failed';
+                    } catch (error: any) {
                         set({
-                            error: errorMessage,
+                            error: error.response?.data?.error || 'Login failed',
                             isLoading: false,
                             isAuthenticated: false,
                         });
@@ -95,12 +92,9 @@ export const useAuthStore = create<AuthState>()(
                     try {
                         await authApi.changePassword(data);
                         set({ mustChangePassword: false, isLoading: false });
-                    } catch (error: unknown) {
-                        const errorMessage = error && typeof error === 'object' && 'response' in error
-                            ? (error.response as { data?: { error?: string } })?.data?.error || 'Password change failed'
-                            : 'Password change failed';
+                    } catch (error: any) {
                         set({
-                            error: errorMessage,
+                            error: error.response?.data?.error || 'Password change failed',
                             isLoading: false,
                         });
                         throw error;
