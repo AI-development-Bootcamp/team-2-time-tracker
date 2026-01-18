@@ -33,153 +33,153 @@ UI designs are located in `/Screenshots`:
 ## 1. Database Schema
 
 ### 1.1 Prisma Models
-- [ ] 1.1.1 Add AbsenceRequest model to `prisma/schema.prisma`
-- [ ] 1.1.2 Add AbsenceDay model (expanded workdays)
-- [ ] 1.1.3 Add AbsenceDocument model
-- [ ] 1.1.4 Create migration for absence tables
-- [ ] 1.1.5 Add indexes for query optimization
+- [x] 1.1.1 Add AbsenceRequest model to `prisma/schema.prisma`
+- [x] 1.1.2 Add AbsenceDay model (expanded workdays)
+- [x] 1.1.3 Add AbsenceDocument model
+- [x] 1.1.4 Create migration for absence tables
+- [x] 1.1.5 Add indexes for query optimization
 
 ## 2. Absences Implementation
 
 ### 2.1 Backend Absences Module
-- [ ] 2.1.1 Create `absences.routes.ts`
-- [ ] 2.1.2 Create `absences.controller.ts`
-- [ ] 2.1.3 Create `absences.service.ts`
-- [ ] 2.1.4 Create `absences.repo.ts`
+- [x] 2.1.1 Create `absences.routes.ts`
+- [x] 2.1.2 Create `absences.controller.ts`
+- [x] 2.1.3 Create `absences.service.ts`
+- [x] 2.1.4 Create `absences.repo.ts`
 
 ### 2.2 Absence Endpoints
-- [ ] 2.2.1 Implement `POST /absences` (create absence request)
-- [ ] 2.2.2 Implement `GET /absences` (list user's absences)
-- [ ] 2.2.3 Implement `GET /absences/:id` (get single absence)
-- [ ] 2.2.4 Implement `PUT /absences/:id` (update absence)
-- [ ] 2.2.5 Implement `DELETE /absences/:id` (delete absence)
+- [x] 2.2.1 Implement `POST /absences` (create absence request)
+- [x] 2.2.2 Implement `GET /absences` (list user's absences)
+- [x] 2.2.3 Implement `GET /absences/:id` (get single absence)
+- [x] 2.2.4 Implement `PUT /absences/:id` (update absence)
+- [x] 2.2.5 Implement `DELETE /absences/:id` (delete absence)
 
 ### 2.3 Absence Business Logic
-- [ ] 2.3.1 Implement date range expansion algorithm
-- [ ] 2.3.2 Exclude Friday-Saturday (Israeli weekend)
-- [ ] 2.3.3 Calculate half-day (270) vs full-day (540) minutes (only for VACATION)
-- [ ] 2.3.4 Set status to PENDING_DOCUMENT for SICK/RESERVES without document
-- [ ] 2.3.5 Validate month not locked before create/update/delete
-- [ ] 2.3.6 Validate no overlapping absences
-- [ ] 2.3.7 Update workday summaries on absence CRUD
+- [x] 2.3.1 Implement date range expansion algorithm
+- [x] 2.3.2 Exclude Friday-Saturday (Israeli weekend)
+- [x] 2.3.3 Calculate half-day (270) vs full-day (540) minutes (only for VACATION)
+- [x] 2.3.4 Set status to PENDING_DOCUMENT for SICK/RESERVES without document
+- [x] 2.3.5 Validate month not locked before create/update/delete
+- [x] 2.3.6 Validate no overlapping absences
+- [x] 2.3.7 Update workday summaries on absence CRUD
 
 ### 2.4 UI Design System Components
-- [ ] 2.4.1 Create base UI components (if not exist in `client/packages/ui/`)
-  - [ ] 2.4.1.1 DatePicker component with Hebrew locale (react-day-picker)
-  - [ ] 2.4.1.2 Dropdown/Select component with RTL support
-  - [ ] 2.4.1.3 Button component (primary/secondary variants)
-  - [ ] 2.4.1.4 Modal/Sheet component for mobile
-  - [ ] 2.4.1.5 Tabs component (for "דיווח עבודה" / "דיווח העדרות")
+- [x] 2.4.1 Create base UI components (if not exist in `client/packages/ui/`)
+  - [x] 2.4.1.1 DatePicker component with Hebrew locale (react-day-picker)
+  - [x] 2.4.1.2 Dropdown/Select component with RTL support
+  - [x] 2.4.1.3 Button component (primary/secondary variants)
+  - [x] 2.4.1.4 Modal/Sheet component for mobile
+  - [x] 2.4.1.5 Tabs component (for "דיווח עבודה" / "דיווח העדרות")
 
 ### 2.5 Absence Form Component (`AbsenceForm.tsx`)
-- [ ] 2.5.1 Create form structure with react-hook-form + Zod validation
-- [ ] 2.5.2 Implement tab switching between "דיווח עבודה" and "דיווח העדרות"
-- [ ] 2.5.3 Add absence type dropdown with 4 options:
-  - [ ] 2.5.3.1 "חופשה - חצי יום 🏖️" (VACATION + isHalfDay=true)
-  - [ ] 2.5.3.2 "חופשה - יום מלא 🏖️" (VACATION + isHalfDay=false)
-  - [ ] 2.5.3.3 "מחלה 😷" (SICK, always full day)
-  - [ ] 2.5.3.4 "מילואים 🚨" (RESERVES, always full day)
-  - [ ] 2.5.3.5 Display emoji icons for each option
-  - [ ] 2.5.3.6 Implement dropdown open/close states
-  - [ ] 2.5.3.7 Add selected value display with emoji
-- [ ] 2.5.4 Implement single date selection mode
-  - [ ] 2.5.4.1 Show single date input field
-  - [ ] 2.5.4.2 Open calendar picker on click
-  - [ ] 2.5.4.3 Display selected date in Hebrew format (DD/MM/YY)
-- [ ] 2.5.5 Implement date range selection mode ("מלא את הזמנים" section)
-  - [ ] 2.5.5.1 Add "תאריך התחלה" input field
-  - [ ] 2.5.5.2 Add "תאריך סיום" input field
-  - [ ] 2.5.5.3 Show calendar with range selection
-  - [ ] 2.5.5.4 Highlight selected range in calendar (blue background)
-  - [ ] 2.5.5.5 Display calculated workdays count ("סה"כ ימי דיווח: 2 ימים")
-  - [ ] 2.5.5.6 Show "שמירה" and "ניקה" buttons in calendar modal
-- [ ] 2.5.6 Implement document upload section ("צירוף קבצים רלוונטים")
-  - [ ] 2.5.6.1 Create dropzone area with dashed border
-  - [ ] 2.5.6.2 Show upload icon and text "לחץ כאן להעלאת הקובץ"
-  - [ ] 2.5.6.3 Display supported formats (PDF / PNG / JPG)
-  - [ ] 2.5.6.4 Show "חסר קובץ" when no document attached
-  - [ ] 2.5.6.5 Show uploaded document with file name when document exists
-- [ ] 2.5.7 Add note/description field (או)
-- [ ] 2.5.8 Add submit button ("שמירה") with validation
-- [ ] 2.5.9 Add close button (X) in top-left corner
-- [ ] 2.5.10 Implement mobile-responsive layout
-- [ ] 2.5.11 Add RTL support for all form elements
+- [x] 2.5.1 Create form structure with react-hook-form + Zod validation
+- [x] 2.5.2 Implement tab switching between "דיווח עבודה" and "דיווח העדרות"
+- [x] 2.5.3 Add absence type dropdown with 4 options:
+  - [x] 2.5.3.1 "חופשה - חצי יום 🏖️" (VACATION + isHalfDay=true)
+  - [x] 2.5.3.2 "חופשה - יום מלא 🏖️" (VACATION + isHalfDay=false)
+  - [x] 2.5.3.3 "מחלה 😷" (SICK, always full day)
+  - [x] 2.5.3.4 "מילואים 🚨" (RESERVES, always full day)
+  - [x] 2.5.3.5 Display emoji icons for each option
+  - [x] 2.5.3.6 Implement dropdown open/close states
+  - [x] 2.5.3.7 Add selected value display with emoji
+- [x] 2.5.4 Implement single date selection mode
+  - [x] 2.5.4.1 Show single date input field
+  - [x] 2.5.4.2 Open calendar picker on click
+  - [x] 2.5.4.3 Display selected date in Hebrew format (DD/MM/YY)
+- [x] 2.5.5 Implement date range selection mode ("מלא את הזמנים" section)
+  - [x] 2.5.5.1 Add "תאריך התחלה" input field
+  - [x] 2.5.5.2 Add "תאריך סיום" input field
+  - [x] 2.5.5.3 Show calendar with range selection
+  - [x] 2.5.5.4 Highlight selected range in calendar (blue background)
+  - [x] 2.5.5.5 Display calculated workdays count ("סה"כ ימי דיווח: 2 ימים")
+  - [x] 2.5.5.6 Show "שמירה" and "ניקה" buttons in calendar modal
+- [x] 2.5.6 Implement document upload section ("צירוף קבצים רלוונטים")
+  - [x] 2.5.6.1 Create dropzone area with dashed border
+  - [x] 2.5.6.2 Show upload icon and text "לחץ כאן להעלאת הקובץ"
+  - [x] 2.5.6.3 Display supported formats (PDF / PNG / JPG)
+  - [x] 2.5.6.4 Show "חסר קובץ" when no document attached
+  - [x] 2.5.6.5 Show uploaded document with file name when document exists
+- [x] 2.5.7 Add note/description field (או)
+- [x] 2.5.8 Add submit button ("שמירה") with validation
+- [x] 2.5.9 Add close button (X) in top-left corner
+- [x] 2.5.10 Implement mobile-responsive layout
+- [x] 2.5.11 Add RTL support for all form elements
 
 ### 2.6 Hebrew Date Picker Component (`HebrewDatePicker.tsx`)
-- [ ] 2.6.1 Configure react-day-picker with Hebrew locale (date-fns)
-- [ ] 2.6.2 Display Hebrew month names (נובמבר 2025)
-- [ ] 2.6.3 Display Hebrew day names (יום א', יום ב', etc.)
-- [ ] 2.6.4 Implement single date selection mode
-  - [ ] 2.6.4.1 Highlight selected date with blue circle
-  - [ ] 2.6.4.2 Show navigation arrows (< >)
-- [ ] 2.6.5 Implement date range selection mode
-  - [ ] 2.6.5.1 Allow start date selection (blue circle)
-  - [ ] 2.6.5.2 Allow end date selection (blue circle)
-  - [ ] 2.6.5.3 Highlight range between dates (light blue background)
-  - [ ] 2.6.5.4 Display current month/year header with navigation
-- [ ] 2.6.6 Exclude Friday-Saturday (disable non-workdays)
-- [ ] 2.6.7 Add modal presentation for mobile
-- [ ] 2.6.8 Implement RTL layout (week starts from right)
+- [x] 2.6.1 Configure react-day-picker with Hebrew locale (date-fns)
+- [x] 2.6.2 Display Hebrew month names (נובמבר 2025)
+- [x] 2.6.3 Display Hebrew day names (יום א', יום ב', etc.)
+- [x] 2.6.4 Implement single date selection mode
+  - [x] 2.6.4.1 Highlight selected date with blue circle
+  - [x] 2.6.4.2 Show navigation arrows (< >)
+- [x] 2.6.5 Implement date range selection mode
+  - [x] 2.6.5.1 Allow start date selection (blue circle)
+  - [x] 2.6.5.2 Allow end date selection (blue circle)
+  - [x] 2.6.5.3 Highlight range between dates (light blue background)
+  - [x] 2.6.5.4 Display current month/year header with navigation
+- [x] 2.6.6 Exclude Friday-Saturday (disable non-workdays)
+- [x] 2.6.7 Add modal presentation for mobile
+- [x] 2.6.8 Implement RTL layout (week starts from right)
 
 ### 2.7 Document Uploader Component (`DocumentUploader.tsx`)
-- [ ] 2.7.1 Integrate react-dropzone for drag-and-drop
-- [ ] 2.7.2 Create dropzone UI with dashed border (blue)
-- [ ] 2.7.3 Add upload icon (folder with arrow)
-- [ ] 2.7.4 Display "לחץ כאן להעלאת הקובץ" text
-- [ ] 2.7.5 Show supported file types (PDF / PNG / JPG)
-- [ ] 2.7.6 Validate file type (PDF, JPG, PNG only)
-- [ ] 2.7.7 Validate file size (max 10MB)
-- [ ] 2.7.8 Show upload progress indicator during upload
-- [ ] 2.7.9 Display uploaded document state
-  - [ ] 2.7.9.1 Show file name when uploaded
-  - [ ] 2.7.9.2 Show appropriate icon for file type
-  - [ ] 2.7.9.3 Change dropzone appearance when file exists
-- [ ] 2.7.10 Show "חסר קובץ" message when required but missing
-- [ ] 2.7.11 Add error handling for failed uploads
+- [x] 2.7.1 Integrate react-dropzone for drag-and-drop
+- [x] 2.7.2 Create dropzone UI with dashed border (blue)
+- [x] 2.7.3 Add upload icon (folder with arrow)
+- [x] 2.7.4 Display "לחץ כאן להעלאת הקובץ" text
+- [x] 2.7.5 Show supported file types (PDF / PNG / JPG)
+- [x] 2.7.6 Validate file type (PDF, JPG, PNG only)
+- [x] 2.7.7 Validate file size (max 10MB)
+- [x] 2.7.8 Show upload progress indicator during upload
+- [x] 2.7.9 Display uploaded document state
+  - [x] 2.7.9.1 Show file name when uploaded
+  - [x] 2.7.9.2 Show appropriate icon for file type
+  - [x] 2.7.9.3 Change dropzone appearance when file exists
+- [x] 2.7.10 Show "חסר קובץ" message when required but missing
+- [x] 2.7.11 Add error handling for failed uploads
 
 ### 2.8 Absence Page (`AbsencePage.tsx`)
-- [ ] 2.8.1 Create page layout with mobile-first design
-- [ ] 2.8.2 Add page header "דיווח העדרות"
-- [ ] 2.8.3 Add sub-header based on mode:
-  - [ ] 2.8.3.1 "יום בודד" for single date
-  - [ ] 2.8.3.2 "לפי טווח ימים" for date range
-- [ ] 2.8.4 Integrate AbsenceForm component
-- [ ] 2.8.5 Add bottom "Search zone" section (pink background)
-- [ ] 2.8.6 Implement form submission logic
-- [ ] 2.8.7 Add success/error notifications
-- [ ] 2.8.8 Handle navigation back on success
+- [x] 2.8.1 Create page layout with mobile-first design
+- [x] 2.8.2 Add page header "דיווח העדרות"
+- [x] 2.8.3 Add sub-header based on mode:
+  - [x] 2.8.3.1 "יום בודד" for single date
+  - [x] 2.8.3.2 "לפי טווח ימים" for date range
+- [x] 2.8.4 Integrate AbsenceForm component
+- [x] 2.8.5 Add bottom "Search zone" section (pink background)
+- [ ] 2.8.6 Implement form submission logic (TODO: wire up actual API calls)
+- [x] 2.8.7 Add success/error notifications
+- [x] 2.8.8 Handle navigation back on success
 
 ### 2.9 Absence Store (`absence.store.ts`)
-- [ ] 2.9.1 Create Zustand store for absence state
-- [ ] 2.9.2 Add state for form mode (single date / date range)
-- [ ] 2.9.3 Add state for selected absence type
-- [ ] 2.9.4 Add state for selected date(s)
-- [ ] 2.9.5 Add state for uploaded document
-- [ ] 2.9.6 Add actions for creating absence
-- [ ] 2.9.7 Add actions for uploading document
-- [ ] 2.9.8 Integrate with TanStack Query for API calls
+- [x] 2.9.1 Create Zustand store for absence state
+- [x] 2.9.2 Add state for form mode (single date / date range)
+- [x] 2.9.3 Add state for selected absence type
+- [x] 2.9.4 Add state for selected date(s)
+- [x] 2.9.5 Add state for uploaded document
+- [x] 2.9.6 Add actions for creating absence
+- [x] 2.9.7 Add actions for uploading document
+- [x] 2.9.8 Integrate with TanStack Query for API calls
 
 ### 2.10 API Integration (`client/apps/employee/src/api/absencesApi.ts`)
-- [ ] 2.10.1 Create API client methods using axios
-  - [ ] 2.10.1.1 `createAbsence(data)` - POST /absences
-  - [ ] 2.10.1.2 `getAbsences(params)` - GET /absences
-  - [ ] 2.10.1.3 `getAbsenceById(id)` - GET /absences/:id
-  - [ ] 2.10.1.4 `updateAbsence(id, data)` - PUT /absences/:id
-  - [ ] 2.10.1.5 `deleteAbsence(id)` - DELETE /absences/:id
-- [ ] 2.10.2 Create document upload methods
-  - [ ] 2.10.2.1 `uploadDocument(absenceId, file)` - POST /absences/:id/documents (multipart/form-data)
-  - [ ] 2.10.2.2 `getDocuments(absenceId)` - GET /absences/:id/documents
-  - [ ] 2.10.2.3 `downloadDocument(absenceId, docId)` - GET /absences/:id/documents/:docId/download
-  - [ ] 2.10.2.4 `deleteDocument(absenceId, docId)` - DELETE /absences/:id/documents/:docId
-- [ ] 2.10.3 Create TanStack Query hooks
-  - [ ] 2.10.3.1 `useCreateAbsence()` mutation hook
-  - [ ] 2.10.3.2 `useAbsences()` query hook with pagination
-  - [ ] 2.10.3.3 `useAbsenceById(id)` query hook
-  - [ ] 2.10.3.4 `useUploadDocument()` mutation hook with progress tracking
-  - [ ] 2.10.3.5 `useDeleteDocument()` mutation hook
-- [ ] 2.10.4 Add error handling and Hebrew error messages
-- [ ] 2.10.5 Add loading states for all operations
-- [ ] 2.10.6 Configure query invalidation on mutations
+- [x] 2.10.1 Create API client methods using axios
+  - [x] 2.10.1.1 `createAbsence(data)` - POST /absences
+  - [x] 2.10.1.2 `getAbsences(params)` - GET /absences
+  - [x] 2.10.1.3 `getAbsenceById(id)` - GET /absences/:id
+  - [x] 2.10.1.4 `updateAbsence(id, data)` - PUT /absences/:id
+  - [x] 2.10.1.5 `deleteAbsence(id)` - DELETE /absences/:id
+- [x] 2.10.2 Create document upload methods
+  - [x] 2.10.2.1 `uploadDocument(absenceId, file)` - POST /absences/:id/documents (multipart/form-data)
+  - [x] 2.10.2.2 `getDocuments(absenceId)` - GET /absences/:id/documents
+  - [x] 2.10.2.3 `downloadDocument(absenceId, docId)` - GET /absences/:id/documents/:docId/download
+  - [x] 2.10.2.4 `deleteDocument(absenceId, docId)` - DELETE /absences/:id/documents/:docId
+- [x] 2.10.3 Create TanStack Query hooks
+  - [x] 2.10.3.1 `useCreateAbsence()` mutation hook
+  - [x] 2.10.3.2 `useAbsences()` query hook with pagination
+  - [x] 2.10.3.3 `useAbsenceById(id)` query hook
+  - [x] 2.10.3.4 `useUploadDocument()` mutation hook with progress tracking
+  - [x] 2.10.3.5 `useDeleteDocument()` mutation hook
+- [x] 2.10.4 Add error handling and Hebrew error messages
+- [x] 2.10.5 Add loading states for all operations
+- [x] 2.10.6 Configure query invalidation on mutations
 
 ## 3. Document Management
 
@@ -312,27 +312,27 @@ UI designs are located in `/Screenshots`:
 ## 7. Testing
 
 ### 7.1 Backend Tests
-- [ ] 7.1.1 Write unit tests for absences.service.ts
-  - [ ] 7.1.1.1 Test date range expansion (single day, multi-day, with weekends)
-  - [ ] 7.1.1.2 Test workday calculation (excludes Fri/Sat)
-  - [ ] 7.1.1.3 Test half-day vs full-day minutes calculation
-  - [ ] 7.1.1.4 Test PENDING_DOCUMENT status logic
-  - [ ] 7.1.1.5 Test overlapping absence validation
-  - [ ] 7.1.1.6 Test month lock validation
+- [x] 7.1.1 Write unit tests for absences.service.ts
+  - [x] 7.1.1.1 Test date range expansion (single day, multi-day, with weekends)
+  - [x] 7.1.1.2 Test workday calculation (excludes Fri/Sat)
+  - [x] 7.1.1.3 Test half-day vs full-day minutes calculation
+  - [x] 7.1.1.4 Test PENDING_DOCUMENT status logic
+  - [x] 7.1.1.5 Test overlapping absence validation
+  - [x] 7.1.1.6 Test month lock validation
 - [ ] 7.1.2 Write unit tests for storage.service.ts
   - [ ] 7.1.2.1 Test file upload to IDrive e2
   - [ ] 7.1.2.2 Test file deletion
   - [ ] 7.1.2.3 Test signed URL generation
-- [ ] 7.1.3 Write integration tests for absence endpoints
-  - [ ] 7.1.3.1 Test POST /absences (success, validation errors)
-  - [ ] 7.1.3.2 Test GET /absences (pagination, filtering)
-  - [ ] 7.1.3.3 Test PUT /absences/:id (update, locked month)
-  - [ ] 7.1.3.4 Test DELETE /absences/:id
-- [ ] 7.1.4 Write integration tests for document upload
-  - [ ] 7.1.4.1 Test POST /absences/:id/documents (file validation)
-  - [ ] 7.1.4.2 Test status update on document upload
-  - [ ] 7.1.4.3 Test document download
-  - [ ] 7.1.4.4 Test document deletion
+- [x] 7.1.3 Write integration tests for absence endpoints
+  - [x] 7.1.3.1 Test POST /absences (success, validation errors)
+  - [x] 7.1.3.2 Test GET /absences (pagination, filtering)
+  - [x] 7.1.3.3 Test PUT /absences/:id (update, locked month)
+  - [x] 7.1.3.4 Test DELETE /absences/:id
+- [x] 7.1.4 Write integration tests for document upload
+  - [x] 7.1.4.1 Test POST /absences/:id/documents (file validation)
+  - [x] 7.1.4.2 Test status update on document upload
+  - [x] 7.1.4.3 Test document download
+  - [x] 7.1.4.4 Test document deletion
 - [ ] 7.1.5 Achieve minimum 60% code coverage
 
 ### 7.2 Frontend Tests
@@ -351,10 +351,10 @@ UI designs are located in `/Screenshots`:
   - [ ] 7.2.3.1 Test Hebrew locale rendering
   - [ ] 7.2.3.2 Test weekend exclusion
   - [ ] 7.2.3.3 Test range selection
-- [ ] 7.2.4 Write tests for date utilities
-  - [ ] 7.2.4.1 Test isIsraeliWorkday()
-  - [ ] 7.2.4.2 Test expandDateRange()
-  - [ ] 7.2.4.3 Test getWorkdaysInRange()
+- [x] 7.2.4 Write tests for date utilities
+  - [x] 7.2.4.1 Test isIsraeliWorkday()
+  - [x] 7.2.4.2 Test expandDateRange()
+  - [x] 7.2.4.3 Test getWorkdaysInRange()
 
 ## 8. Documentation
 
