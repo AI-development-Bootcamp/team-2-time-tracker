@@ -30,10 +30,10 @@ reviews:
     enabled: true
     # Auto-review drafts
     drafts: false
-    # Review base branches
-    base_branches:
-      - main
-      - develop
+    # Review all base branches (removed restriction)
+    # base_branches:
+    #   - main
+    #   - develop
 
 # Chat settings
 chat:
