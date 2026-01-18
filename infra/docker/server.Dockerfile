@@ -17,7 +17,9 @@ COPY . .
 
 # Build shared types and server
 RUN pnpm --filter @shared/types build
-ENV DATABASE_URL="postgresql://placeholder:placeholder@localhost:5432/placeholder"
+
+# Use ARG for build-time only - prisma generate only needs schema, not a real DB
+ARG DATABASE_URL="postgresql://placeholder:placeholder@localhost:5432/placeholder"
 RUN cd server && npx prisma generate
 RUN pnpm --filter server build
 
@@ -29,7 +31,7 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 
-# Copy built artifacts and node_modules from builder
+# Copy built artifacts and node_modules from builder (includes generated prisma client)
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/server/dist ./server/dist
 COPY --from=builder /app/server/node_modules ./server/node_modules
@@ -41,10 +43,8 @@ COPY --from=builder /app/package.json ./package.json
 
 WORKDIR /app/server
 
-ENV DATABASE_URL="postgresql://placeholder:placeholder@localhost:5432/placeholder"
-RUN npx prisma generate
-
 EXPOSE 3000
 
 # Run migrations and start server
+# DATABASE_URL will come from runtime environment (Render sets this)
 CMD ["sh", "-c", "npx prisma migrate deploy && npx tsx dist/app.js"]
