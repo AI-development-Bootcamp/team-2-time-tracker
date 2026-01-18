@@ -63,13 +63,6 @@ export async function createAbsence(
     const startDate = new Date(data.startDate);
     const endDate = new Date(data.endDate);
 
-    // Validate dates are not in the future (optional business rule)
-    // const today = new Date();
-    // today.setHours(0, 0, 0, 0);
-    // if (startDate > today) {
-    //     throw new BadRequestError('Cannot create absence for future dates');
-    // }
-
     // Check if month is locked
     const isLocked = await absencesRepo.isMonthLocked(startDate);
     if (isLocked) {
@@ -84,7 +77,6 @@ export async function createAbsence(
 
     // Expand date range to individual workdays
     const workdays = expandDateRangeToWorkdays(startDate, endDate);
-
     if (workdays.length === 0) {
         throw new BadRequestError('No workdays in the selected range');
     }
@@ -96,6 +88,13 @@ export async function createAbsence(
     const status = determineStatus(data.type, false);
 
     // Create absence request and days
+    const absenceDaysData = workdays.map((workDate) => ({
+        absenceRequestId: '', // Will be set by repo
+        userId,
+        workDate,
+        minutes: minutesPerDay,
+    }));
+
     const absence = await absencesRepo.createAbsenceWithDays(
         {
             userId,
@@ -106,12 +105,7 @@ export async function createAbsence(
             status,
             note: data.note,
         },
-        workdays.map((workDate) => ({
-            absenceRequestId: '', // Will be set by repo
-            userId,
-            workDate,
-            minutes: minutesPerDay,
-        }))
+        absenceDaysData
     );
 
     return absence;

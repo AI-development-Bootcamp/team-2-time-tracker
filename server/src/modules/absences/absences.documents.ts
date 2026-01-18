@@ -3,10 +3,11 @@
  * @module absences/absences.documents
  */
 
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction, RequestHandler } from 'express';
 import { AuthenticatedRequest } from '../../middlewares/auth.middleware';
 import { BadRequestError, NotFoundError, ForbiddenError } from '../../shared/errors';
 import { uploadConfig, hebrewFileErrors } from '../../config/upload';
+import { fileConstraints } from '../../config/storage';
 import * as storageService from '../../shared/storage.service';
 import { prisma } from '../../db';
 import multer from 'multer';
@@ -14,13 +15,13 @@ import multer from 'multer';
 // Configure multer for memory storage
 const storage = multer.memoryStorage();
 
-export const uploadMiddleware = multer({
+export const uploadMiddleware: RequestHandler = multer({
     storage,
     limits: {
         fileSize: uploadConfig.maxFileSize,
     },
     fileFilter: (_req, file, cb) => {
-        if (uploadConfig.allowedMimeTypes.includes(file.mimetype)) {
+        if (fileConstraints.allowedMimeTypes.includes(file.mimetype as typeof fileConstraints.allowedMimeTypes[number])) {
             cb(null, true);
         } else {
             cb(new BadRequestError(hebrewFileErrors.INVALID_FILE_TYPE));

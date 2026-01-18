@@ -64,7 +64,7 @@ export async function createAbsenceWithDays(
             await updateWorkdaySummariesForDates(absenceData.userId, dates, minutesPerDay, 'add', tx);
         }
 
-        return tx.absenceRequest.findUnique({
+        const result = await tx.absenceRequest.findUnique({
             where: { id: absence.id },
             include: {
                 absenceDays: {
@@ -73,6 +73,8 @@ export async function createAbsenceWithDays(
                 documents: true,
             },
         });
+
+        return result;
     });
 }
 

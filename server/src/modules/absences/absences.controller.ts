@@ -15,7 +15,6 @@ export async function createAbsence(req: AuthenticatedRequest, res: Response, ne
     try {
         const userId = req.user!.userId;
         const absence = await absencesService.createAbsence(userId, req.body);
-
         res.status(201).json({
             success: true,
             data: absence,
