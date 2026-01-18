@@ -9,20 +9,41 @@ on:
 jobs:
   lint-test-build:
     runs-on: ubuntu-latest
-    
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: timetracker
+          POSTGRES_PASSWORD: timetracker123
+          POSTGRES_DB: timetracker_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      DATABASE_URL: postgresql://timetracker:timetracker123@localhost:5432/timetracker_test
+      NODE_ENV: test
+      JWT_SECRET: ${{ secrets.JWT_SECRET_TEST }}
+      JWT_REFRESH_SECRET: ${{ secrets.JWT_REFRESH_SECRET_TEST }}
+
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          
+
       - name: Install pnpm
         uses: pnpm/action-setup@v2
         with:
           version: 9
-          
+
       - name: Get pnpm store directory
         shell: bash
         run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
@@ -34,18 +55,59 @@ jobs:
           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
-            
+
       - name: Install dependencies
         run: pnpm install
-        
+
       - name: Lint
         run: pnpm lint
-        
+
+      - name: Type check
+        run: pnpm -r exec tsc --noEmit
+
       - name: Build shared types
         run: pnpm --filter @shared/types build
-        
+
+      - name: Prisma generate
+        run: pnpm --filter server prisma generate
+
+      - name: Prisma validate
+        run: pnpm --filter server prisma validate
+
+      - name: Run database migrations
+        run: pnpm --filter server prisma migrate deploy
+
       - name: Build server
         run: pnpm --filter server build
-        
-      - name: Test
-        run: pnpm test
+
+      - name: Build client packages
+        run: pnpm --filter './client/packages/*' build
+
+      - name: Build client apps
+        run: pnpm --filter './client/apps/*' build
+
+      - name: Run unit tests
+        run: pnpm --filter server test:unit:coverage
+
+      - name: Upload unit test coverage
+        uses: codecov/codecov-action@v4
+        if: always()
+        with:
+          files: ./server/coverage/coverage-final.json
+          flags: unit-tests
+          name: unit-tests-coverage
+          fail_ci_if_error: false
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Run integration tests
+        run: pnpm --filter server test:integration:coverage
+
+      - name: Upload integration test coverage
+        uses: codecov/codecov-action@v4
+        if: always()
+        with:
+          files: ./server/coverage/coverage-final.json
+          flags: integration-tests
+          name: integration-tests-coverage
+          fail_ci_if_error: false
+          token: ${{ secrets.CODECOV_TOKEN }}

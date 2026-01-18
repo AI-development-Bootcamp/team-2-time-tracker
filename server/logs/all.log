@@ -7,3 +7,50 @@
 2026-01-15 16:12:09 [35mhttp[39m: [35m::ffff:127.0.0.1 - - [15/Jan/2026:14:12:09 +0000] "GET /api/docs/swagger-ui-standalone-preset.js HTTP/1.1" 200 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"[39m
 2026-01-15 16:12:09 [35mhttp[39m: [35m::ffff:127.0.0.1 - - [15/Jan/2026:14:12:09 +0000] "GET /api/docs/swagger-ui-bundle.js HTTP/1.1" 200 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"[39m
 2026-01-15 16:12:09 [35mhttp[39m: [35m::ffff:127.0.0.1 - - [15/Jan/2026:14:12:09 +0000] "GET /api/docs/favicon-16x16.png HTTP/1.1" 200 665 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"[39m
+2026-01-18 14:48:50 [32minfo[39m: [32mServer running on port 3000 in development mode[39m
+2026-01-18 14:48:50 [32minfo[39m: [32mDocs available at http://localhost:3000/api/docs[39m
+2026-01-18 14:58:41 [33mwarn[39m: [33mOperational Error: Route not found[39m
+2026-01-18 14:58:41 [35mhttp[39m: [35m::1 - - [18/Jan/2026:12:58:41 +0000] "GET / HTTP/1.1" 404 68 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[39m
+2026-01-18 14:58:46 [33mwarn[39m: [33mOperational Error: Route not found[39m
+2026-01-18 14:58:46 [35mhttp[39m: [35m::1 - - [18/Jan/2026:12:58:46 +0000] "GET /favicon.ico HTTP/1.1" 404 68 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[39m
+2026-01-18 14:58:51 [35mhttp[39m: [35m::1 - - [18/Jan/2026:12:58:51 +0000] "GET /api/docs HTTP/1.1" 301 158 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[39m
+2026-01-18 14:58:51 [35mhttp[39m: [35m::1 - - [18/Jan/2026:12:58:51 +0000] "GET /api/docs/ HTTP/1.1" 200 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[39m
+2026-01-18 14:58:51 [35mhttp[39m: [35m::1 - - [18/Jan/2026:12:58:51 +0000] "GET /api/docs/swagger-ui-init.js HTTP/1.1" 200 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[39m
+2026-01-18 14:58:51 [35mhttp[39m: [35m::1 - - [18/Jan/2026:12:58:51 +0000] "GET /api/docs/swagger-ui.css HTTP/1.1" 200 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[39m
+2026-01-18 14:58:51 [35mhttp[39m: [35m::1 - - [18/Jan/2026:12:58:51 +0000] "GET /api/docs/swagger-ui-standalone-preset.js HTTP/1.1" 200 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[39m
+2026-01-18 14:58:51 [35mhttp[39m: [35m::1 - - [18/Jan/2026:12:58:51 +0000] "GET /api/docs/swagger-ui-bundle.js HTTP/1.1" 200 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[39m
+2026-01-18 14:58:52 [35mhttp[39m: [35m::1 - - [18/Jan/2026:12:58:52 +0000] "GET /api/docs/favicon-32x32.png HTTP/1.1" 200 628 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[39m
+2026-01-18 15:35:33 [33mwarn[39m: [33mOperational Error: Invalid credentials[39m
+2026-01-18 15:35:33 [33mwarn[39m: [33mOperational Error: Invalid credentials[39m
+2026-01-18 15:35:33 [33mwarn[39m: [33mOperational Error: Validation failed: Invalid input: expected string, received undefined[39m
+2026-01-18 15:35:33 [33mwarn[39m: [33mOperational Error: Validation failed: Invalid email format[39m
+2026-01-18 15:35:33 [33mwarn[39m: [33mOperational Error: Invalid or expired refresh token[39m
+2026-01-18 15:35:33 [33mwarn[39m: [33mOperational Error: Invalid or expired refresh token[39m
+2026-01-18 15:35:33 [33mwarn[39m: [33mOperational Error: User account is not active[39m
+2026-01-18 15:35:33 [33mwarn[39m: [33mOperational Error: No token provided[39m
+2026-01-18 15:35:33 [33mwarn[39m: [33mOperational Error: User account is not active[39m
+2026-01-18 15:40:12 [33mwarn[39m: [33mOperational Error: Invalid credentials[39m
+2026-01-18 15:40:12 [33mwarn[39m: [33mOperational Error: Invalid credentials[39m
+2026-01-18 15:40:12 [33mwarn[39m: [33mOperational Error: Validation failed: Invalid input: expected string, received undefined[39m
+2026-01-18 15:40:12 [33mwarn[39m: [33mOperational Error: Validation failed: Invalid email format[39m
+2026-01-18 15:40:12 [33mwarn[39m: [33mOperational Error: Invalid or expired refresh token[39m
+2026-01-18 15:40:12 [33mwarn[39m: [33mOperational Error: Invalid or expired refresh token[39m
+2026-01-18 15:40:12 [33mwarn[39m: [33mOperational Error: User account is not active[39m
+2026-01-18 15:40:12 [33mwarn[39m: [33mOperational Error: No token provided[39m
+2026-01-18 15:40:12 [33mwarn[39m: [33mOperational Error: User account is not active[39m
+2026-01-18 15:42:19 [33mwarn[39m: [33mOperational Error: Invalid credentials[39m
+2026-01-18 15:42:19 [33mwarn[39m: [33mOperational Error: Validation failed: Invalid input: expected string, received undefined[39m
+2026-01-18 15:42:19 [33mwarn[39m: [33mOperational Error: Validation failed: Invalid email format[39m
+2026-01-18 15:42:19 [33mwarn[39m: [33mOperational Error: Invalid or expired refresh token[39m
+2026-01-18 15:42:19 [33mwarn[39m: [33mOperational Error: No token provided[39m
+2026-01-18 15:44:25 [33mwarn[39m: [33mOperational Error: Invalid credentials[39m
+2026-01-18 15:44:25 [33mwarn[39m: [33mOperational Error: Validation failed: Invalid input: expected string, received undefined[39m
+2026-01-18 15:44:25 [33mwarn[39m: [33mOperational Error: Validation failed: Invalid email format[39m
+2026-01-18 15:44:26 [33mwarn[39m: [33mOperational Error: Invalid or expired refresh token[39m
+2026-01-18 15:44:26 [33mwarn[39m: [33mOperational Error: No token provided[39m
+2026-01-18 15:45:14 [33mwarn[39m: [33mOperational Error: Invalid credentials[39m
+2026-01-18 15:45:14 [33mwarn[39m: [33mOperational Error: Invalid credentials[39m
+2026-01-18 15:45:14 [33mwarn[39m: [33mOperational Error: Validation failed: Invalid input: expected string, received undefined[39m
+2026-01-18 15:45:14 [33mwarn[39m: [33mOperational Error: Validation failed: Invalid email format[39m
+2026-01-18 15:45:14 [33mwarn[39m: [33mOperational Error: Invalid or expired refresh token[39m
+2026-01-18 15:45:14 [33mwarn[39m: [33mOperational Error: No token provided[39m

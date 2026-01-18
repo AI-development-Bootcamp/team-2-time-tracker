@@ -147,6 +147,7 @@ Once the server is running, access the Swagger documentation at:
 - bcrypt password hashing
 - Zod validation
 - Winston logging
+- Vitest (testing)
 
 ### Frontend
 - React 18
@@ -157,6 +158,15 @@ Once the server is running, access the Swagger documentation at:
 - TanStack Query
 - Radix UI (components)
 - react-hook-form + Zod
+- Vitest (unit tests)
+- Playwright (E2E tests)
+
+### CI/CD
+- GitHub Actions
+- PostgreSQL service containers
+- Automated testing (unit + E2E)
+- Code coverage reporting (Codecov)
+- PR checks (semantic titles, security, code quality)
 
 ## Testing
 
@@ -167,11 +177,35 @@ pnpm test              # Run all tests
 pnpm test:coverage     # Run with coverage report
 ```
 
-### Frontend Tests
+### Frontend Unit Tests
 ```bash
 cd client/apps/employee
 pnpm test
 ```
+
+### E2E Tests (Playwright)
+```bash
+# Install Playwright browsers (first time only)
+pnpm --filter @client/employee exec playwright install
+
+# Run E2E tests
+pnpm --filter @client/employee test:e2e
+
+# Run with UI mode (interactive debugging)
+pnpm --filter @client/employee test:e2e:ui
+
+# Run in headed mode (see browser)
+pnpm --filter @client/employee test:e2e:headed
+
+# Run specific test file
+pnpm --filter @client/employee test:e2e login.spec.ts
+
+# Run on specific browser
+pnpm --filter @client/employee test:e2e --project=chromium
+pnpm --filter @client/employee test:e2e --project="Mobile Chrome"
+```
+
+See `client/apps/employee/e2e/README.md` for detailed E2E testing documentation.
 
 ## Project Architecture
 

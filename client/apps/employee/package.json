@@ -7,7 +7,11 @@
         "build": "tsc && vite build",
         "lint": "eslint . --ext ts,tsx",
         "preview": "vite preview",
-        "test": "vitest run"
+        "test": "vitest run",
+        "test:e2e": "playwright test",
+        "test:e2e:ui": "playwright test --ui",
+        "test:e2e:headed": "playwright test --headed",
+        "test:e2e:debug": "playwright test --debug"
     },
     "dependencies": {
         "@client/api-client": "workspace:*",
@@ -20,6 +24,7 @@
         "zustand": "^5.0.10"
     },
     "devDependencies": {
+        "@playwright/test": "^1.50.1",
         "@testing-library/jest-dom": "^6.9.1",
         "@testing-library/react": "^16.3.1",
         "@types/react": "^19.2.8",

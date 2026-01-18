@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir:*)",
+      "Bash(findstr:*)",
+      "Bash(more:*)",
+      "Bash(pnpm install:*)",
+      "Bash(pnpm test:integration:*)"
+    ]
+  }
+}

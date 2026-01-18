@@ -8,7 +8,11 @@
     "start": "node dist/app.js",
     "lint": "eslint src/**/*.ts",
     "test": "vitest run",
-    "test:coverage": "vitest run --coverage"
+    "test:unit": "vitest run --config vitest.config.unit.ts",
+    "test:integration": "vitest run --config vitest.config.integration.ts",
+    "test:coverage": "vitest run --coverage",
+    "test:unit:coverage": "vitest run --config vitest.config.unit.ts --coverage",
+    "test:integration:coverage": "vitest run --config vitest.config.integration.ts --coverage"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.2.0",
