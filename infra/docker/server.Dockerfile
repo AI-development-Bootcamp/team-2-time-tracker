@@ -1,32 +1,30 @@
 # Build stage
 FROM node:20-alpine AS builder
-RUN apk add --no-cache openssl
-RUN corepack enable && corepack prepare pnpm@latest --activate
+RUN apk add --no-cache openssl && \
+    corepack enable && corepack prepare pnpm@9 --activate
 WORKDIR /app
 
-# Copy all package files for workspace
+# Copy all package files for workspace (cached layer - changes rarely)
 COPY package.json pnpm-workspace.yaml pnpm-lock.yaml* ./
 COPY server/package.json ./server/
 COPY shared/types/package.json ./shared/types/
 
-# Install all dependencies
+# Install all dependencies (cached if package files unchanged)
 RUN pnpm install --frozen-lockfile
 
 # Copy source code
 COPY . .
 
-# Build shared types and server
-RUN pnpm --filter @shared/types build
-
-# Use ARG for build-time only - prisma generate only needs schema, not a real DB
+# Build shared types, generate prisma client, and build server (single layer)
 ARG DATABASE_URL="postgresql://placeholder:placeholder@localhost:5432/placeholder"
-RUN cd server && npx prisma generate
-RUN pnpm --filter server build
+RUN pnpm --filter @shared/types build && \
+    cd server && npx prisma generate && \
+    cd .. && pnpm --filter server build
 
 # Production stage
 FROM node:20-alpine AS runner
-RUN apk add --no-cache openssl
-RUN corepack enable && corepack prepare pnpm@latest --activate
+RUN apk add --no-cache openssl && \
+    corepack enable && corepack prepare pnpm@9 --activate
 WORKDIR /app
 
 ENV NODE_ENV=production
@@ -47,4 +45,4 @@ EXPOSE 3000
 
 # Run migrations and start server
 # DATABASE_URL will come from runtime environment (Render sets this)
-CMD ["sh", "-c", "npx prisma migrate deploy && npx tsx dist/app.js"]
+CMD ["sh", "-c", "npx prisma migrate deploy && node dist/app.js"]

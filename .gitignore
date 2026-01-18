@@ -6,6 +6,7 @@ node_modules/
 dist/
 build/
 coverage/
+*.tsbuildinfo
 
 # Environment
 .env
@@ -21,6 +22,9 @@ pnpm-debug.log*
 # OS
 .DS_Store
 Thumbs.db
+
+#Screenshots
+Screenshots/
 
 # Editors
 .vscode/
