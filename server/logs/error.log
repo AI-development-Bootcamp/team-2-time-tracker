@@ -1,0 +1,193 @@
+2026-01-18 14:26:54 [31merror[39m: [31mUnexpected Error: Bad escaped character in JSON at position 54 (line 1 column 55)[39m
+2026-01-18 14:27:03 [31merror[39m: [31mUnexpected Error: Bad escaped character in JSON at position 54 (line 1 column 55)[39m
+2026-01-18 14:27:16 [31merror[39m: [31mUnexpected Error: Bad escaped character in JSON at position 51 (line 1 column 52)[39m
+2026-01-18 14:36:51 [31merror[39m: [31mUnexpected Error: [39m
+[31mInvalid `tx.absenceRequest.create()` invocation in[39m
+[31m/Users/maiilany/Documents/AI Bootcamp/hours/team-2-time-tracker/server/src/modules/absences/absences.repo.ts:45:49[39m
+
+[31m  42     absenceDays: CreateAbsenceDayData[][39m
+[31m  43 ) {[39m
+[31m  44     return prisma.$transaction(async (tx) => {[39m
+[31m→ 45         const absence = await tx.absenceRequest.create([39m
+[31mForeign key constraint violated on the constraint: `absence_requests_user_id_fkey`[39m
+2026-01-18 14:36:51 [31merror[39m: [31mUnexpected Error: [39m
+[31mInvalid `tx.absenceRequest.create()` invocation in[39m
+[31m/Users/maiilany/Documents/AI Bootcamp/hours/team-2-time-tracker/server/src/modules/absences/absences.repo.ts:45:49[39m
+
+[31m  42     absenceDays: CreateAbsenceDayData[][39m
+[31m  43 ) {[39m
+[31m  44     return prisma.$transaction(async (tx) => {[39m
+[31m→ 45         const absence = await tx.absenceRequest.create([39m
+[31mForeign key constraint violated on the constraint: `absence_requests_user_id_fkey`[39m
+2026-01-18 14:36:51 [31merror[39m: [31mUnexpected Error: [39m
+[31mInvalid `tx.absenceRequest.create()` invocation in[39m
+[31m/Users/maiilany/Documents/AI Bootcamp/hours/team-2-time-tracker/server/src/modules/absences/absences.repo.ts:45:49[39m
+
+[31m  42     absenceDays: CreateAbsenceDayData[][39m
+[31m  43 ) {[39m
+[31m  44     return prisma.$transaction(async (tx) => {[39m
+[31m→ 45         const absence = await tx.absenceRequest.create([39m
+[31mForeign key constraint violated on the constraint: `absence_requests_user_id_fkey`[39m
+2026-01-18 14:36:51 [31merror[39m: [31mUnexpected Error: [39m
+[31mInvalid `tx.absenceRequest.create()` invocation in[39m
+[31m/Users/maiilany/Documents/AI Bootcamp/hours/team-2-time-tracker/server/src/modules/absences/absences.repo.ts:45:49[39m
+
+[31m  42     absenceDays: CreateAbsenceDayData[][39m
+[31m  43 ) {[39m
+[31m  44     return prisma.$transaction(async (tx) => {[39m
+[31m→ 45         const absence = await tx.absenceRequest.create([39m
+[31mForeign key constraint violated on the constraint: `absence_requests_user_id_fkey`[39m
+2026-01-18 14:36:51 [31merror[39m: [31mUnexpected Error: Cannot set property query of #<IncomingMessage> which has only a getter[39m
+2026-01-18 14:36:51 [31merror[39m: [31mUnexpected Error: Cannot set property query of #<IncomingMessage> which has only a getter[39m
+2026-01-18 14:37:55 [31merror[39m: [31mUnexpected Error: [39m
+[31mInvalid `tx.absenceRequest.create()` invocation in[39m
+[31m/Users/maiilany/Documents/AI Bootcamp/hours/team-2-time-tracker/server/src/modules/absences/absences.repo.ts:45:49[39m
+
+[31m  42     absenceDays: CreateAbsenceDayData[][39m
+[31m  43 ) {[39m
+[31m  44     return prisma.$transaction(async (tx) => {[39m
+[31m→ 45         const absence = await tx.absenceRequest.create([39m
+[31mForeign key constraint violated on the constraint: `absence_requests_user_id_fkey`[39m
+2026-01-18 14:37:55 [31merror[39m: [31mUnexpected Error: [39m
+[31mInvalid `tx.absenceRequest.create()` invocation in[39m
+[31m/Users/maiilany/Documents/AI Bootcamp/hours/team-2-time-tracker/server/src/modules/absences/absences.repo.ts:45:49[39m
+
+[31m  42     absenceDays: CreateAbsenceDayData[][39m
+[31m  43 ) {[39m
+[31m  44     return prisma.$transaction(async (tx) => {[39m
+[31m→ 45         const absence = await tx.absenceRequest.create([39m
+[31mForeign key constraint violated on the constraint: `absence_requests_user_id_fkey`[39m
+2026-01-18 14:37:55 [31merror[39m: [31mUnexpected Error: [39m
+[31mInvalid `tx.absenceRequest.create()` invocation in[39m
+[31m/Users/maiilany/Documents/AI Bootcamp/hours/team-2-time-tracker/server/src/modules/absences/absences.repo.ts:45:49[39m
+
+[31m  42     absenceDays: CreateAbsenceDayData[][39m
+[31m  43 ) {[39m
+[31m  44     return prisma.$transaction(async (tx) => {[39m
+[31m→ 45         const absence = await tx.absenceRequest.create([39m
+[31mForeign key constraint violated on the constraint: `absence_requests_user_id_fkey`[39m
+2026-01-18 14:37:55 [31merror[39m: [31mUnexpected Error: [39m
+[31mInvalid `tx.absenceRequest.create()` invocation in[39m
+[31m/Users/maiilany/Documents/AI Bootcamp/hours/team-2-time-tracker/server/src/modules/absences/absences.repo.ts:45:49[39m
+
+[31m  42     absenceDays: CreateAbsenceDayData[][39m
+[31m  43 ) {[39m
+[31m  44     return prisma.$transaction(async (tx) => {[39m
+[31m→ 45         const absence = await tx.absenceRequest.create([39m
+[31mForeign key constraint violated on the constraint: `absence_requests_user_id_fkey`[39m
+2026-01-18 14:37:55 [31merror[39m: [31mUnexpected Error: Cannot set property query of #<IncomingMessage> which has only a getter[39m
+2026-01-18 14:37:55 [31merror[39m: [31mUnexpected Error: Cannot set property query of #<IncomingMessage> which has only a getter[39m
+2026-01-18 14:38:26 [31merror[39m: [31mUnexpected Error: [39m
+[31mInvalid `tx.absenceRequest.create()` invocation in[39m
+[31m/Users/maiilany/Documents/AI Bootcamp/hours/team-2-time-tracker/server/src/modules/absences/absences.repo.ts:45:49[39m
+
+[31m  42     absenceDays: CreateAbsenceDayData[][39m
+[31m  43 ) {[39m
+[31m  44     return prisma.$transaction(async (tx) => {[39m
+[31m→ 45         const absence = await tx.absenceRequest.create([39m
+[31mForeign key constraint violated on the constraint: `absence_requests_user_id_fkey`[39m
+2026-01-18 14:38:26 [31merror[39m: [31mUnexpected Error: [39m
+[31mInvalid `tx.absenceRequest.create()` invocation in[39m
+[31m/Users/maiilany/Documents/AI Bootcamp/hours/team-2-time-tracker/server/src/modules/absences/absences.repo.ts:45:49[39m
+
+[31m  42     absenceDays: CreateAbsenceDayData[][39m
+[31m  43 ) {[39m
+[31m  44     return prisma.$transaction(async (tx) => {[39m
+[31m→ 45         const absence = await tx.absenceRequest.create([39m
+[31mForeign key constraint violated on the constraint: `absence_requests_user_id_fkey`[39m
+2026-01-18 14:38:26 [31merror[39m: [31mUnexpected Error: [39m
+[31mInvalid `tx.absenceRequest.create()` invocation in[39m
+[31m/Users/maiilany/Documents/AI Bootcamp/hours/team-2-time-tracker/server/src/modules/absences/absences.repo.ts:45:49[39m
+
+[31m  42     absenceDays: CreateAbsenceDayData[][39m
+[31m  43 ) {[39m
+[31m  44     return prisma.$transaction(async (tx) => {[39m
+[31m→ 45         const absence = await tx.absenceRequest.create([39m
+[31mForeign key constraint violated on the constraint: `absence_requests_user_id_fkey`[39m
+2026-01-18 14:38:26 [31merror[39m: [31mUnexpected Error: [39m
+[31mInvalid `tx.absenceRequest.create()` invocation in[39m
+[31m/Users/maiilany/Documents/AI Bootcamp/hours/team-2-time-tracker/server/src/modules/absences/absences.repo.ts:45:49[39m
+
+[31m  42     absenceDays: CreateAbsenceDayData[][39m
+[31m  43 ) {[39m
+[31m  44     return prisma.$transaction(async (tx) => {[39m
+[31m→ 45         const absence = await tx.absenceRequest.create([39m
+[31mForeign key constraint violated on the constraint: `absence_requests_user_id_fkey`[39m
+2026-01-18 14:38:26 [31merror[39m: [31mUnexpected Error: Cannot set property query of #<IncomingMessage> which has only a getter[39m
+2026-01-18 14:38:26 [31merror[39m: [31mUnexpected Error: Cannot set property query of #<IncomingMessage> which has only a getter[39m
+2026-01-18 14:38:40 [31merror[39m: [31mUnexpected Error: [39m
+[31mInvalid `tx.absenceRequest.create()` invocation in[39m
+[31m/Users/maiilany/Documents/AI Bootcamp/hours/team-2-time-tracker/server/src/modules/absences/absences.repo.ts:45:49[39m
+
+[31m  42     absenceDays: CreateAbsenceDayData[][39m
+[31m  43 ) {[39m
+[31m  44     return prisma.$transaction(async (tx) => {[39m
+[31m→ 45         const absence = await tx.absenceRequest.create([39m
+[31mForeign key constraint violated on the constraint: `absence_requests_user_id_fkey`[39m
+2026-01-18 14:38:40 [31merror[39m: [31mUnexpected Error: [39m
+[31mInvalid `tx.absenceRequest.create()` invocation in[39m
+[31m/Users/maiilany/Documents/AI Bootcamp/hours/team-2-time-tracker/server/src/modules/absences/absences.repo.ts:45:49[39m
+
+[31m  42     absenceDays: CreateAbsenceDayData[][39m
+[31m  43 ) {[39m
+[31m  44     return prisma.$transaction(async (tx) => {[39m
+[31m→ 45         const absence = await tx.absenceRequest.create([39m
+[31mForeign key constraint violated on the constraint: `absence_requests_user_id_fkey`[39m
+2026-01-18 14:38:40 [31merror[39m: [31mUnexpected Error: [39m
+[31mInvalid `tx.absenceRequest.create()` invocation in[39m
+[31m/Users/maiilany/Documents/AI Bootcamp/hours/team-2-time-tracker/server/src/modules/absences/absences.repo.ts:45:49[39m
+
+[31m  42     absenceDays: CreateAbsenceDayData[][39m
+[31m  43 ) {[39m
+[31m  44     return prisma.$transaction(async (tx) => {[39m
+[31m→ 45         const absence = await tx.absenceRequest.create([39m
+[31mForeign key constraint violated on the constraint: `absence_requests_user_id_fkey`[39m
+2026-01-18 14:38:40 [31merror[39m: [31mUnexpected Error: [39m
+[31mInvalid `tx.absenceRequest.create()` invocation in[39m
+[31m/Users/maiilany/Documents/AI Bootcamp/hours/team-2-time-tracker/server/src/modules/absences/absences.repo.ts:45:49[39m
+
+[31m  42     absenceDays: CreateAbsenceDayData[][39m
+[31m  43 ) {[39m
+[31m  44     return prisma.$transaction(async (tx) => {[39m
+[31m→ 45         const absence = await tx.absenceRequest.create([39m
+[31mForeign key constraint violated on the constraint: `absence_requests_user_id_fkey`[39m
+2026-01-18 14:38:40 [31merror[39m: [31mUnexpected Error: Cannot set property query of #<IncomingMessage> which has only a getter[39m
+2026-01-18 14:38:40 [31merror[39m: [31mUnexpected Error: Cannot set property query of #<IncomingMessage> which has only a getter[39m
+2026-01-18 14:39:04 [31merror[39m: [31mUnexpected Error: [39m
+[31mInvalid `tx.absenceRequest.create()` invocation in[39m
+[31m/Users/maiilany/Documents/AI Bootcamp/hours/team-2-time-tracker/server/src/modules/absences/absences.repo.ts:45:49[39m
+
+[31m  42     absenceDays: CreateAbsenceDayData[][39m
+[31m  43 ) {[39m
+[31m  44     return prisma.$transaction(async (tx) => {[39m
+[31m→ 45         const absence = await tx.absenceRequest.create([39m
+[31mForeign key constraint violated on the constraint: `absence_requests_user_id_fkey`[39m
+2026-01-18 14:39:04 [31merror[39m: [31mUnexpected Error: [39m
+[31mInvalid `tx.absenceRequest.create()` invocation in[39m
+[31m/Users/maiilany/Documents/AI Bootcamp/hours/team-2-time-tracker/server/src/modules/absences/absences.repo.ts:45:49[39m
+
+[31m  42     absenceDays: CreateAbsenceDayData[][39m
+[31m  43 ) {[39m
+[31m  44     return prisma.$transaction(async (tx) => {[39m
+[31m→ 45         const absence = await tx.absenceRequest.create([39m
+[31mForeign key constraint violated on the constraint: `absence_requests_user_id_fkey`[39m
+2026-01-18 14:39:04 [31merror[39m: [31mUnexpected Error: [39m
+[31mInvalid `tx.absenceRequest.create()` invocation in[39m
+[31m/Users/maiilany/Documents/AI Bootcamp/hours/team-2-time-tracker/server/src/modules/absences/absences.repo.ts:45:49[39m
+
+[31m  42     absenceDays: CreateAbsenceDayData[][39m
+[31m  43 ) {[39m
+[31m  44     return prisma.$transaction(async (tx) => {[39m
+[31m→ 45         const absence = await tx.absenceRequest.create([39m
+[31mForeign key constraint violated on the constraint: `absence_requests_user_id_fkey`[39m
+2026-01-18 14:39:04 [31merror[39m: [31mUnexpected Error: [39m
+[31mInvalid `tx.absenceRequest.create()` invocation in[39m
+[31m/Users/maiilany/Documents/AI Bootcamp/hours/team-2-time-tracker/server/src/modules/absences/absences.repo.ts:45:49[39m
+
+[31m  42     absenceDays: CreateAbsenceDayData[][39m
+[31m  43 ) {[39m
+[31m  44     return prisma.$transaction(async (tx) => {[39m
+[31m→ 45         const absence = await tx.absenceRequest.create([39m
+[31mForeign key constraint violated on the constraint: `absence_requests_user_id_fkey`[39m
+2026-01-18 14:39:04 [31merror[39m: [31mUnexpected Error: Cannot set property query of #<IncomingMessage> which has only a getter[39m
+2026-01-18 14:39:04 [31merror[39m: [31mUnexpected Error: Cannot set property query of #<IncomingMessage> which has only a getter[39m

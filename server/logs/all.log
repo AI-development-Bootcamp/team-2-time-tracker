@@ -7,3 +7,439 @@
 2026-01-15 16:12:09 [35mhttp[39m: [35m::ffff:127.0.0.1 - - [15/Jan/2026:14:12:09 +0000] "GET /api/docs/swagger-ui-standalone-preset.js HTTP/1.1" 200 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"[39m
 2026-01-15 16:12:09 [35mhttp[39m: [35m::ffff:127.0.0.1 - - [15/Jan/2026:14:12:09 +0000] "GET /api/docs/swagger-ui-bundle.js HTTP/1.1" 200 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"[39m
 2026-01-15 16:12:09 [35mhttp[39m: [35m::ffff:127.0.0.1 - - [15/Jan/2026:14:12:09 +0000] "GET /api/docs/favicon-16x16.png HTTP/1.1" 200 665 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"[39m
+2026-01-18 10:12:55 [32minfo[39m: [32mServer running on port 3000 in development mode[39m
+2026-01-18 10:12:55 [32minfo[39m: [32mDocs available at http://localhost:3000/api/docs[39m
+2026-01-18 10:13:00 [33mwarn[39m: [33mOperational Error: Route not found[39m
+2026-01-18 10:13:00 [35mhttp[39m: [35m::1 - - [18/Jan/2026:08:13:00 +0000] "GET /health HTTP/1.1" 404 68 "-" "curl/8.7.1"[39m
+2026-01-18 10:13:05 [35mhttp[39m: [35m::1 - - [18/Jan/2026:08:13:05 +0000] "GET /api/health HTTP/1.1" 200 72 "-" "curl/8.7.1"[39m
+2026-01-18 10:14:46 [32minfo[39m: [32mServer running on port 3000 in development mode[39m
+2026-01-18 10:14:46 [32minfo[39m: [32mDocs available at http://localhost:3000/api/docs[39m
+2026-01-18 13:15:32 [32minfo[39m: [32mServer running on port 3000 in development mode[39m
+2026-01-18 13:15:32 [32minfo[39m: [32mDocs available at http://localhost:3000/api/docs[39m
+2026-01-18 13:15:42 [35mhttp[39m: [35m::1 - - [18/Jan/2026:11:15:42 +0000] "GET /api/health HTTP/1.1" 200 72 "-" "curl/8.7.1"[39m
+2026-01-18 13:17:02 [33mwarn[39m: [33mOperational Error: Route not found[39m
+2026-01-18 13:17:02 [35mhttp[39m: [35m::1 - - [18/Jan/2026:11:17:02 +0000] "GET / HTTP/1.1" 404 68 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Cursor/2.2.44 Chrome/138.0.7204.251 Electron/37.7.0 Safari/537.36"[39m
+2026-01-18 13:18:56 [33mwarn[39m: [33mOperational Error: No token provided[39m
+2026-01-18 13:18:56 [35mhttp[39m: [35m::1 - - [18/Jan/2026:11:18:56 +0000] "GET /api/absences HTTP/1.1" 401 70 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Cursor/2.2.44 Chrome/138.0.7204.251 Electron/37.7.0 Safari/537.36"[39m
+2026-01-18 13:19:59 [35mhttp[39m: [35m::1 - - [18/Jan/2026:11:19:59 +0000] "GET /api/docs HTTP/1.1" 301 158 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[39m
+2026-01-18 13:19:59 [35mhttp[39m: [35m::1 - - [18/Jan/2026:11:19:59 +0000] "GET /api/docs/ HTTP/1.1" 200 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[39m
+2026-01-18 13:19:59 [35mhttp[39m: [35m::1 - - [18/Jan/2026:11:19:59 +0000] "GET /api/docs/swagger-ui-init.js HTTP/1.1" 200 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[39m
+2026-01-18 13:19:59 [35mhttp[39m: [35m::1 - - [18/Jan/2026:11:19:59 +0000] "GET /api/docs/swagger-ui.css HTTP/1.1" 200 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[39m
+2026-01-18 13:19:59 [35mhttp[39m: [35m::1 - - [18/Jan/2026:11:19:59 +0000] "GET /api/docs/swagger-ui-standalone-preset.js HTTP/1.1" 200 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[39m
+2026-01-18 13:19:59 [35mhttp[39m: [35m::1 - - [18/Jan/2026:11:19:59 +0000] "GET /api/docs/swagger-ui-bundle.js HTTP/1.1" 200 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[39m
+2026-01-18 13:20:00 [35mhttp[39m: [35m::1 - - [18/Jan/2026:11:20:00 +0000] "GET /api/docs/favicon-32x32.png HTTP/1.1" 200 628 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[39m
+2026-01-18 13:43:01 [32minfo[39m: [32mServer running on port 3000 in development mode[39m
+2026-01-18 13:43:01 [32minfo[39m: [32mDocs available at http://localhost:3000/api/docs[39m
+2026-01-18 13:59:48 [35mhttp[39m: [35m::1 - - [18/Jan/2026:11:59:48 +0000] "POST /api/auth/login HTTP/1.1" 200 547 "http://localhost:5173/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[39m
+2026-01-18 13:59:48 [35mhttp[39m: [35m::1 - - [18/Jan/2026:11:59:48 +0000] "GET /api/auth/me HTTP/1.1" 200 152 "http://localhost:5173/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[39m
+2026-01-18 13:59:48 [35mhttp[39m: [35m::1 - - [18/Jan/2026:11:59:48 +0000] "GET /api/auth/me HTTP/1.1" 304 - "http://localhost:5173/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"[39m
+2026-01-18 14:03:35 [33mwarn[39m: [33mOperational Error: No token provided[39m
+2026-01-18 14:03:35 [35mhttp[39m: [35m::1 - - [18/Jan/2026:12:03:35 +0000] "GET /api/absences HTTP/1.1" 401 70 "-" "curl/8.7.1"[39m
+2026-01-18 14:25:38 [32minfo[39m: [32mServer running on port 3000 in development mode[39m
+2026-01-18 14:25:38 [32minfo[39m: [32mDocs available at http://localhost:3000/api/docs[39m
+2026-01-18 14:26:28 [32minfo[39m: [32mServer running on port 3000 in development mode[39m
+2026-01-18 14:26:28 [32minfo[39m: [32mDocs available at http://localhost:3000/api/docs[39m
+2026-01-18 14:26:41 [35mhttp[39m: [35m::1 - - [18/Jan/2026:12:26:41 +0000] "GET /api/health HTTP/1.1" 200 72 "-" "curl/8.7.1"[39m
+2026-01-18 14:26:54 [31merror[39m: [31mUnexpected Error: Bad escaped character in JSON at position 54 (line 1 column 55)[39m
+2026-01-18 14:27:03 [31merror[39m: [31mUnexpected Error: Bad escaped character in JSON at position 54 (line 1 column 55)[39m
+2026-01-18 14:27:16 [31merror[39m: [31mUnexpected Error: Bad escaped character in JSON at position 51 (line 1 column 52)[39m
+2026-01-18 14:36:30 [33mwarn[39m: [33mOperational Error: User account is not active[39m
+2026-01-18 14:36:30 [33mwarn[39m: [33mOperational Error: User account is not active[39m
+2026-01-18 14:36:30 [33mwarn[39m: [33mOperational Error: User account is not active[39m
+2026-01-18 14:36:30 [33mwarn[39m: [33mOperational Error: User account is not active[39m
+2026-01-18 14:36:30 [33mwarn[39m: [33mOperational Error: User account is not active[39m
+2026-01-18 14:36:30 [33mwarn[39m: [33mOperational Error: User account is not active[39m
+2026-01-18 14:36:30 [33mwarn[39m: [33mOperational Error: User account is not active[39m
+2026-01-18 14:36:30 [33mwarn[39m: [33mOperational Error: No token provided[39m
+2026-01-18 14:36:30 [33mwarn[39m: [33mOperational Error: User account is not active[39m
+2026-01-18 14:36:30 [33mwarn[39m: [33mOperational Error: User account is not active[39m
+2026-01-18 14:36:30 [33mwarn[39m: [33mOperational Error: No token provided[39m
+2026-01-18 14:36:30 [33mwarn[39m: [33mOperational Error: User account is not active[39m
+2026-01-18 14:36:30 [33mwarn[39m: [33mOperational Error: User account is not active[39m
+2026-01-18 14:36:30 [33mwarn[39m: [33mOperational Error: User account is not active[39m
+2026-01-18 14:36:30 [33mwarn[39m: [33mOperational Error: No token provided[39m
+2026-01-18 14:36:30 [33mwarn[39m: [33mOperational Error: User account is not active[39m
+2026-01-18 14:36:30 [33mwarn[39m: [33mOperational Error: User account is not active[39m
+2026-01-18 14:36:30 [33mwarn[39m: [33mOperational Error: User account is not active[39m
+2026-01-18 14:36:30 [33mwarn[39m: [33mOperational Error: User account is not active[39m
+2026-01-18 14:36:30 [33mwarn[39m: [33mOperational Error: No token provided[39m
+2026-01-18 14:36:30 [33mwarn[39m: [33mOperational Error: User account is not active[39m
+2026-01-18 14:36:30 [33mwarn[39m: [33mOperational Error: User account is not active[39m
+2026-01-18 14:36:30 [33mwarn[39m: [33mOperational Error: User account is not active[39m
+2026-01-18 14:36:30 [33mwarn[39m: [33mOperational Error: No token provided[39m
+2026-01-18 14:36:30 [33mwarn[39m: [33mOperational Error: User account is not active[39m
+2026-01-18 14:36:30 [33mwarn[39m: [33mOperational Error: User account is not active[39m
+2026-01-18 14:36:30 [33mwarn[39m: [33mOperational Error: User account is not active[39m
+2026-01-18 14:36:30 [33mwarn[39m: [33mOperational Error: No token provided[39m
+2026-01-18 14:36:30 [33mwarn[39m: [33mOperational Error: User account is not active[39m
+2026-01-18 14:36:31 [33mwarn[39m: [33mOperational Error: User account is not active[39m
+2026-01-18 14:36:31 [33mwarn[39m: [33mOperational Error: No token provided[39m
+2026-01-18 14:36:31 [33mwarn[39m: [33mOperational Error: User account is not active[39m
+2026-01-18 14:36:31 [33mwarn[39m: [33mOperational Error: User account is not active[39m
+2026-01-18 14:36:31 [33mwarn[39m: [33mOperational Error: User account is not active[39m
+2026-01-18 14:36:31 [33mwarn[39m: [33mOperational Error: No token provided[39m
+2026-01-18 14:36:31 [33mwarn[39m: [33mOperational Error: User account is not active[39m
+2026-01-18 14:36:31 [33mwarn[39m: [33mOperational Error: User account is not active[39m
+2026-01-18 14:36:31 [33mwarn[39m: [33mOperational Error: User account is not active[39m
+2026-01-18 14:36:31 [33mwarn[39m: [33mOperational Error: User account is not active[39m
+2026-01-18 14:36:31 [33mwarn[39m: [33mOperational Error: No token provided[39m
+2026-01-18 14:36:51 [31merror[39m: [31mUnexpected Error: [39m
+[31mInvalid `tx.absenceRequest.create()` invocation in[39m
+[31m/Users/maiilany/Documents/AI Bootcamp/hours/team-2-time-tracker/server/src/modules/absences/absences.repo.ts:45:49[39m
+
+[31m  42     absenceDays: CreateAbsenceDayData[][39m
+[31m  43 ) {[39m
+[31m  44     return prisma.$transaction(async (tx) => {[39m
+[31m→ 45         const absence = await tx.absenceRequest.create([39m
+[31mForeign key constraint violated on the constraint: `absence_requests_user_id_fkey`[39m
+2026-01-18 14:36:51 [31merror[39m: [31mUnexpected Error: [39m
+[31mInvalid `tx.absenceRequest.create()` invocation in[39m
+[31m/Users/maiilany/Documents/AI Bootcamp/hours/team-2-time-tracker/server/src/modules/absences/absences.repo.ts:45:49[39m
+
+[31m  42     absenceDays: CreateAbsenceDayData[][39m
+[31m  43 ) {[39m
+[31m  44     return prisma.$transaction(async (tx) => {[39m
+[31m→ 45         const absence = await tx.absenceRequest.create([39m
+[31mForeign key constraint violated on the constraint: `absence_requests_user_id_fkey`[39m
+2026-01-18 14:36:51 [33mwarn[39m: [33mOperational Error: Validation failed: End date must be greater than or equal to start date[39m
+2026-01-18 14:36:51 [33mwarn[39m: [33mOperational Error: Validation failed: Invalid input: expected string, received undefined[39m
+2026-01-18 14:36:51 [33mwarn[39m: [33mOperational Error: Validation failed: Invalid option: expected one of "VACATION"|"SICK"|"RESERVES"|"OTHER"[39m
+2026-01-18 14:36:51 [31merror[39m: [31mUnexpected Error: [39m
+[31mInvalid `tx.absenceRequest.create()` invocation in[39m
+[31m/Users/maiilany/Documents/AI Bootcamp/hours/team-2-time-tracker/server/src/modules/absences/absences.repo.ts:45:49[39m
+
+[31m  42     absenceDays: CreateAbsenceDayData[][39m
+[31m  43 ) {[39m
+[31m  44     return prisma.$transaction(async (tx) => {[39m
+[31m→ 45         const absence = await tx.absenceRequest.create([39m
+[31mForeign key constraint violated on the constraint: `absence_requests_user_id_fkey`[39m
+2026-01-18 14:36:51 [31merror[39m: [31mUnexpected Error: [39m
+[31mInvalid `tx.absenceRequest.create()` invocation in[39m
+[31m/Users/maiilany/Documents/AI Bootcamp/hours/team-2-time-tracker/server/src/modules/absences/absences.repo.ts:45:49[39m
+
+[31m  42     absenceDays: CreateAbsenceDayData[][39m
+[31m  43 ) {[39m
+[31m  44     return prisma.$transaction(async (tx) => {[39m
+[31m→ 45         const absence = await tx.absenceRequest.create([39m
+[31mForeign key constraint violated on the constraint: `absence_requests_user_id_fkey`[39m
+2026-01-18 14:36:51 [33mwarn[39m: [33mOperational Error: No token provided[39m
+2026-01-18 14:36:51 [31merror[39m: [31mUnexpected Error: Cannot set property query of #<IncomingMessage> which has only a getter[39m
+2026-01-18 14:36:51 [31merror[39m: [31mUnexpected Error: Cannot set property query of #<IncomingMessage> which has only a getter[39m
+2026-01-18 14:36:51 [33mwarn[39m: [33mOperational Error: No token provided[39m
+2026-01-18 14:36:51 [33mwarn[39m: [33mOperational Error: Validation failed: Invalid absence ID[39m
+2026-01-18 14:36:51 [33mwarn[39m: [33mOperational Error: Validation failed: Invalid absence ID[39m
+2026-01-18 14:36:51 [33mwarn[39m: [33mOperational Error: Validation failed: Invalid absence ID[39m
+2026-01-18 14:36:51 [33mwarn[39m: [33mOperational Error: No token provided[39m
+2026-01-18 14:36:51 [33mwarn[39m: [33mOperational Error: Validation failed: Invalid absence ID[39m
+2026-01-18 14:36:51 [33mwarn[39m: [33mOperational Error: Validation failed: Invalid absence ID[39m
+2026-01-18 14:36:51 [33mwarn[39m: [33mOperational Error: Validation failed: Invalid absence ID[39m
+2026-01-18 14:36:51 [33mwarn[39m: [33mOperational Error: Validation failed: Invalid absence ID[39m
+2026-01-18 14:36:51 [33mwarn[39m: [33mOperational Error: No token provided[39m
+2026-01-18 14:36:51 [33mwarn[39m: [33mOperational Error: Validation failed: Invalid absence ID[39m
+2026-01-18 14:36:51 [33mwarn[39m: [33mOperational Error: Validation failed: Invalid absence ID[39m
+2026-01-18 14:36:51 [33mwarn[39m: [33mOperational Error: Validation failed: Invalid absence ID[39m
+2026-01-18 14:36:51 [33mwarn[39m: [33mOperational Error: No token provided[39m
+2026-01-18 14:36:51 [33mwarn[39m: [33mOperational Error: Validation failed: Invalid absence ID[39m
+2026-01-18 14:36:51 [33mwarn[39m: [33mOperational Error: Validation failed: Invalid absence ID[39m
+2026-01-18 14:36:51 [33mwarn[39m: [33mOperational Error: Validation failed: Invalid absence ID[39m
+2026-01-18 14:36:51 [33mwarn[39m: [33mOperational Error: No token provided[39m
+2026-01-18 14:36:51 [33mwarn[39m: [33mOperational Error: Validation failed: Invalid absence ID[39m
+2026-01-18 14:36:51 [33mwarn[39m: [33mOperational Error: Validation failed: Invalid absence ID[39m
+2026-01-18 14:36:51 [33mwarn[39m: [33mOperational Error: No token provided[39m
+2026-01-18 14:36:51 [33mwarn[39m: [33mOperational Error: Validation failed: Invalid absence ID, Invalid document ID[39m
+2026-01-18 14:36:51 [33mwarn[39m: [33mOperational Error: Validation failed: Invalid absence ID, Invalid document ID[39m
+2026-01-18 14:36:51 [33mwarn[39m: [33mOperational Error: Validation failed: Invalid absence ID, Invalid document ID[39m
+2026-01-18 14:36:51 [33mwarn[39m: [33mOperational Error: No token provided[39m
+2026-01-18 14:36:51 [33mwarn[39m: [33mOperational Error: Validation failed: Invalid absence ID, Invalid document ID[39m
+2026-01-18 14:36:51 [33mwarn[39m: [33mOperational Error: Validation failed: Invalid absence ID, Invalid document ID[39m
+2026-01-18 14:36:51 [33mwarn[39m: [33mOperational Error: Validation failed: Invalid absence ID, Invalid document ID[39m
+2026-01-18 14:36:51 [33mwarn[39m: [33mOperational Error: Validation failed: Invalid absence ID, Invalid document ID[39m
+2026-01-18 14:36:51 [33mwarn[39m: [33mOperational Error: No token provided[39m
+2026-01-18 14:37:55 [31merror[39m: [31mUnexpected Error: [39m
+[31mInvalid `tx.absenceRequest.create()` invocation in[39m
+[31m/Users/maiilany/Documents/AI Bootcamp/hours/team-2-time-tracker/server/src/modules/absences/absences.repo.ts:45:49[39m
+
+[31m  42     absenceDays: CreateAbsenceDayData[][39m
+[31m  43 ) {[39m
+[31m  44     return prisma.$transaction(async (tx) => {[39m
+[31m→ 45         const absence = await tx.absenceRequest.create([39m
+[31mForeign key constraint violated on the constraint: `absence_requests_user_id_fkey`[39m
+2026-01-18 14:37:55 [31merror[39m: [31mUnexpected Error: [39m
+[31mInvalid `tx.absenceRequest.create()` invocation in[39m
+[31m/Users/maiilany/Documents/AI Bootcamp/hours/team-2-time-tracker/server/src/modules/absences/absences.repo.ts:45:49[39m
+
+[31m  42     absenceDays: CreateAbsenceDayData[][39m
+[31m  43 ) {[39m
+[31m  44     return prisma.$transaction(async (tx) => {[39m
+[31m→ 45         const absence = await tx.absenceRequest.create([39m
+[31mForeign key constraint violated on the constraint: `absence_requests_user_id_fkey`[39m
+2026-01-18 14:37:55 [33mwarn[39m: [33mOperational Error: Validation failed: End date must be greater than or equal to start date[39m
+2026-01-18 14:37:55 [33mwarn[39m: [33mOperational Error: Validation failed: Invalid input: expected string, received undefined[39m
+2026-01-18 14:37:55 [33mwarn[39m: [33mOperational Error: Validation failed: Invalid option: expected one of "VACATION"|"SICK"|"RESERVES"|"OTHER"[39m
+2026-01-18 14:37:55 [31merror[39m: [31mUnexpected Error: [39m
+[31mInvalid `tx.absenceRequest.create()` invocation in[39m
+[31m/Users/maiilany/Documents/AI Bootcamp/hours/team-2-time-tracker/server/src/modules/absences/absences.repo.ts:45:49[39m
+
+[31m  42     absenceDays: CreateAbsenceDayData[][39m
+[31m  43 ) {[39m
+[31m  44     return prisma.$transaction(async (tx) => {[39m
+[31m→ 45         const absence = await tx.absenceRequest.create([39m
+[31mForeign key constraint violated on the constraint: `absence_requests_user_id_fkey`[39m
+2026-01-18 14:37:55 [31merror[39m: [31mUnexpected Error: [39m
+[31mInvalid `tx.absenceRequest.create()` invocation in[39m
+[31m/Users/maiilany/Documents/AI Bootcamp/hours/team-2-time-tracker/server/src/modules/absences/absences.repo.ts:45:49[39m
+
+[31m  42     absenceDays: CreateAbsenceDayData[][39m
+[31m  43 ) {[39m
+[31m  44     return prisma.$transaction(async (tx) => {[39m
+[31m→ 45         const absence = await tx.absenceRequest.create([39m
+[31mForeign key constraint violated on the constraint: `absence_requests_user_id_fkey`[39m
+2026-01-18 14:37:55 [33mwarn[39m: [33mOperational Error: No token provided[39m
+2026-01-18 14:37:55 [31merror[39m: [31mUnexpected Error: Cannot set property query of #<IncomingMessage> which has only a getter[39m
+2026-01-18 14:37:55 [31merror[39m: [31mUnexpected Error: Cannot set property query of #<IncomingMessage> which has only a getter[39m
+2026-01-18 14:37:55 [33mwarn[39m: [33mOperational Error: No token provided[39m
+2026-01-18 14:37:55 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:37:55 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:37:55 [33mwarn[39m: [33mOperational Error: Validation failed: Invalid absence ID[39m
+2026-01-18 14:37:55 [33mwarn[39m: [33mOperational Error: No token provided[39m
+2026-01-18 14:37:55 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:37:55 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:37:55 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:37:55 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:37:55 [33mwarn[39m: [33mOperational Error: No token provided[39m
+2026-01-18 14:37:55 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:37:55 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:37:55 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:37:55 [33mwarn[39m: [33mOperational Error: No token provided[39m
+2026-01-18 14:37:55 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:37:55 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:37:55 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:37:55 [33mwarn[39m: [33mOperational Error: No token provided[39m
+2026-01-18 14:37:55 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:37:55 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:37:55 [33mwarn[39m: [33mOperational Error: No token provided[39m
+2026-01-18 14:37:55 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:37:55 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:37:55 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:37:55 [33mwarn[39m: [33mOperational Error: No token provided[39m
+2026-01-18 14:37:55 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:37:55 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:37:55 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:37:55 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:37:55 [33mwarn[39m: [33mOperational Error: No token provided[39m
+2026-01-18 14:38:26 [31merror[39m: [31mUnexpected Error: [39m
+[31mInvalid `tx.absenceRequest.create()` invocation in[39m
+[31m/Users/maiilany/Documents/AI Bootcamp/hours/team-2-time-tracker/server/src/modules/absences/absences.repo.ts:45:49[39m
+
+[31m  42     absenceDays: CreateAbsenceDayData[][39m
+[31m  43 ) {[39m
+[31m  44     return prisma.$transaction(async (tx) => {[39m
+[31m→ 45         const absence = await tx.absenceRequest.create([39m
+[31mForeign key constraint violated on the constraint: `absence_requests_user_id_fkey`[39m
+2026-01-18 14:38:26 [31merror[39m: [31mUnexpected Error: [39m
+[31mInvalid `tx.absenceRequest.create()` invocation in[39m
+[31m/Users/maiilany/Documents/AI Bootcamp/hours/team-2-time-tracker/server/src/modules/absences/absences.repo.ts:45:49[39m
+
+[31m  42     absenceDays: CreateAbsenceDayData[][39m
+[31m  43 ) {[39m
+[31m  44     return prisma.$transaction(async (tx) => {[39m
+[31m→ 45         const absence = await tx.absenceRequest.create([39m
+[31mForeign key constraint violated on the constraint: `absence_requests_user_id_fkey`[39m
+2026-01-18 14:38:26 [33mwarn[39m: [33mOperational Error: Validation failed: End date must be greater than or equal to start date[39m
+2026-01-18 14:38:26 [33mwarn[39m: [33mOperational Error: Validation failed: Invalid input: expected string, received undefined[39m
+2026-01-18 14:38:26 [33mwarn[39m: [33mOperational Error: Validation failed: Invalid option: expected one of "VACATION"|"SICK"|"RESERVES"|"OTHER"[39m
+2026-01-18 14:38:26 [31merror[39m: [31mUnexpected Error: [39m
+[31mInvalid `tx.absenceRequest.create()` invocation in[39m
+[31m/Users/maiilany/Documents/AI Bootcamp/hours/team-2-time-tracker/server/src/modules/absences/absences.repo.ts:45:49[39m
+
+[31m  42     absenceDays: CreateAbsenceDayData[][39m
+[31m  43 ) {[39m
+[31m  44     return prisma.$transaction(async (tx) => {[39m
+[31m→ 45         const absence = await tx.absenceRequest.create([39m
+[31mForeign key constraint violated on the constraint: `absence_requests_user_id_fkey`[39m
+2026-01-18 14:38:26 [31merror[39m: [31mUnexpected Error: [39m
+[31mInvalid `tx.absenceRequest.create()` invocation in[39m
+[31m/Users/maiilany/Documents/AI Bootcamp/hours/team-2-time-tracker/server/src/modules/absences/absences.repo.ts:45:49[39m
+
+[31m  42     absenceDays: CreateAbsenceDayData[][39m
+[31m  43 ) {[39m
+[31m  44     return prisma.$transaction(async (tx) => {[39m
+[31m→ 45         const absence = await tx.absenceRequest.create([39m
+[31mForeign key constraint violated on the constraint: `absence_requests_user_id_fkey`[39m
+2026-01-18 14:38:26 [33mwarn[39m: [33mOperational Error: No token provided[39m
+2026-01-18 14:38:26 [31merror[39m: [31mUnexpected Error: Cannot set property query of #<IncomingMessage> which has only a getter[39m
+2026-01-18 14:38:26 [31merror[39m: [31mUnexpected Error: Cannot set property query of #<IncomingMessage> which has only a getter[39m
+2026-01-18 14:38:26 [33mwarn[39m: [33mOperational Error: No token provided[39m
+2026-01-18 14:38:26 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:38:26 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:38:26 [33mwarn[39m: [33mOperational Error: Validation failed: Invalid absence ID[39m
+2026-01-18 14:38:26 [33mwarn[39m: [33mOperational Error: No token provided[39m
+2026-01-18 14:38:26 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:38:26 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:38:26 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:38:26 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:38:26 [33mwarn[39m: [33mOperational Error: No token provided[39m
+2026-01-18 14:38:26 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:38:26 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:38:26 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:38:26 [33mwarn[39m: [33mOperational Error: No token provided[39m
+2026-01-18 14:38:26 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:38:26 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:38:26 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:38:26 [33mwarn[39m: [33mOperational Error: No token provided[39m
+2026-01-18 14:38:26 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:38:26 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:38:26 [33mwarn[39m: [33mOperational Error: No token provided[39m
+2026-01-18 14:38:26 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:38:26 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:38:26 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:38:26 [33mwarn[39m: [33mOperational Error: No token provided[39m
+2026-01-18 14:38:26 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:38:26 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:38:26 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:38:26 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:38:26 [33mwarn[39m: [33mOperational Error: No token provided[39m
+2026-01-18 14:38:40 [31merror[39m: [31mUnexpected Error: [39m
+[31mInvalid `tx.absenceRequest.create()` invocation in[39m
+[31m/Users/maiilany/Documents/AI Bootcamp/hours/team-2-time-tracker/server/src/modules/absences/absences.repo.ts:45:49[39m
+
+[31m  42     absenceDays: CreateAbsenceDayData[][39m
+[31m  43 ) {[39m
+[31m  44     return prisma.$transaction(async (tx) => {[39m
+[31m→ 45         const absence = await tx.absenceRequest.create([39m
+[31mForeign key constraint violated on the constraint: `absence_requests_user_id_fkey`[39m
+2026-01-18 14:38:40 [31merror[39m: [31mUnexpected Error: [39m
+[31mInvalid `tx.absenceRequest.create()` invocation in[39m
+[31m/Users/maiilany/Documents/AI Bootcamp/hours/team-2-time-tracker/server/src/modules/absences/absences.repo.ts:45:49[39m
+
+[31m  42     absenceDays: CreateAbsenceDayData[][39m
+[31m  43 ) {[39m
+[31m  44     return prisma.$transaction(async (tx) => {[39m
+[31m→ 45         const absence = await tx.absenceRequest.create([39m
+[31mForeign key constraint violated on the constraint: `absence_requests_user_id_fkey`[39m
+2026-01-18 14:38:40 [33mwarn[39m: [33mOperational Error: Validation failed: End date must be greater than or equal to start date[39m
+2026-01-18 14:38:40 [33mwarn[39m: [33mOperational Error: Validation failed: Invalid input: expected string, received undefined[39m
+2026-01-18 14:38:40 [33mwarn[39m: [33mOperational Error: Validation failed: Invalid option: expected one of "VACATION"|"SICK"|"RESERVES"|"OTHER"[39m
+2026-01-18 14:38:40 [31merror[39m: [31mUnexpected Error: [39m
+[31mInvalid `tx.absenceRequest.create()` invocation in[39m
+[31m/Users/maiilany/Documents/AI Bootcamp/hours/team-2-time-tracker/server/src/modules/absences/absences.repo.ts:45:49[39m
+
+[31m  42     absenceDays: CreateAbsenceDayData[][39m
+[31m  43 ) {[39m
+[31m  44     return prisma.$transaction(async (tx) => {[39m
+[31m→ 45         const absence = await tx.absenceRequest.create([39m
+[31mForeign key constraint violated on the constraint: `absence_requests_user_id_fkey`[39m
+2026-01-18 14:38:40 [31merror[39m: [31mUnexpected Error: [39m
+[31mInvalid `tx.absenceRequest.create()` invocation in[39m
+[31m/Users/maiilany/Documents/AI Bootcamp/hours/team-2-time-tracker/server/src/modules/absences/absences.repo.ts:45:49[39m
+
+[31m  42     absenceDays: CreateAbsenceDayData[][39m
+[31m  43 ) {[39m
+[31m  44     return prisma.$transaction(async (tx) => {[39m
+[31m→ 45         const absence = await tx.absenceRequest.create([39m
+[31mForeign key constraint violated on the constraint: `absence_requests_user_id_fkey`[39m
+2026-01-18 14:38:40 [33mwarn[39m: [33mOperational Error: No token provided[39m
+2026-01-18 14:38:40 [31merror[39m: [31mUnexpected Error: Cannot set property query of #<IncomingMessage> which has only a getter[39m
+2026-01-18 14:38:40 [31merror[39m: [31mUnexpected Error: Cannot set property query of #<IncomingMessage> which has only a getter[39m
+2026-01-18 14:38:40 [33mwarn[39m: [33mOperational Error: No token provided[39m
+2026-01-18 14:38:40 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:38:40 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:38:40 [33mwarn[39m: [33mOperational Error: Validation failed: Invalid absence ID[39m
+2026-01-18 14:38:40 [33mwarn[39m: [33mOperational Error: No token provided[39m
+2026-01-18 14:38:40 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:38:40 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:38:40 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:38:40 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:38:40 [33mwarn[39m: [33mOperational Error: No token provided[39m
+2026-01-18 14:38:40 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:38:40 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:38:40 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:38:40 [33mwarn[39m: [33mOperational Error: No token provided[39m
+2026-01-18 14:38:40 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:38:40 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:38:40 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:38:40 [33mwarn[39m: [33mOperational Error: No token provided[39m
+2026-01-18 14:38:40 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:38:40 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:38:40 [33mwarn[39m: [33mOperational Error: No token provided[39m
+2026-01-18 14:38:40 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:38:40 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:38:40 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:38:40 [33mwarn[39m: [33mOperational Error: No token provided[39m
+2026-01-18 14:38:40 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:38:40 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:38:40 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:38:40 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:38:40 [33mwarn[39m: [33mOperational Error: No token provided[39m
+2026-01-18 14:39:04 [31merror[39m: [31mUnexpected Error: [39m
+[31mInvalid `tx.absenceRequest.create()` invocation in[39m
+[31m/Users/maiilany/Documents/AI Bootcamp/hours/team-2-time-tracker/server/src/modules/absences/absences.repo.ts:45:49[39m
+
+[31m  42     absenceDays: CreateAbsenceDayData[][39m
+[31m  43 ) {[39m
+[31m  44     return prisma.$transaction(async (tx) => {[39m
+[31m→ 45         const absence = await tx.absenceRequest.create([39m
+[31mForeign key constraint violated on the constraint: `absence_requests_user_id_fkey`[39m
+2026-01-18 14:39:04 [31merror[39m: [31mUnexpected Error: [39m
+[31mInvalid `tx.absenceRequest.create()` invocation in[39m
+[31m/Users/maiilany/Documents/AI Bootcamp/hours/team-2-time-tracker/server/src/modules/absences/absences.repo.ts:45:49[39m
+
+[31m  42     absenceDays: CreateAbsenceDayData[][39m
+[31m  43 ) {[39m
+[31m  44     return prisma.$transaction(async (tx) => {[39m
+[31m→ 45         const absence = await tx.absenceRequest.create([39m
+[31mForeign key constraint violated on the constraint: `absence_requests_user_id_fkey`[39m
+2026-01-18 14:39:04 [33mwarn[39m: [33mOperational Error: Validation failed: End date must be greater than or equal to start date[39m
+2026-01-18 14:39:04 [33mwarn[39m: [33mOperational Error: Validation failed: Invalid input: expected string, received undefined[39m
+2026-01-18 14:39:04 [33mwarn[39m: [33mOperational Error: Validation failed: Invalid option: expected one of "VACATION"|"SICK"|"RESERVES"|"OTHER"[39m
+2026-01-18 14:39:04 [31merror[39m: [31mUnexpected Error: [39m
+[31mInvalid `tx.absenceRequest.create()` invocation in[39m
+[31m/Users/maiilany/Documents/AI Bootcamp/hours/team-2-time-tracker/server/src/modules/absences/absences.repo.ts:45:49[39m
+
+[31m  42     absenceDays: CreateAbsenceDayData[][39m
+[31m  43 ) {[39m
+[31m  44     return prisma.$transaction(async (tx) => {[39m
+[31m→ 45         const absence = await tx.absenceRequest.create([39m
+[31mForeign key constraint violated on the constraint: `absence_requests_user_id_fkey`[39m
+2026-01-18 14:39:04 [31merror[39m: [31mUnexpected Error: [39m
+[31mInvalid `tx.absenceRequest.create()` invocation in[39m
+[31m/Users/maiilany/Documents/AI Bootcamp/hours/team-2-time-tracker/server/src/modules/absences/absences.repo.ts:45:49[39m
+
+[31m  42     absenceDays: CreateAbsenceDayData[][39m
+[31m  43 ) {[39m
+[31m  44     return prisma.$transaction(async (tx) => {[39m
+[31m→ 45         const absence = await tx.absenceRequest.create([39m
+[31mForeign key constraint violated on the constraint: `absence_requests_user_id_fkey`[39m
+2026-01-18 14:39:04 [33mwarn[39m: [33mOperational Error: No token provided[39m
+2026-01-18 14:39:04 [31merror[39m: [31mUnexpected Error: Cannot set property query of #<IncomingMessage> which has only a getter[39m
+2026-01-18 14:39:04 [31merror[39m: [31mUnexpected Error: Cannot set property query of #<IncomingMessage> which has only a getter[39m
+2026-01-18 14:39:04 [33mwarn[39m: [33mOperational Error: No token provided[39m
+2026-01-18 14:39:04 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:39:04 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:39:04 [33mwarn[39m: [33mOperational Error: Validation failed: Invalid absence ID[39m
+2026-01-18 14:39:04 [33mwarn[39m: [33mOperational Error: No token provided[39m
+2026-01-18 14:39:04 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:39:04 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:39:04 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:39:04 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:39:04 [33mwarn[39m: [33mOperational Error: No token provided[39m
+2026-01-18 14:39:04 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:39:04 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:39:04 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:39:04 [33mwarn[39m: [33mOperational Error: No token provided[39m
+2026-01-18 14:39:04 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:39:04 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:39:04 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:39:04 [33mwarn[39m: [33mOperational Error: No token provided[39m
+2026-01-18 14:39:04 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:39:04 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:39:04 [33mwarn[39m: [33mOperational Error: No token provided[39m
+2026-01-18 14:39:04 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:39:04 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:39:04 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:39:04 [33mwarn[39m: [33mOperational Error: No token provided[39m
+2026-01-18 14:39:04 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:39:04 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:39:04 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:39:04 [33mwarn[39m: [33mOperational Error: Absence not found[39m
+2026-01-18 14:39:04 [33mwarn[39m: [33mOperational Error: No token provided[39m
