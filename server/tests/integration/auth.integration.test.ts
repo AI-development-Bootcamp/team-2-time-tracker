@@ -128,7 +128,7 @@ describe('Auth Integration Tests', () => {
         it('should refresh access token with valid refresh token', async () => {
             // Create user and login first
             const hashedPassword = await bcrypt.hash('password123', 10);
-            const user = await prisma.user.create({
+            await prisma.user.create({
                 data: {
                     email: 'refresh@example.com',
                     password: hashedPassword,
