@@ -9,10 +9,10 @@
     "lint": "eslint src/**/*.ts",
     "test": "vitest run",
     "test:unit": "vitest run --config vitest.config.unit.ts",
-    "test:integration": "vitest run --config vitest.config.integration.ts",
     "test:coverage": "vitest run --coverage",
     "test:unit:coverage": "vitest run --config vitest.config.unit.ts --coverage",
     "test:integration:coverage": "vitest run --config vitest.config.integration.ts --coverage"
+    "db:seed": "cross-env NODE_ENV=development tsx src/db/seed.ts"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.2.0",
@@ -35,6 +35,7 @@
     "zod": "^4.3.5"
   },
   "devDependencies": {
+    "cross-env": "^10.1.0",
     "@prisma/config": "^7.2.0",
     "@types/bcrypt": "^6.0.0",
     "@types/compression": "^1.8.1",

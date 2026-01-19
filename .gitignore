@@ -27,6 +27,9 @@ pnpm-debug.log*
 .DS_Store
 Thumbs.db
 
+# Screenshots
+Screenshots/
+
 # Editors
 .vscode/
 .idea/
