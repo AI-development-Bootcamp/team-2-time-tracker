@@ -1,6 +1,6 @@
 /**
  * AbsenceForm component styles
- * Mobile-first, RTL-compatible design
+ * Mobile-first, RTL-compatible design with iOS style
  */
 
 .absence-form {
@@ -8,7 +8,8 @@
     flex-direction: column;
     gap: var(--spacing-md);
     width: 100%;
-    padding: var(--spacing-md);
+    padding: 0;
+    background-color: transparent;
 }
 
 /* Tabs Section */

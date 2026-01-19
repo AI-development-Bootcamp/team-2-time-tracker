@@ -14,6 +14,7 @@ import * as absencesService from './absences.service';
 export async function createAbsence(req: AuthenticatedRequest, res: Response, next: NextFunction) {
     try {
         const userId = req.user!.userId;
+        console.log('[DEBUG] Creating absence for userId:', userId, 'user email:', req.user!.email);
         const absence = await absencesService.createAbsence(userId, req.body);
         res.status(201).json({
             success: true,

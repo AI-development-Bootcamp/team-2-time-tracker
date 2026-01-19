@@ -140,14 +140,34 @@ export const absencesApi = {
  * Maps API error response to Hebrew error message
  */
 function getHebrewErrorMessage(error: unknown): string {
+    console.log('Error object:', error); // Debug log
+
     if (typeof error === 'object' && error !== null) {
-        const axiosError = error as { response?: { data?: { message?: string; error?: string } }; message?: string };
+        const axiosError = error as {
+            response?: {
+                data?: {
+                    message?: string | string[];
+                    error?: string;
+                    errors?: unknown[];
+                }
+            };
+            message?: string
+        };
 
         // Check for axios error response
         if (axiosError.response?.data) {
-            const apiMessage = axiosError.response.data.message || axiosError.response.data.error;
+            const data = axiosError.response.data;
+            console.log('Error response data:', data); // Debug log
+
+            // Handle array of messages (validation errors)
+            if (Array.isArray(data.message)) {
+                const firstMessage = data.message[0];
+                return mapErrorToHebrew(String(firstMessage));
+            }
+
+            const apiMessage = data.message || data.error;
             if (apiMessage) {
-                return mapErrorToHebrew(apiMessage);
+                return mapErrorToHebrew(String(apiMessage));
             }
         }
 
@@ -164,6 +184,9 @@ function getHebrewErrorMessage(error: unknown): string {
  * Maps common error messages to Hebrew
  */
 function mapErrorToHebrew(message: string): string {
+    // Ensure message is a string
+    const messageStr = String(message || '');
+
     const errorMap: Record<string, string> = {
         'Month is locked': 'החודש נעול ואי אפשר לערוך דיווחים',
         'Absence not found': 'ההעדרות לא נמצאה',
@@ -174,22 +197,25 @@ function mapErrorToHebrew(message: string): string {
         'Document required': 'נדרש לצרף מסמך עבור סוג העדרות זה',
         'Network Error': 'שגיאת רשת. בדוק את החיבור לאינטרנט',
         'Request timeout': 'פג הזמן הקצוב. אנא נסה שוב',
+        'Foreign key constraint': 'שגיאה בנתוני המשתמש. אנא התחבר מחדש',
+        'user_id_fkey': 'שגיאה בנתוני המשתמש. אנא התחבר מחדש',
     };
 
     // Check for exact match
-    if (errorMap[message]) {
-        return errorMap[message];
+    if (errorMap[messageStr]) {
+        return errorMap[messageStr];
     }
 
     // Check for partial matches
+    const messageLower = messageStr.toLowerCase();
     for (const [key, value] of Object.entries(errorMap)) {
-        if (message.toLowerCase().includes(key.toLowerCase())) {
+        if (messageLower.includes(key.toLowerCase())) {
             return value;
         }
     }
 
     // Return original message if no mapping found
-    return message;
+    return messageStr || 'אירעה שגיאה בלתי צפויה';
 }
 
 // ============================================================================
@@ -266,7 +292,6 @@ export function useCreateAbsence(options?: CreateAbsenceMutationOptions) {
         onError: (error: unknown) => {
             const hebrewError = getHebrewErrorMessage(error);
             options?.onError?.(hebrewError);
-            throw new Error(hebrewError);
         },
     });
 }
@@ -301,7 +326,6 @@ export function useUpdateAbsence(options?: UpdateAbsenceMutationOptions) {
         onError: (error: unknown) => {
             const hebrewError = getHebrewErrorMessage(error);
             options?.onError?.(hebrewError);
-            throw new Error(hebrewError);
         },
     });
 }
@@ -335,7 +359,6 @@ export function useDeleteAbsence(options?: DeleteAbsenceMutationOptions) {
         onError: (error: unknown) => {
             const hebrewError = getHebrewErrorMessage(error);
             options?.onError?.(hebrewError);
-            throw new Error(hebrewError);
         },
     });
 }
@@ -377,7 +400,6 @@ export function useUploadDocument(options?: UploadDocumentMutationOptions) {
         onError: (error: unknown) => {
             const hebrewError = getHebrewErrorMessage(error);
             options?.onError?.(hebrewError);
-            throw new Error(hebrewError);
         },
     });
 }
@@ -426,7 +448,6 @@ export function useDeleteDocument(options?: DeleteDocumentMutationOptions) {
         onError: (error: unknown) => {
             const hebrewError = getHebrewErrorMessage(error);
             options?.onError?.(hebrewError);
-            throw new Error(hebrewError);
         },
     });
 }

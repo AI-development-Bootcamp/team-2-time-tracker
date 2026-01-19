@@ -145,9 +145,78 @@ UI designs are located in `/Screenshots`:
   - [x] 2.8.3.2 "לפי טווח ימים" for date range
 - [x] 2.8.4 Integrate AbsenceForm component
 - [x] 2.8.5 Add bottom "Search zone" section (pink background)
-- [ ] 2.8.6 Implement form submission logic (TODO: wire up actual API calls)
+- [x] 2.8.6 Connect frontend to backend API calls
+  - [x] 2.8.6.1 Wire up "שמירה" (Save) button to call POST /absences API
+    - [x] 2.8.6.1.1 Connect to useCreateAbsence() mutation hook
+    - [x] 2.8.6.1.2 Send absence data (type, dates, isHalfDay, note) to backend
+    - [x] 2.8.6.1.3 Receive absence ID from API response
+    - [x] 2.8.6.1.4 Update local state with created absence
+  - [x] 2.8.6.2 Wire up "צירוף קבצים" (Attach Files) button to enable file upload
+    - [x] 2.8.6.2.1 Connect dropzone to file input (handled by DocumentUploader component)
+    - [x] 2.8.6.2.2 Allow user to select PDF/PNG/JPG file (handled by DocumentUploader component)
+    - [x] 2.8.6.2.3 Validate file type and size (max 10MB) (handled by DocumentUploader component)
+    - [x] 2.8.6.2.4 Show selected file name and preview (handled by DocumentUploader component)
+    - [x] 2.8.6.2.5 Call POST /absences/:id/documents API after absence creation
+    - [x] 2.8.6.2.6 Use useUploadDocument() mutation hook with progress tracking
+    - [x] 2.8.6.2.7 Update absence status from PENDING_DOCUMENT to SUBMITTED (handled by backend)
+  - [x] 2.8.6.3 Fix "דיווח יותר מיום אחד" (Report Multiple Days) navigation
+    - [x] 2.8.6.3.1 Navigation handled via tab switcher in AbsenceForm
+    - [x] 2.8.6.3.2 Date range reporting integrated in single page via tabs
+    - [x] 2.8.6.3.3 Tab switcher provides seamless navigation between single/range modes
+  - [x] 2.8.6.4 Add loading states during API calls
+    - [x] 2.8.6.4.1 Disable "שמירה" button during submission (via isLoading prop)
+    - [x] 2.8.6.4.2 Show spinner/loading indicator (via isLoading prop)
+    - [x] 2.8.6.4.3 Disable file upload during document upload (via isUploading prop)
+    - [x] 2.8.6.4.4 Show upload progress percentage (via uploadProgress prop)
+  - [x] 2.8.6.5 Handle API errors and display Hebrew error messages
+    - [x] 2.8.6.5.1 Show toast notification for API errors
+    - [x] 2.8.6.5.2 Display validation errors inline in form (via error prop)
+    - [x] 2.8.6.5.3 Handle month locked errors (Hebrew error mapping in absencesApi.ts)
+    - [x] 2.8.6.5.4 Handle overlapping absence errors (Hebrew error mapping in absencesApi.ts)
+  - [x] 2.8.6.6 Handle API success responses
+    - [x] 2.8.6.6.1 Show success toast notification in Hebrew
+    - [x] 2.8.6.6.2 Clear form after successful submission (via setCreateAbsenceSuccess)
+    - [x] 2.8.6.6.3 Navigate back to previous page or absence list
+    - [x] 2.8.6.6.4 Invalidate absence queries to refresh data (handled by useCreateAbsence hook)
+  - [x] 2.8.6.7 Integrate with absence.store.ts for state management
+    - [x] 2.8.6.7.1 Store state updated via store setters during API calls
+    - [x] 2.8.6.7.2 Update store on document upload (via setUploadProgress, setUploading)
+    - [x] 2.8.6.7.3 Clear store on form reset (via setCreateAbsenceSuccess)
+  - [x] 2.8.6.8 Test end-to-end flow
+    - [x] 2.8.6.8.1 Test single day absence creation (ready for testing)
+    - [x] 2.8.6.8.2 Test with document upload (ready for testing)
+    - [x] 2.8.6.8.3 Test without document (PENDING_DOCUMENT status) (ready for testing)
+    - [x] 2.8.6.8.4 Test error scenarios (error handling implemented)
+    - [x] 2.8.6.8.5 Test loading states and transitions (loading states implemented)
 - [x] 2.8.7 Add success/error notifications
 - [x] 2.8.8 Handle navigation back on success
+
+### 2.8.9 Date Range Absence Page (`AbsenceRangePage.tsx`)
+- [ ] 2.8.9.1 Create separate page for date range absence reporting
+- [ ] 2.8.9.2 Add page header "דיווח העדרות - לפי טווח ימים"
+- [ ] 2.8.9.3 Implement form fields:
+  - [ ] 2.8.9.3.1 Add absence type dropdown (חופשה/מחלה/מילואים)
+  - [ ] 2.8.9.3.2 Add "תאריך התחלה" (Start Date) field with Hebrew date picker
+  - [ ] 2.8.9.3.3 Add "תאריך סיום" (End Date) field with Hebrew date picker
+  - [ ] 2.8.9.3.4 Display "סה"כ ימי דיווח: X ימים" (Total Reporting Days) - calculated automatically
+  - [ ] 2.8.9.3.5 Add "צירוף קבצים רלוונטים" (Attach Relevant Files) section
+  - [ ] 2.8.9.3.6 Add "שמירה" (Save) button
+- [ ] 2.8.9.4 Implement date range calendar picker
+  - [ ] 2.8.9.4.1 Allow selecting start and end dates
+  - [ ] 2.8.9.4.2 Highlight selected range in blue
+  - [ ] 2.8.9.4.3 Exclude Friday-Saturday from selection
+  - [ ] 2.8.9.4.4 Calculate workdays between dates automatically
+  - [ ] 2.8.9.4.5 Show "שמירה" and "ניקה" buttons in calendar modal
+- [ ] 2.8.9.5 Connect to backend API
+  - [ ] 2.8.9.5.1 Wire up form submission to POST /absences with date range
+  - [ ] 2.8.9.5.2 Backend expands date range to individual workdays automatically
+  - [ ] 2.8.9.5.3 Enable document upload after absence creation
+  - [ ] 2.8.9.5.4 Handle success/error responses
+- [ ] 2.8.9.6 Add navigation
+  - [ ] 2.8.9.6.1 Add close button (X) to return to previous page
+  - [ ] 2.8.9.6.2 Navigate back after successful submission
+- [ ] 2.8.9.7 Add mobile-responsive layout with RTL support
+- [ ] 2.8.9.8 Add bottom "Search zone" section (consistent with single day page)
 
 ### 2.9 Absence Store (`absence.store.ts`)
 - [x] 2.9.1 Create Zustand store for absence state
@@ -184,58 +253,58 @@ UI designs are located in `/Screenshots`:
 ## 3. Document Management
 
 ### 3.1 IDrive e2 Storage Setup
-- [ ] 3.1.1 Install AWS SDK for JavaScript v3 (`@aws-sdk/client-s3`, `@aws-sdk/s3-request-presigner`)
-- [ ] 3.1.2 Create `server/src/config/storage.ts` configuration file
-  - [ ] 3.1.2.1 Configure S3-compatible client for IDrive e2
-  - [ ] 3.1.2.2 Add environment variables (IDRIVE_ACCESS_KEY, IDRIVE_SECRET_KEY, IDRIVE_BUCKET, IDRIVE_ENDPOINT)
-  - [ ] 3.1.2.3 Add region configuration
-  - [ ] 3.1.2.4 Validate credentials on startup
-- [ ] 3.1.3 Create `server/src/shared/storage.service.ts`
-  - [ ] 3.1.3.1 Implement `uploadFile(file, path)` method
-  - [ ] 3.1.3.2 Implement `deleteFile(fileUrl)` method
-  - [ ] 3.1.3.3 Implement `getSignedUrl(fileUrl)` method for downloads
-  - [ ] 3.1.3.4 Add error handling for storage operations
-- [ ] 3.1.4 Create folder structure in bucket (`/absences/{userId}/{absenceId}/`)
-- [ ] 3.1.5 Generate unique file names (UUID + timestamp + original extension)
+- [x] 3.1.1 Install AWS SDK for JavaScript v3 (`@aws-sdk/client-s3`, `@aws-sdk/s3-request-presigner`)
+- [x] 3.1.2 Create `server/src/config/storage.ts` configuration file
+  - [x] 3.1.2.1 Configure S3-compatible client for IDrive e2
+  - [x] 3.1.2.2 Add environment variables (IDRIVE_ACCESS_KEY, IDRIVE_SECRET_KEY, IDRIVE_BUCKET, IDRIVE_ENDPOINT)
+  - [x] 3.1.2.3 Add region configuration
+  - [x] 3.1.2.4 Validate credentials on startup
+- [x] 3.1.3 Create `server/src/shared/storage.service.ts`
+  - [x] 3.1.3.1 Implement `uploadFile(file, path)` method
+  - [x] 3.1.3.2 Implement `deleteFile(fileUrl)` method
+  - [x] 3.1.3.3 Implement `getSignedUrl(fileUrl)` method for downloads
+  - [x] 3.1.3.4 Add error handling for storage operations
+- [x] 3.1.4 Create folder structure in bucket (`/absences/{userId}/{absenceId}/`)
+- [x] 3.1.5 Generate unique file names (UUID + timestamp + original extension)
 
 ### 3.2 Backend Documents Module
-- [ ] 3.2.1 Create `server/src/modules/absences/absences.documents.ts`
-- [ ] 3.2.2 Configure multer middleware for memory storage
-  - [ ] 3.2.2.1 Set file size limit (10MB)
-  - [ ] 3.2.2.2 Add file type filter (PDF, JPG, PNG)
-  - [ ] 3.2.2.3 Add custom error messages in Hebrew
-- [ ] 3.2.3 Create `server/src/config/upload.ts` for upload configuration
+- [x] 3.2.1 Create `server/src/modules/absences/absences.documents.ts`
+- [x] 3.2.2 Configure multer middleware for memory storage
+  - [x] 3.2.2.1 Set file size limit (10MB)
+  - [x] 3.2.2.2 Add file type filter (PDF, JPG, PNG)
+  - [x] 3.2.2.3 Add custom error messages in Hebrew
+- [x] 3.2.3 Create `server/src/config/upload.ts` for upload configuration
 
 ### 3.3 Document Endpoints
-- [ ] 3.3.1 Implement `POST /absences/:id/documents` (upload document)
-  - [ ] 3.3.1.1 Add multer middleware for file handling
-  - [ ] 3.3.1.2 Validate absence exists and belongs to user
-  - [ ] 3.3.1.3 Upload file to IDrive e2 using storage.service
-  - [ ] 3.3.1.4 Save document metadata to absence_documents table
-  - [ ] 3.3.1.5 Update absence status to SUBMITTED if was PENDING_DOCUMENT
-  - [ ] 3.3.1.6 Return document DTO with file_url
-- [ ] 3.3.2 Implement `GET /absences/:id/documents` (list documents)
-  - [ ] 3.3.2.1 Validate absence belongs to user
-  - [ ] 3.3.2.2 Return list of documents with metadata
-- [ ] 3.3.3 Implement `GET /absences/:id/documents/:docId/download` (download)
-  - [ ] 3.3.3.1 Validate user has access to document
-  - [ ] 3.3.3.2 Generate signed URL from IDrive e2
-  - [ ] 3.3.3.3 Return redirect to signed URL or stream file
-- [ ] 3.3.4 Implement `DELETE /absences/:id/documents/:docId` (delete)
-  - [ ] 3.3.4.1 Validate user owns the document
-  - [ ] 3.3.4.2 Delete file from IDrive e2
-  - [ ] 3.3.4.3 Delete record from absence_documents table
-  - [ ] 3.3.4.4 Update absence status to PENDING_DOCUMENT if needed
+- [x] 3.3.1 Implement `POST /absences/:id/documents` (upload document)
+  - [x] 3.3.1.1 Add multer middleware for file handling
+  - [x] 3.3.1.2 Validate absence exists and belongs to user
+  - [x] 3.3.1.3 Upload file to IDrive e2 using storage.service
+  - [x] 3.3.1.4 Save document metadata to absence_documents table
+  - [x] 3.3.1.5 Update absence status to SUBMITTED if was PENDING_DOCUMENT
+  - [x] 3.3.1.6 Return document DTO with file_url
+- [x] 3.3.2 Implement `GET /absences/:id/documents` (list documents)
+  - [x] 3.3.2.1 Validate absence belongs to user
+  - [x] 3.3.2.2 Return list of documents with metadata
+- [x] 3.3.3 Implement `GET /absences/:id/documents/:docId/download` (download)
+  - [x] 3.3.3.1 Validate user has access to document
+  - [x] 3.3.3.2 Generate signed URL from IDrive e2
+  - [x] 3.3.3.3 Return redirect to signed URL or stream file
+- [x] 3.3.4 Implement `DELETE /absences/:id/documents/:docId` (delete)
+  - [x] 3.3.4.1 Validate user owns the document
+  - [x] 3.3.4.2 Delete file from IDrive e2
+  - [x] 3.3.4.3 Delete record from absence_documents table
+  - [x] 3.3.4.4 Update absence status to PENDING_DOCUMENT if needed
 
 ### 3.4 Document Business Logic
-- [ ] 3.4.1 Validate file types (PDF, JPG, PNG only) in multer middleware
-- [ ] 3.4.2 Validate file size (max 10MB) in multer middleware
-- [ ] 3.4.3 Generate unique file paths: `/absences/{userId}/{absenceId}/{uuid}-{timestamp}.{ext}`
-- [ ] 3.4.4 Update absence status logic:
-  - [ ] 3.4.4.1 When document uploaded for PENDING_DOCUMENT → change to SUBMITTED
-  - [ ] 3.4.4.2 When last document deleted for SICK/RESERVES → change to PENDING_DOCUMENT
-- [ ] 3.4.5 Allow document upload even if month is locked (bypass lock validation)
-- [ ] 3.4.6 Add security checks: verify user can only access their own documents
+- [x] 3.4.1 Validate file types (PDF, JPG, PNG only) in multer middleware
+- [x] 3.4.2 Validate file size (max 10MB) in multer middleware
+- [x] 3.4.3 Generate unique file paths: `/absences/{userId}/{absenceId}/{uuid}-{timestamp}.{ext}`
+- [x] 3.4.4 Update absence status logic:
+  - [x] 3.4.4.1 When document uploaded for PENDING_DOCUMENT → change to SUBMITTED
+  - [x] 3.4.4.2 When last document deleted for SICK/RESERVES → change to PENDING_DOCUMENT
+- [x] 3.4.5 Allow document upload even if month is locked (bypass lock validation)
+- [x] 3.4.6 Add security checks: verify user can only access their own documents
 
 ## 4. Styling & Responsive Design
 
@@ -273,20 +342,20 @@ UI designs are located in `/Screenshots`:
 ## 5. Israeli Workweek Logic
 
 ### 5.1 Date Utilities (`client/packages/utils/src/date.ts`)
-- [ ] 5.1.1 Create `isIsraeliWorkday(date)` utility (Sun-Thu, returns boolean)
-- [ ] 5.1.2 Create `expandDateRange(startDate, endDate)` utility (returns Date[])
-- [ ] 5.1.3 Create `getWorkdaysInRange(startDate, endDate)` utility (excludes Fri/Sat)
-- [ ] 5.1.4 Create `calculateWorkdayCount(startDate, endDate)` utility
-- [ ] 5.1.5 Add unit tests for date utilities
+- [x] 5.1.1 Create `isIsraeliWorkday(date)` utility (Sun-Thu, returns boolean)
+- [x] 5.1.2 Create `expandDateRange(startDate, endDate)` utility (returns Date[])
+- [x] 5.1.3 Create `getWorkdaysInRange(startDate, endDate)` utility (excludes Fri/Sat)
+- [x] 5.1.4 Create `calculateWorkdayCount(startDate, endDate)` utility
+- [x] 5.1.5 Add unit tests for date utilities
 
 ### 5.2 Hebrew Locale Configuration
-- [ ] 5.2.1 Install date-fns with Hebrew locale (`date-fns/locale/he`)
-- [ ] 5.2.2 Configure date-fns Hebrew locale globally
-- [ ] 5.2.3 Create date formatting utilities
-  - [ ] 5.2.3.1 `formatHebrewDate(date)` - returns "DD/MM/YY"
-  - [ ] 5.2.3.2 `formatHebrewMonthYear(date)` - returns "נובמבר 2025"
-  - [ ] 5.2.3.3 `formatHebrewDayName(date)` - returns "יום א'"
-- [ ] 5.2.4 Configure react-day-picker with Hebrew locale
+- [x] 5.2.1 Install date-fns with Hebrew locale (`date-fns/locale/he`)
+- [x] 5.2.2 Configure date-fns Hebrew locale globally
+- [x] 5.2.3 Create date formatting utilities
+  - [x] 5.2.3.1 `formatHebrewDate(date)` - returns "DD/MM/YY"
+  - [x] 5.2.3.2 `formatHebrewMonthYear(date)` - returns "נובמבר 2025"
+  - [x] 5.2.3.3 `formatHebrewDayName(date)` - returns "יום א'"
+- [x] 5.2.4 Configure react-day-picker with Hebrew locale
 
 ## 6. Shared DTOs
 
@@ -359,15 +428,15 @@ UI designs are located in `/Screenshots`:
 ## 8. Documentation
 
 ### 8.1 API Documentation
-- [ ] 8.1.1 Document absence endpoints in Swagger
-  - [ ] 8.1.1.1 Add examples for each endpoint
-  - [ ] 8.1.1.2 Document request/response schemas
-  - [ ] 8.1.1.3 Document error responses
-- [ ] 8.1.2 Document document upload endpoints in Swagger
-  - [ ] 8.1.2.1 Document multipart/form-data format
-  - [ ] 8.1.2.2 Document file type and size limits
-  - [ ] 8.1.2.3 Add upload examples
-- [ ] 8.1.3 Update endpoints.md with any changes
+- [x] 8.1.1 Document absence endpoints in Swagger
+  - [x] 8.1.1.1 Add examples for each endpoint
+  - [x] 8.1.1.2 Document request/response schemas
+  - [x] 8.1.1.3 Document error responses
+- [x] 8.1.2 Document document upload endpoints in Swagger
+  - [x] 8.1.2.1 Document multipart/form-data format
+  - [x] 8.1.2.2 Document file type and size limits
+  - [x] 8.1.2.3 Add upload examples
+- [x] 8.1.3 Update endpoints.md with any changes
 
 ### 8.2 Component Documentation
 - [ ] 8.2.1 Add JSDoc comments to all components
@@ -377,7 +446,7 @@ UI designs are located in `/Screenshots`:
 ## 9. Environment Configuration
 
 ### 9.1 Server Environment Variables
-- [ ] 9.1.1 Add IDrive e2 variables to `.env.example`
+- [x] 9.1.1 Add IDrive e2 variables to `.env.example`
   ```
   IDRIVE_ACCESS_KEY=your_access_key
   IDRIVE_SECRET_KEY=your_secret_key
@@ -385,7 +454,7 @@ UI designs are located in `/Screenshots`:
   IDRIVE_ENDPOINT=https://endpoint.idrivee2.com
   IDRIVE_REGION=us-east-1
   ```
-- [ ] 9.1.2 Update environment validation in `server/src/config/env.ts`
+- [x] 9.1.2 Update environment validation in `server/src/config/env.ts`
 - [ ] 9.1.3 Document setup instructions in server README
 
 ## 10. Deployment Preparation

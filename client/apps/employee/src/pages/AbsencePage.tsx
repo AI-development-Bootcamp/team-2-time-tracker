@@ -6,59 +6,146 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AbsenceForm, AbsenceFormData, useToast } from '@client/ui';
+import { useCreateAbsence, useUploadDocument } from '../api/absencesApi';
+import { useAbsenceStore } from '../app/stores/absence.store';
+import { AbsenceType, CreateAbsenceRequestDto } from '@shared/types';
 import './AbsencePage.css';
 
 export default function AbsencePage() {
     const navigate = useNavigate();
     const toast = useToast();
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const [error, setError] = useState<string>('');
     const [uploadProgress, setUploadProgress] = useState(0);
-    const [isUploading, setIsUploading] = useState(false);
     const [dateMode, setDateMode] = useState<'single' | 'range'>('range');
 
+    // Get store actions
+    const {
+        setCreateAbsenceLoading,
+        setCreateAbsenceError,
+        setCreateAbsenceSuccess,
+        setUploadProgress: setStoreUploadProgress,
+        setUploading,
+        setUploadError,
+        setUploadSuccess,
+    } = useAbsenceStore();
+
+    // Setup mutations
+    const createAbsenceMutation = useCreateAbsence({
+        onSuccess: (absence) => {
+            console.log('Absence created:', absence);
+        },
+        onError: (error) => {
+            const errorMessage = typeof error === 'string' ? error : 'שגיאה בשמירת הדיווח';
+            setCreateAbsenceError(errorMessage);
+            toast.error(errorMessage);
+        },
+    });
+
+    const uploadDocumentMutation = useUploadDocument({
+        onProgress: (progress) => {
+            setUploadProgress(progress);
+            setStoreUploadProgress(progress);
+        },
+        onSuccess: (document) => {
+            console.log('Document uploaded:', document);
+            setUploadSuccess();
+        },
+        onError: (error) => {
+            const errorMessage = typeof error === 'string' ? error : 'שגיאה בהעלאת המסמך';
+            setUploadError(errorMessage);
+            toast.error(errorMessage);
+        },
+    });
+
     const handleSubmit = async (data: AbsenceFormData, file?: File) => {
-        setIsSubmitting(true);
-        setError('');
-        setUploadProgress(0);
-        setIsUploading(false);
+        setCreateAbsenceLoading(true);
+        setCreateAbsenceError(null);
 
         try {
-            // Simulate upload progress if file exists
-            if (file) {
-                setIsUploading(true);
-                // Simulate upload progress
-                for (let i = 0; i <= 100; i += 10) {
-                    await new Promise(resolve => setTimeout(resolve, 200));
-                    setUploadProgress(i);
-                }
-                setIsUploading(false);
+            // Map form data to API DTO
+            const absenceData = mapFormDataToDto(data);
+
+            // Create absence request
+            const createdAbsence = await createAbsenceMutation.mutateAsync(absenceData);
+
+            // If file is provided, upload it
+            if (file && createdAbsence.id) {
+                setUploading(true);
+                await uploadDocumentMutation.mutateAsync({
+                    absenceId: createdAbsence.id,
+                    file,
+                });
             }
 
-            // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 500));
-
-            console.log('Absence data:', data);
-            console.log('File:', file);
-
-            // TODO: Replace with actual API call
-            // await createAbsence(data, file);
-
-            // Form submitted successfully
+            // Success - clear form and show notification
+            setCreateAbsenceSuccess();
             toast.success('הדיווח נשמר בהצלחה!');
-            
+
             // Navigate back on success
             setTimeout(() => {
                 navigate(-1);
             }, 1000);
         } catch (err) {
-            const errorMessage = err instanceof Error ? err.message : 'שגיאה בשמירת הדיווח';
-            setError(errorMessage);
-            toast.error('שגיאה', errorMessage);
+            // Error handling is done in mutation callbacks
+            console.error('Error submitting absence:', err);
         } finally {
-            setIsSubmitting(false);
-            setIsUploading(false);
+            setCreateAbsenceLoading(false);
+            setUploading(false);
         }
+    };
+
+    /**
+     * Maps AbsenceFormData to CreateAbsenceRequestDto
+     */
+    const mapFormDataToDto = (data: AbsenceFormData): CreateAbsenceRequestDto => {
+        // Determine absence type and isHalfDay
+        let type: AbsenceType = AbsenceType.VACATION;
+        let isHalfDay = false;
+
+        if (data.absenceType) {
+            if (data.absenceType === 'VACATION_HALF') {
+                type = AbsenceType.VACATION;
+                isHalfDay = true;
+            } else if (data.absenceType === 'VACATION_FULL') {
+                type = AbsenceType.VACATION;
+                isHalfDay = false;
+            } else if (data.absenceType === 'SICK') {
+                type = AbsenceType.SICK;
+                isHalfDay = false;
+            } else if (data.absenceType === 'RESERVES') {
+                type = AbsenceType.RESERVES;
+                isHalfDay = false;
+            }
+        }
+
+        // Determine start and end dates
+        let startDate: Date;
+        let endDate: Date;
+
+        if (data.dateMode === 'single' && data.singleDate) {
+            startDate = data.singleDate;
+            endDate = data.singleDate;
+        } else if (data.dateMode === 'range' && data.dateRange?.from) {
+            startDate = data.dateRange.from;
+            endDate = data.dateRange.to || data.dateRange.from;
+        } else {
+            throw new Error('תאריכים לא תקינים');
+        }
+
+        // Format dates as YYYY-MM-DD (backend expects this format)
+        const formatDate = (date: Date): string => {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        };
+
+        return {
+            type,
+            startDate: formatDate(startDate),
+            endDate: formatDate(endDate),
+            isHalfDay,
+            note: data.note,
+        };
     };
 
     const handleClose = () => {
@@ -68,6 +155,11 @@ export default function AbsencePage() {
     const handleModeChange = (mode: 'single' | 'range') => {
         setDateMode(mode);
     };
+
+    // Get loading and error states from store and mutations
+    const { isLoading, error, isUploading } = useAbsenceStore();
+    const isSubmitting = createAbsenceMutation.isPending || uploadDocumentMutation.isPending || isLoading;
+    const errorMessage = error || (createAbsenceMutation.error ? String(createAbsenceMutation.error) : '');
 
     return (
         <div className="absence-page">
@@ -82,7 +174,7 @@ export default function AbsencePage() {
                         ×
                     </button>
                     <div className="absence-page__header-content">
-                        <h1 className="absence-page__title">דיווח העדרות</h1>
+                        <h1 className="absence-page__title">דיווח ידני</h1>
                         {dateMode === 'single' && (
                             <h2 className="absence-page__subtitle">יום בודד</h2>
                         )}
@@ -98,13 +190,10 @@ export default function AbsencePage() {
                         onClose={handleClose}
                         onModeChange={handleModeChange}
                         isLoading={isSubmitting}
-                        error={error}
+                        error={errorMessage}
                         uploadProgress={uploadProgress}
                         isUploading={isUploading}
                     />
-                </div>
-                <div className="absence-page__search-zone">
-                    {/* Search zone section */}
                 </div>
             </div>
         </div>
