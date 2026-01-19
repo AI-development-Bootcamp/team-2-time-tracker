@@ -145,6 +145,10 @@ describe('Auth Integration Tests', () => {
                     password: 'password123',
                 });
 
+            expect(loginResponse.status).toBe(200);
+            expect(loginResponse.body.success).toBe(true);
+            expect(loginResponse.body.data?.refreshToken).toBeTruthy();
+
             const refreshToken = loginResponse.body.data.refreshToken;
 
             // Now try to refresh
@@ -203,6 +207,14 @@ describe('Auth Integration Tests', () => {
 
             expect(response.status).toBe(401);
         });
+
+        it('should return 401 for invalid token', async () => {
+            const response = await request(app)
+                .get('/api/auth/me')
+                .set('Authorization', 'Bearer invalid');
+
+            expect(response.status).toBe(401);
+        });
     });
 
     describe('POST /api/auth/logout', () => {
@@ -236,6 +248,13 @@ describe('Auth Integration Tests', () => {
 
             expect(response.status).toBe(200);
             expect(response.body.success).toBe(true);
+
+            const refreshResponse = await request(app)
+                .post('/api/auth/refresh')
+                .send({ refreshToken });
+
+            expect(refreshResponse.status).toBe(401);
+            expect(refreshResponse.body.success === false || Boolean(refreshResponse.body.error)).toBe(true);
         });
     });
 

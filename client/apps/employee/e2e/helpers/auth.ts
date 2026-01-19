@@ -89,8 +89,22 @@ export async function logout(page: Page) {
  * @returns true if authenticated
  */
 export async function isAuthenticated(page: Page): Promise<boolean> {
-  const currentUrl = page.url();
-  return !currentUrl.includes('/login');
+  const logoutButton = page
+    .locator('button:has-text("התנתק"), button:has-text("Logout")')
+    .first();
+  const hasLogoutButton =
+    (await logoutButton.count()) > 0 && (await logoutButton.isVisible());
+
+  if (hasLogoutButton) {
+    return true;
+  }
+
+  const cookies = await page.context().cookies();
+  const hasAuthCookie = cookies.some(
+    (cookie) => cookie.name === 'session' || cookie.name === 'authToken'
+  );
+
+  return hasAuthCookie;
 }
 
 /**

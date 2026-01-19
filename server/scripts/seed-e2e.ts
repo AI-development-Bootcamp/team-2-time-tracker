@@ -49,9 +49,9 @@ async function main() {
   });
 
   console.log('Created test users:');
-  console.log(`- Employee: ${testEmployee.email} (password: Test123!)`);
-  console.log(`- Admin: ${testAdmin.email} (password: Test123!)`);
-  console.log(`- New Employee: ${newEmployee.email} (password: Test123!, mustChangePassword: true)`);
+  console.log(`- Employee: ${testEmployee.email} (${testEmployee.role})`);
+  console.log(`- Admin: ${testAdmin.email} (${testAdmin.role})`);
+  console.log(`- New Employee: ${newEmployee.email} (${newEmployee.role}, mustChangePassword: ${newEmployee.mustChangePassword})`);
 
   console.log('E2E database seeding completed successfully!');
 }

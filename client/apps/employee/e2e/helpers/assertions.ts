@@ -61,7 +61,7 @@ export async function expectHebrewText(page: Page, text: string) {
  */
 export async function expectErrorMessage(page: Page, message?: string | RegExp) {
   if (message) {
-    await expect(page.locator(`text=${message}`)).toBeVisible();
+    await expect(page.getByText(message)).toBeVisible();
   } else {
     // Look for common error indicators
     const errorElement = page.locator('[role="alert"], .error, [class*="error"]').first();
@@ -76,7 +76,7 @@ export async function expectErrorMessage(page: Page, message?: string | RegExp) 
  */
 export async function expectSuccessMessage(page: Page, message?: string | RegExp) {
   if (message) {
-    await expect(page.locator(`text=${message}`)).toBeVisible();
+    await expect(page.getByText(message)).toBeVisible();
   } else {
     // Look for common success indicators
     const successElement = page.locator('[role="status"], .success, [class*="success"]').first();

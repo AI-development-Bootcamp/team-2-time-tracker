@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { login, TEST_USERS } from './helpers/auth';
+import { expectMobileResponsive, expectRTL } from './helpers/assertions';
 
 /**
  * Homepage E2E Tests
@@ -17,25 +18,11 @@ test.describe('Homepage', () => {
   });
 
   test('should have RTL layout', async ({ page }) => {
-    // Check HTML direction
-    const html = page.locator('html');
-    await expect(html).toHaveAttribute('dir', 'rtl');
-
-    // Check that the page title exists
-    await expect(page).toHaveTitle(/Time Tracker/);
+    await expectRTL(page);
   });
 
   test('should be responsive on mobile', async ({ page }) => {
-    // Set mobile viewport
-    await page.setViewportSize({ width: 375, height: 667 });
-
-    // Reload page
-    await page.reload();
-
-    // Check that main content is visible
-    const mainContent = page.locator('main, [role="main"]').first();
-    await expect(mainContent).toBeVisible();
-    await expect(mainContent).toBeInViewport();
+    await expectMobileResponsive(page);
   });
 
   // TODO: Remove skip when navigation feature is implemented - TICKET-NAV-001 / @team-frontend

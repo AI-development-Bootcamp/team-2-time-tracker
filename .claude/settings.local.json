@@ -10,7 +10,8 @@
       "Bash(pnpm list:*)",
       "Bash(pnpm --filter server prisma migrate:*)",
       "Bash(npx prisma migrate:*)",
-      "Bash(gh run list:*)"
+      "Bash(gh run list:*)",
+      "Bash(gh pr view:*)"
     ]
   }
 }
