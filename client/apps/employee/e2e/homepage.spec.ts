@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { login, TEST_USERS } from './helpers/auth';
 
 /**
  * Homepage E2E Tests
@@ -6,18 +7,8 @@ import { test, expect } from '@playwright/test';
  */
 
 test.describe('Homepage', () => {
-  // Helper function to login before each test
   test.beforeEach(async ({ page }) => {
-    // Navigate to login page
-    await page.goto('/login');
-
-    // Login with test credentials
-    await page.fill('input[name="username"]', 'test_employee');
-    await page.fill('input[name="password"]', 'TestPassword123!');
-    await page.click('button[type="submit"]');
-
-    // Wait for redirect to homepage
-    await page.waitForURL(/\/$|\/dashboard/);
+    await login(page, TEST_USERS.EMPLOYEE);
   });
 
   test('should display welcome message with user name', async ({ page }) => {
@@ -47,8 +38,8 @@ test.describe('Homepage', () => {
     await expect(mainContent).toBeInViewport();
   });
 
-  test.skip('should navigate between pages', async ({ page }) => {
-    // Skip: Navigation feature not yet implemented
+  // TODO: Remove skip when navigation feature is implemented - TICKET-NAV-001 / @team-frontend
+  test.skip('should navigate between pages', 'Navigation feature not yet implemented', async ({ page }) => {
     // When implemented, this test should:
     // 1. Assert the timeReportLink is visible
     // 2. Click the link
