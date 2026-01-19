@@ -68,22 +68,36 @@ export default function AbsencePage() {
             const createdAbsence = await createAbsenceMutation.mutateAsync(absenceData);
 
             // If file is provided, upload it
+            let fileUploadSuccess = true;
             if (file && createdAbsence.id) {
-                setUploading(true);
-                await uploadDocumentMutation.mutateAsync({
-                    absenceId: createdAbsence.id,
-                    file,
-                });
+                try {
+                    setUploading(true);
+                    await uploadDocumentMutation.mutateAsync({
+                        absenceId: createdAbsence.id,
+                        file,
+                    });
+                } catch (uploadErr) {
+                    // File upload failed, but absence was created
+                    fileUploadSuccess = false;
+                    const errorMessage = typeof uploadErr === 'string' ? uploadErr : 'שגיאה בהעלאת הקובץ';
+                    console.error('Error uploading file:', uploadErr);
+                    
+                    // Show warning that absence was saved but file upload failed
+                    toast.warning(`הדיווח נשמר, אך העלאת הקובץ נכשלה: ${errorMessage}`);
+                }
             }
 
             // Success - clear form and show notification
             setCreateAbsenceSuccess();
-            toast.success('הדיווח נשמר בהצלחה!');
+            
+            if (fileUploadSuccess) {
+                toast.success('הדיווח נשמר בהצלחה!');
+            }
 
-            // Navigate back on success
+            // Navigate to home page on success
             setTimeout(() => {
-                navigate(-1);
-            }, 1000);
+                navigate('/');
+            }, 1500);
         } catch (err) {
             // Error handling is done in mutation callbacks
             console.error('Error submitting absence:', err);

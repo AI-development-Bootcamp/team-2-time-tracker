@@ -199,6 +199,9 @@ function mapErrorToHebrew(message: string): string {
         'Request timeout': 'פג הזמן הקצוב. אנא נסה שוב',
         'Foreign key constraint': 'שגיאה בנתוני המשתמש. אנא התחבר מחדש',
         'user_id_fkey': 'שגיאה בנתוני המשתמש. אנא התחבר מחדש',
+        'Failed to upload file to storage': 'שגיאה בהעלאת הקובץ. אנא נסה שוב',
+        'Storage is not configured': 'שירות העלאת קבצים אינו זמין כרגע',
+        'שירות העלאת קבצים אינו זמין': 'שירות העלאת קבצים אינו זמין כרגע. הדיווח נשמר ללא קובץ',
     };
 
     // Check for exact match
