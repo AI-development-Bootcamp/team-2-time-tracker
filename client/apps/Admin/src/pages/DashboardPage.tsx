@@ -8,9 +8,9 @@ import './DashboardPage.css';
 
 /**
  * @description Admin dashboard page with logout functionality
- * @returns {JSX.Element} Dashboard page component
+ * @returns Dashboard page component
  */
-function DashboardPage(): JSX.Element {
+function DashboardPage() {
     const { user, logout } = useAuthStore();
 
     async function handleLogout(): Promise<void> {

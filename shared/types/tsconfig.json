@@ -5,9 +5,9 @@
         "rootDir": "./src",
         "noEmit": false,
         "allowImportingTsExtensions": false,
-        "module": "CommonJS",
         "moduleResolution": "Node",
-        "declaration": true
+        "declaration": true,    
+        "jsx": "react-jsx",
     },
     "include": [
         "src/**/*"
