@@ -93,8 +93,8 @@ export async function expectAccessible(page: Page) {
   await expect(page.locator('main, [role="main"]')).toBeVisible();
 
   // Check for skip link (good accessibility practice)
-  const skipLink = page.locator('a[href="#main-content"], a:has-text("דלג לתוכן")').first();
-  // Skip link might not always exist, so don't fail if missing
+  // Skip link might not always exist, so just verify the selector would work
+  await page.locator('a[href="#main-content"], a:has-text("דלג לתוכן")').first().isVisible().catch(() => false);
 }
 
 /**

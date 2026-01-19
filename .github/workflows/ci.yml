@@ -60,14 +60,14 @@ jobs:
       - name: Lint
         run: pnpm lint
 
-      - name: Type check
-        run: pnpm -r exec tsc --noEmit
-
       - name: Build shared types
         run: pnpm --filter @shared/types build
 
       - name: Prisma generate
         run: pnpm --filter server prisma generate
+
+      - name: Type check
+        run: pnpm -r exec tsc --noEmit
 
       - name: Prisma validate
         run: pnpm --filter server prisma validate

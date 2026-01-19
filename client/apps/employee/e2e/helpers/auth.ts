@@ -5,7 +5,7 @@ import { Page } from '@playwright/test';
  */
 
 export interface TestUser {
-  username: string;
+  email: string;
   password: string;
   role: 'EMPLOYEE' | 'ADMIN';
   mustChangePassword?: boolean;
@@ -14,21 +14,22 @@ export interface TestUser {
 /**
  * Default test users
  * Note: These users should be seeded in the test database
+ * See: server/scripts/seed-e2e.ts
  */
 export const TEST_USERS = {
   EMPLOYEE: {
-    username: 'test_employee',
-    password: 'TestPassword123!',
+    email: 'test.employee@example.com',
+    password: 'Test123!',
     role: 'EMPLOYEE' as const,
   },
   ADMIN: {
-    username: 'test_admin',
-    password: 'AdminPassword123!',
+    email: 'test.admin@example.com',
+    password: 'Test123!',
     role: 'ADMIN' as const,
   },
   NEW_EMPLOYEE: {
-    username: 'new_employee',
-    password: 'TempPassword123!',
+    email: 'new.employee@example.com',
+    password: 'Test123!',
     role: 'EMPLOYEE' as const,
     mustChangePassword: true,
   },
@@ -44,7 +45,7 @@ export async function login(page: Page, user: TestUser) {
   await page.goto('/login');
 
   // Fill in credentials
-  await page.fill('input[name="username"]', user.username);
+  await page.fill('input[name="email"]', user.email);
   await page.fill('input[name="password"]', user.password);
 
   // Submit form

@@ -16,7 +16,7 @@ test.describe('Login Flow', () => {
     await expect(page).toHaveTitle(/Time Tracker/);
 
     // Check for login form elements
-    await expect(page.locator('input[name="username"]')).toBeVisible();
+    await expect(page.locator('input[name="email"]')).toBeVisible();
     await expect(page.locator('input[name="password"]')).toBeVisible();
     await expect(page.locator('button[type="submit"]')).toBeVisible();
 
@@ -30,13 +30,13 @@ test.describe('Login Flow', () => {
     await page.click('button[type="submit"]');
 
     // Should show validation errors
-    await expect(page.locator('text=/שם משתמש|username/i')).toBeVisible();
+    await expect(page.locator('text=/אימייל|email/i')).toBeVisible();
     await expect(page.locator('text=/סיסמה|password/i')).toBeVisible();
   });
 
   test('should show error for invalid credentials', async ({ page }) => {
     // Fill in invalid credentials
-    await page.fill('input[name="username"]', 'invalid_user');
+    await page.fill('input[name="email"]', 'invalid@example.com');
     await page.fill('input[name="password"]', 'wrong_password');
 
     // Submit form
@@ -54,8 +54,8 @@ test.describe('Login Flow', () => {
     // In real CI, you would seed the database with test data
 
     // Fill in valid credentials (example - adjust to your test user)
-    await page.fill('input[name="username"]', 'test_employee');
-    await page.fill('input[name="password"]', 'TestPassword123!');
+    await page.fill('input[name="email"]', 'test.employee@example.com');
+    await page.fill('input[name="password"]', 'Test123!');
 
     // Submit form
     await page.click('button[type="submit"]');
@@ -69,8 +69,8 @@ test.describe('Login Flow', () => {
 
   test('should redirect to change password if first login', async ({ page }) => {
     // Login with user that needs password change
-    await page.fill('input[name="username"]', 'new_employee');
-    await page.fill('input[name="password"]', 'TempPassword123!');
+    await page.fill('input[name="email"]', 'new.employee@example.com');
+    await page.fill('input[name="password"]', 'Test123!');
 
     await page.click('button[type="submit"]');
 
@@ -111,7 +111,7 @@ test.describe('Login Flow', () => {
     expect(buttonBox?.height).toBeGreaterThanOrEqual(44);
 
     // Check that form is not cut off
-    await expect(page.locator('input[name="username"]')).toBeInViewport();
+    await expect(page.locator('input[name="email"]')).toBeInViewport();
     await expect(page.locator('input[name="password"]')).toBeInViewport();
     await expect(loginButton).toBeInViewport();
   });
@@ -138,8 +138,8 @@ test.describe('Login Flow', () => {
 
   test('should logout successfully', async ({ page }) => {
     // Login first
-    await page.fill('input[name="username"]', 'test_employee');
-    await page.fill('input[name="password"]', 'TestPassword123!');
+    await page.fill('input[name="email"]', 'test.employee@example.com');
+    await page.fill('input[name="password"]', 'Test123!');
     await page.click('button[type="submit"]');
 
     // Wait for redirect
