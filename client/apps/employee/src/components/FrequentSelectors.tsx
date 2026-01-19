@@ -1,35 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { selectorsApi } from '@client/api-client';
+import { ClientSelectorDto, ProjectSelectorDto, TaskSelectorDto } from '@shared/types';
 import './FrequentSelectors.css';
-
-/**
- * Selector item interface for dropdown options
- */
-interface SelectorItem {
-    id: string;
-    name: string;
-    usageCount: number;
-}
-
-/**
- * Client selector item
- */
-interface ClientSelector extends SelectorItem {
-    // No additional fields
-}
-
-/**
- * Project selector item
- */
-interface ProjectSelector extends SelectorItem {
-    clientId: string;
-}
-
-/**
- * Task selector item
- */
-interface TaskSelector extends SelectorItem {
-    projectId: string;
-}
 
 /**
  * Selection state interface
@@ -68,30 +40,6 @@ type SortMode = 'frequency' | 'alpha';
  *   initialSelection={{ clientId: 'abc-123' }}
  * />
  */
-
-// TODO: Replace with actual API calls when backend is ready (tasks 5.1-5.12)
-// Mock data for testing - this simulates the expected API response format
-const mockClients: ClientSelector[] = [
-    { id: '550e8400-e29b-41d4-a716-446655440001', name: 'לקוח א', usageCount: 45 },
-    { id: '550e8400-e29b-41d4-a716-446655440002', name: 'לקוח ב', usageCount: 30 },
-    { id: '550e8400-e29b-41d4-a716-446655440003', name: 'לקוח ג', usageCount: 15 },
-];
-
-const mockProjects: ProjectSelector[] = [
-    { id: '550e8400-e29b-41d4-a716-446655440011', name: 'פרויקט 1', clientId: '550e8400-e29b-41d4-a716-446655440001', usageCount: 25 },
-    { id: '550e8400-e29b-41d4-a716-446655440012', name: 'פרויקט 2', clientId: '550e8400-e29b-41d4-a716-446655440001', usageCount: 20 },
-    { id: '550e8400-e29b-41d4-a716-446655440013', name: 'פרויקט 3', clientId: '550e8400-e29b-41d4-a716-446655440002', usageCount: 18 },
-    { id: '550e8400-e29b-41d4-a716-446655440014', name: 'פרויקט 4', clientId: '550e8400-e29b-41d4-a716-446655440003', usageCount: 10 },
-];
-
-const mockTasks: TaskSelector[] = [
-    { id: '550e8400-e29b-41d4-a716-446655440111', name: 'משימה 1', projectId: '550e8400-e29b-41d4-a716-446655440011', usageCount: 15 },
-    { id: '550e8400-e29b-41d4-a716-446655440112', name: 'משימה 2', projectId: '550e8400-e29b-41d4-a716-446655440011', usageCount: 10 },
-    { id: '550e8400-e29b-41d4-a716-446655440113', name: 'משימה 3', projectId: '550e8400-e29b-41d4-a716-446655440012', usageCount: 12 },
-    { id: '550e8400-e29b-41d4-a716-446655440114', name: 'משימה 4', projectId: '550e8400-e29b-41d4-a716-446655440013', usageCount: 9 },
-    { id: '550e8400-e29b-41d4-a716-446655440115', name: 'משימה 5', projectId: '550e8400-e29b-41d4-a716-446655440014', usageCount: 6 },
-];
-
 export const FrequentSelectors: React.FC<FrequentSelectorsProps> = ({
     onSelectionChange,
     initialSelection = {},
@@ -103,6 +51,16 @@ export const FrequentSelectors: React.FC<FrequentSelectorsProps> = ({
     const [taskId, setTaskId] = useState<string | null>(initialSelection.taskId || null);
     const [sortMode, setSortMode] = useState<SortMode>('frequency');
 
+    // Data from API
+    const [clients, setClients] = useState<ClientSelectorDto[]>([]);
+    const [projects, setProjects] = useState<ProjectSelectorDto[]>([]);
+    const [tasks, setTasks] = useState<TaskSelectorDto[]>([]);
+
+    // Loading states
+    const [loadingClients, setLoadingClients] = useState(false);
+    const [loadingProjects, setLoadingProjects] = useState(false);
+    const [loadingTasks, setLoadingTasks] = useState(false);
+
     // Track manual overrides to prevent auto-select from overriding user choices
     const [manualOverrides, setManualOverrides] = useState({
         client: false,
@@ -111,51 +69,74 @@ export const FrequentSelectors: React.FC<FrequentSelectorsProps> = ({
     });
 
     /**
-     * @description Sort items based on current sort mode
-     * @param {SelectorItem[]} items - Items to sort
-     * @returns {SelectorItem[]} Sorted items
+     * @description Fetch clients from API
      */
-    const sortItems = <T extends SelectorItem>(items: T[]): T[] => {
-        if (sortMode === 'frequency') {
-            return [...items].sort((a, b) => b.usageCount - a.usageCount);
-        }
-        return [...items].sort((a, b) => a.name.localeCompare(b.name, 'he'));
-    };
-
-    /**
-     * @description Get filtered and sorted clients
-     */
-    const clients = React.useMemo(() => {
-        return sortItems(mockClients);
+    useEffect(() => {
+        const fetchClients = async () => {
+            setLoadingClients(true);
+            try {
+                const data = await selectorsApi.getClients(sortMode);
+                setClients(data);
+            } catch (error) {
+                console.error('Failed to fetch clients:', error);
+            } finally {
+                setLoadingClients(false);
+            }
+        };
+        fetchClients();
     }, [sortMode]);
 
     /**
-     * @description Get filtered and sorted projects for selected client
+     * @description Fetch projects when client changes
      */
-    const projects = React.useMemo(() => {
-        if (!clientId) return [];
-        const filtered = mockProjects.filter(p => p.clientId === clientId);
-        return sortItems(filtered);
+    useEffect(() => {
+        if (!clientId) {
+            setProjects([]);
+            return;
+        }
+
+        const fetchProjects = async () => {
+            setLoadingProjects(true);
+            try {
+                const data = await selectorsApi.getProjects(clientId, sortMode);
+                setProjects(data);
+            } catch (error) {
+                console.error('Failed to fetch projects:', error);
+            } finally {
+                setLoadingProjects(false);
+            }
+        };
+        fetchProjects();
     }, [clientId, sortMode]);
 
     /**
-     * @description Get filtered and sorted tasks for selected project
+     * @description Fetch tasks when project changes
      */
-    const tasks = React.useMemo(() => {
-        if (!projectId) return [];
-        const filtered = mockTasks.filter(t => t.projectId === projectId);
-        return sortItems(filtered);
+    useEffect(() => {
+        if (!projectId) {
+            setTasks([]);
+            return;
+        }
+
+        const fetchTasks = async () => {
+            setLoadingTasks(true);
+            try {
+                const data = await selectorsApi.getTasks(projectId, sortMode);
+                setTasks(data);
+            } catch (error) {
+                console.error('Failed to fetch tasks:', error);
+            } finally {
+                setLoadingTasks(false);
+            }
+        };
+        fetchTasks();
     }, [projectId, sortMode]);
 
     /**
      * @description Auto-select when only one option is available
-     * @param {SelectorItem[]} items - Items to check
-     * @param {string | null} currentValue - Current selected value
-     * @param {(value: string) => void} setValue - Setter function
-     * @param {'client' | 'project' | 'task'} level - Selection level
      */
     const autoSelectSingle = (
-        items: SelectorItem[],
+        items: any[],
         currentValue: string | null,
         setValue: (value: string) => void,
         level: 'client' | 'project' | 'task'
@@ -259,9 +240,9 @@ export const FrequentSelectors: React.FC<FrequentSelectorsProps> = ({
                         className="frequent-selectors__dropdown"
                         value={clientId || ''}
                         onChange={handleClientChange}
-                        disabled={disabled || clients.length === 0}
+                        disabled={disabled || loadingClients}
                     >
-                        <option value="">בחר לקוח...</option>
+                        <option value="">{loadingClients ? 'טוען...' : 'בחר לקוח...'}</option>
                         {clients.map(client => (
                             <option key={client.id} value={client.id}>
                                 {client.name}
@@ -281,9 +262,9 @@ export const FrequentSelectors: React.FC<FrequentSelectorsProps> = ({
                         className="frequent-selectors__dropdown"
                         value={projectId || ''}
                         onChange={handleProjectChange}
-                        disabled={disabled || !clientId || projects.length === 0}
+                        disabled={disabled || !clientId || loadingProjects}
                     >
-                        <option value="">בחר פרויקט...</option>
+                        <option value="">{loadingProjects ? 'טוען...' : 'בחר פרויקט...'}</option>
                         {projects.map(project => (
                             <option key={project.id} value={project.id}>
                                 {project.name}
@@ -303,9 +284,9 @@ export const FrequentSelectors: React.FC<FrequentSelectorsProps> = ({
                         className="frequent-selectors__dropdown"
                         value={taskId || ''}
                         onChange={handleTaskChange}
-                        disabled={disabled || !projectId || tasks.length === 0}
+                        disabled={disabled || !projectId || loadingTasks}
                     >
-                        <option value="">בחר משימה...</option>
+                        <option value="">{loadingTasks ? 'טוען...' : 'בחר משימה...'}</option>
                         {tasks.map(task => (
                             <option key={task.id} value={task.id}>
                                 {task.name}

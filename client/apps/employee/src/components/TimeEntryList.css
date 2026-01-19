@@ -1,62 +1,211 @@
 .time-entry-list {
     display: flex;
     flex-direction: column;
-    gap: var(--space-4);
+    gap: 4px;
 }
 
-.time-entry-item {
+.time-entry-list__empty {
+    padding: 40px 20px;
+    text-align: center;
+    color: rgb(16, 23, 46);
+    font-family: 'Assistant', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 16px;
+}
+
+/* Date Group */
+.time-entry-group {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.time-entry-group__header {
+    width: 100%;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    padding: var(--space-3);
-    background-color: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md);
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: white;
+    border: none;
+    cursor: pointer;
+    font-family: 'Assistant', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     transition: background-color 0.2s;
 }
 
-.time-entry-item:hover {
-    background-color: var(--color-surface-hover);
+.time-entry-group__header:hover {
+    background: rgb(248, 248, 248);
 }
 
-.time-entry-item__info {
+.time-entry-group__header-left {
     display: flex;
-    flex-direction: column;
-    gap: var(--space-1);
-    flex: 1;
+    align-items: center;
+    gap: 8px;
 }
 
-.time-entry-item__project {
+.time-entry-group__status {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.time-entry-group__status--green {
+    background: rgb(52, 211, 153);
+}
+
+.time-entry-group__status--yellow {
+    background: rgb(251, 191, 36);
+}
+
+.time-entry-group__status--red {
+    background: rgb(239, 68, 68);
+}
+
+.time-entry-group__chevron {
+    font-size: 12px;
+    color: rgb(107, 114, 128);
+}
+
+.time-entry-group__badge {
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+    font-family: 'Assistant', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.time-entry-group__badge--red {
+    background: rgb(254, 226, 226);
+    color: rgb(239, 68, 68);
+}
+
+.time-entry-group__badge--yellow {
+    background: rgb(254, 243, 199);
+    color: rgb(217, 119, 6);
+}
+
+.time-entry-group__badge--green {
+    background: rgb(209, 250, 229);
+    color: rgb(5, 150, 105);
+}
+
+.time-entry-group__icon {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
     font-weight: 600;
-    font-size: var(--text-sm);
-    color: var(--color-text);
 }
 
-.time-entry-item__task {
-    font-size: var(--text-xs);
-    color: var(--color-text-secondary);
+.time-entry-group__icon--red {
+    background: rgb(254, 226, 226);
+    color: rgb(239, 68, 68);
 }
 
-.time-entry-item__time {
+.time-entry-group__icon--yellow {
+    background: rgb(254, 243, 199);
+    color: rgb(217, 119, 6);
+}
+
+.time-entry-group__icon--green {
+    background: rgb(209, 250, 229);
+    color: rgb(5, 150, 105);
+}
+
+.time-entry-group__date {
+    font-size: 16px;
+    font-weight: 500;
+    color: rgb(16, 23, 46);
+    direction: rtl;
+}
+
+/* Entries */
+.time-entry-group__entries {
+    border-top: 1px solid rgb(242, 242, 247);
+}
+
+/* Entry Items */
+.time-entry-item {
+    padding: 12px 16px;
+    border-bottom: 1px solid rgb(242, 242, 247);
+}
+
+.time-entry-item:last-child {
+    border-bottom: none;
+}
+
+.time-entry-item__main {
     display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: var(--space-1);
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.time-entry-item__left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.time-entry-item__right {
+    text-align: right;
+}
+
+.time-entry-item__edit {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    color: rgb(59, 130, 246);
+    font-family: 'Assistant', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 14px;
+    text-decoration: underline;
+}
+
+.time-entry-item__edit:hover {
+    color: rgb(37, 99, 235);
+}
+
+.time-entry-item__time-range {
+    font-size: 16px;
+    font-weight: 600;
+    color: rgb(59, 130, 246);
+    font-family: 'Assistant', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.time-entry-item__task-name {
+    font-size: 16px;
+    font-weight: 500;
+    color: rgb(16, 23, 46);
+    font-family: 'Assistant', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    direction: rtl;
+}
+
+.time-entry-item__details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    direction: rtl;
+}
+
+.time-entry-item__location {
+    font-size: 14px;
+    color: rgb(107, 114, 128);
+    font-family: 'Assistant', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 .time-entry-item__duration {
-    font-weight: 600;
-    font-size: var(--text-sm);
-    color: var(--color-primary);
+    font-size: 14px;
+    color: rgb(107, 114, 128);
+    font-family: 'Assistant', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
-.time-entry-item__range {
-    font-size: var(--text-xs);
-    color: var(--color-text-secondary);
-}
-
-.time-entry-item__actions {
-    display: flex;
-    gap: var(--space-2);
-    margin-left: var(--space-4);
+.time-entry-item__description {
+    font-size: 14px;
+    color: rgb(107, 114, 128);
+    font-family: 'Assistant', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    margin-top: 8px;
+    direction: rtl;
 }

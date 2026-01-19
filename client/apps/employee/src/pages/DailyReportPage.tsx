@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { useWorkdayStore } from '@/app/stores/workday.store';
 import { useTimeEntryStore } from '@/app/stores/timeEntries.store';
-import { TimeEntryDto, CreateTimeEntryInput } from '@shared/types';
-import { Button } from '@client/ui';
-import { WorkdayProgress } from '../components/WorkdayProgress';
-import { DailySummaryCard } from '../components/DailySummaryCard';
-import { TimerCard } from '../components/TimerCard';
+import { TimeEntryDto, CreateTimeEntryInput, GetWorkdayResponseDto } from '@shared/types';
 import { TimeEntryList } from '../components/TimeEntryList';
-import { TimeEntryForm } from '../components/TimeEntryForm';
+import { MultiProjectTimeEntryForm } from '../components/MultiProjectTimeEntryForm';
+import { FooterActions } from '../components/FooterActions';
+import { workdayApi } from '@client/api-client';
 import './DailyReportPage.css';
+
+export interface DayData {
+    date: string;
+    workday: GetWorkdayResponseDto | null;
+    entries: TimeEntryDto[];
+}
 
 /**
  * DailyReportPage Component
@@ -16,140 +19,110 @@ import './DailyReportPage.css';
  */
 export const DailyReportPage: React.FC = () => {
     // State
-    const [currentDate, setCurrentDate] = useState(new Date().toISOString().split('T')[0]);
     const [isFormOpen, setIsFormOpen] = useState(false);
-    const [editingEntry, setEditingEntry] = useState<Partial<CreateTimeEntryInput> | undefined>(undefined);
+    const [daysData, setDaysData] = useState<DayData[]>([]);
+    const [loading, setLoading] = useState(true);
 
     // Stores
     const {
-        currentWorkday,
-        fetchWorkday,
-    } = useWorkdayStore();
-
-    const {
         createTimeEntry,
-        updateTimeEntry,
         deleteTimeEntry
     } = useTimeEntryStore();
 
-    // Fetch data on date change
+    // Fetch last 14 days of data
     useEffect(() => {
-        fetchWorkday(currentDate);
-    }, [currentDate, fetchWorkday]);
+        const fetchMultipleDays = async () => {
+            setLoading(true);
+            const days: DayData[] = [];
+            const today = new Date();
 
-    // Derived state
-    const entries = currentWorkday?.timeEntries || [];
-    const summary = currentWorkday?.summary;
-    const isToday = currentDate === new Date().toISOString().split('T')[0];
+            for (let i = 0; i < 14; i++) {
+                const date = new Date(today);
+                date.setDate(date.getDate() - i);
+                const dateStr = date.toISOString().split('T')[0];
+
+                try {
+                    const workday = await workdayApi.getWorkday(dateStr);
+                    days.push({
+                        date: dateStr,
+                        workday,
+                        entries: workday.data?.timeEntries || []
+                    });
+                } catch (error) {
+                    // If workday doesn't exist, create empty day
+                    days.push({
+                        date: dateStr,
+                        workday: null,
+                        entries: []
+                    });
+                }
+            }
+
+            setDaysData(days);
+            setLoading(false);
+        };
+
+        fetchMultipleDays();
+    }, []);
 
     // Handlers
-    const handlePrevDay = () => {
-        const date = new Date(currentDate);
-        date.setDate(date.getDate() - 1);
-        setCurrentDate(date.toISOString().split('T')[0]);
+    const handleStartTimer = () => {
+        // TODO: Open timer selection modal or start timer directly
+        console.log('Start timer clicked');
     };
 
-    const handleNextDay = () => {
-        const date = new Date(currentDate);
-        date.setDate(date.getDate() + 1);
-        setCurrentDate(date.toISOString().split('T')[0]);
-    };
-
-    const handleToday = () => {
-        setCurrentDate(new Date().toISOString().split('T')[0]);
-    };
-
-    const handleCreateEntry = () => {
-        setEditingEntry(undefined);
+    const handleManualReport = () => {
         setIsFormOpen(true);
     };
 
     const handleEditEntry = (entry: TimeEntryDto) => {
-        setEditingEntry({
-            ...entry,
-            taskId: entry.task.id,
-            workDate: entry.workDate, // Keep original date
-        });
-        setIsFormOpen(true);
+        // TODO: Implement edit functionality
+        console.log('Edit entry:', entry);
     };
 
-    const handleDeleteEntry = async (entry: TimeEntryDto) => {
-        if (window.confirm('Are you sure you want to delete this entry?')) {
-            await deleteTimeEntry(entry.id);
-            // Refresh logic handled by store usually, or we refetch
-            fetchWorkday(currentDate);
+    const handleDeleteEntry = async (id: string) => {
+        if (confirm('האם אתה בטוח שברצונך למחוק דיווח זה?')) {
+            await deleteTimeEntry(id);
+            // Refresh data
+            window.location.reload(); // Temporary solution
         }
     };
 
     const handleFormSubmit = async (data: CreateTimeEntryInput) => {
-        if ((editingEntry as any)?.id) {
-            await updateTimeEntry((editingEntry as any).id, data);
-        } else {
-            await createTimeEntry({ ...data, workDate: currentDate });
-        }
-        fetchWorkday(currentDate); // Refresh data
+        await createTimeEntry(data);
+        // Refresh data
+        window.location.reload(); // Temporary solution
     };
+
+    if (loading) {
+        return (
+            <div className="daily-report-page">
+                <div className="daily-report-page__loading">טוען...</div>
+            </div>
+        );
+    }
 
     return (
         <div className="daily-report-page">
-            {/* Header / Date Nav */}
-            <div className="daily-report-page__header">
-                <div className="daily-report-page__date-nav">
-                    <button className="daily-report-page__nav-btn" onClick={handleNextDay} disabled={isToday}>
-                        &lt;
-                    </button>
-                    <span onClick={handleToday} style={{ cursor: 'pointer' }}>
-                        {new Date(currentDate).toLocaleDateString('he-IL', { weekday: 'long', day: 'numeric', month: 'long' })}
-                    </span>
-                    <button className="daily-report-page__nav-btn" onClick={handlePrevDay}>
-                        &gt;
-                    </button>
-                    {!isToday && (
-                        <Button size="sm" variant="ghost" onClick={handleToday}>
-                            חזור להיום
-                        </Button>
-                    )}
-                </div>
-            </div>
-
-            {/* Progress Bar */}
-            <WorkdayProgress />
-
-            {/* Summary & Timer Grid */}
-            <div className="daily-report-page__summary-grid">
-                <TimerCard />
-                {summary && (
-                    <DailySummaryCard
-                        date={currentDate}
-                        summary={summary}
-                        status={currentWorkday?.status || 'MISSING'}
-                        isLocked={currentWorkday?.isLocked || false}
-                        isSubmitted={currentWorkday?.isSubmitted || false}
-                    />
-                )}
-            </div>
-
-            {/* Entries List */}
-            <div className="daily-report-page__entries-section">
-                <div className="daily-report-page__section-header">
-                    <h2 className="daily-report-page__section-title">דיווחים ({entries.length})</h2>
-                    <Button onClick={handleCreateEntry}>
-                        + דיווח ידני
-                    </Button>
-                </div>
-
+            {/* Scrollable Content Area */}
+            <div className="daily-report-page__content">
                 <TimeEntryList
-                    entries={entries}
+                    daysData={daysData}
                     onEdit={handleEditEntry}
                     onDelete={handleDeleteEntry}
                 />
             </div>
 
+            {/* Fixed Footer */}
+            <FooterActions
+                onStartTimer={handleStartTimer}
+                onManualReport={handleManualReport}
+            />
+
             {/* Entry Form Modal */}
-            <TimeEntryForm
+            <MultiProjectTimeEntryForm
                 open={isFormOpen}
                 onOpenChange={setIsFormOpen}
-                initialData={editingEntry}
                 onSubmit={handleFormSubmit}
             />
         </div>

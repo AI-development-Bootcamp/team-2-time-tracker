@@ -127,9 +127,43 @@ export const seedDatabase = async () => {
             },
         });
 
-        // Assign tasks to Employee
+        // Admin-specific tasks (with 'Admin' prefix)
+        const adminDesignTask = await prisma.task.create({
+            data: {
+                name: 'Admin Design Phase',
+                projectId: websiteProject.id,
+                status: 'OPEN',
+            },
+        });
+
+        const adminDevTask = await prisma.task.create({
+            data: {
+                name: 'Admin Development',
+                projectId: websiteProject.id,
+                status: 'OPEN',
+            },
+        });
+
+        const adminAppTask = await prisma.task.create({
+            data: {
+                name: 'Admin App Architecture',
+                projectId: mobileProject.id,
+                status: 'OPEN',
+            },
+        });
+
+        const adminMeetingTask = await prisma.task.create({
+            data: {
+                name: 'Admin Weekly Meeting',
+                projectId: opsProject.id,
+                status: 'OPEN',
+            },
+        });
+
+        // Assign tasks: Employee gets regular tasks, Admin gets admin-specific tasks
         await prisma.taskAssignment.createMany({
             data: [
+                // Employee assignments (regular tasks)
                 {
                     userId: employee.id,
                     taskId: designTask.id,
@@ -148,6 +182,27 @@ export const seedDatabase = async () => {
                 {
                     userId: employee.id,
                     taskId: meetingTask.id,
+                    assignedByAdminId: admin.id,
+                },
+                // Admin assignments (admin-specific tasks only)
+                {
+                    userId: admin.id,
+                    taskId: adminDesignTask.id,
+                    assignedByAdminId: admin.id,
+                },
+                {
+                    userId: admin.id,
+                    taskId: adminDevTask.id,
+                    assignedByAdminId: admin.id,
+                },
+                {
+                    userId: admin.id,
+                    taskId: adminAppTask.id,
+                    assignedByAdminId: admin.id,
+                },
+                {
+                    userId: admin.id,
+                    taskId: adminMeetingTask.id,
                     assignedByAdminId: admin.id,
                 },
             ],

@@ -100,9 +100,12 @@ export async function createTimeEntry(
     const workDateObj = new Date(workDate);
 
     // Validate future dates are blocked
+    // Use UTC to avoid timezone issues
     const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    if (workDateObj > today) {
+    const todayUTC = new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()));
+    const workDateUTC = new Date(Date.UTC(workDateObj.getFullYear(), workDateObj.getMonth(), workDateObj.getDate()));
+
+    if (workDateUTC > todayUTC) {
         throw new BadRequestError('Cannot create time entry for future dates');
     }
 
@@ -571,9 +574,12 @@ export async function batchCreateTimeEntries(
     const workDateObj = new Date(workDate);
 
     // Validate future dates are blocked
+    // Use UTC to avoid timezone issues
     const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    if (workDateObj > today) {
+    const todayUTC = new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()));
+    const workDateUTC = new Date(Date.UTC(workDateObj.getFullYear(), workDateObj.getMonth(), workDateObj.getDate()));
+
+    if (workDateUTC > todayUTC) {
         throw new BadRequestError('Cannot create time entries for future dates');
     }
 

@@ -127,22 +127,27 @@ export class SelectorsRepo {
 
     /**
      * Get tasks with optional frequency sorting
-     * Only returns tasks assigned to the user
+     * For ADMIN users: returns all active tasks
+     * For EMPLOYEE users: returns only tasks assigned to them
      */
     async getTasks(
         userId: string,
+        userRole: string,
         projectId?: string,
         sort: 'alpha' | 'frequency' = 'alpha'
     ): Promise<TaskSelectorDto[]> {
         const where: Prisma.TaskWhereInput = {
-            status: 'OPEN',
-            // Only tasks assigned to the user
-            taskAssignments: {
+            status: 'OPEN'
+        };
+
+        // Only filter by assignments for non-admin users
+        if (userRole !== 'ADMIN') {
+            where.taskAssignments = {
                 some: {
                     userId
                 }
-            }
-        };
+            };
+        }
 
         if (projectId) {
             where.projectId = projectId;
