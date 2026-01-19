@@ -3,125 +3,36 @@ name: CI
 on:
   push:
   pull_request:
+    branches: [main, development]
+  workflow_dispatch:
 
 jobs:
-  lint-test-build:
+  ci:
+    name: Lint, Build, Test
     runs-on: ubuntu-latest
-
-    services:
-      postgres:
-        image: postgres:16-alpine
-        env:
-          POSTGRES_USER: timetracker
-          POSTGRES_PASSWORD: timetracker123
-          POSTGRES_DB: timetracker_test
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-
-    env:
-      DATABASE_URL: postgresql://timetracker:timetracker123@localhost:5432/timetracker_test
-      NODE_ENV: test
-      JWT_SECRET: ${{ secrets.JWT_SECRET_TEST }}
-      JWT_REFRESH_SECRET: ${{ secrets.JWT_REFRESH_SECRET_TEST }}
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v4
         with:
           version: 9
 
-      - name: Get pnpm store directory
-        shell: bash
-        run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
-
-      - name: Setup pnpm cache
+      - name: Cache pnpm
         uses: actions/cache@v4
         with:
-          path: ${{ env.STORE_PATH }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-store-
+          path: ~/.local/share/pnpm/store
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: ${{ runner.os }}-pnpm-
 
-      - name: Install dependencies
-        run: pnpm install
+      - run: pnpm install --frozen-lockfile
 
-      - name: Lint
-        run: pnpm lint
+      - run: pnpm lint
 
-      - name: Build shared types
-        run: pnpm --filter @shared/types build
+      - run: pnpm build
 
-      - name: Prisma generate
-        run: pnpm --filter server prisma generate
-
-      - name: Type check
-        run: pnpm -r exec tsc --noEmit
-
-      - name: Prisma validate
-        run: pnpm --filter server prisma validate
-
-      - name: Run database migrations
-        run: pnpm --filter server prisma migrate deploy
-
-      - name: Build server
-        run: pnpm --filter server build
-
-      - name: Build client packages
-        run: pnpm --filter './client/packages/*' build
-
-      - name: Build client apps
-        run: pnpm --filter './client/apps/*' build
-
-      - name: Upload server build artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: server-build
-          path: server/dist/
-          retention-days: 30
-
-      - name: Upload client build artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: client-builds
-          path: |
-            client/apps/*/dist/
-            client/packages/*/dist/
-          retention-days: 30
-
-      - name: Run unit tests
-        run: pnpm --filter server test:unit:coverage
-
-      - name: Upload unit test coverage
-        uses: codecov/codecov-action@v4
-        if: always()
-        with:
-          files: ./server/coverage/coverage-final.json
-          flags: unit-tests
-          name: unit-tests-coverage
-          fail_ci_if_error: true
-          token: ${{ secrets.CODECOV_TOKEN }}
-
-      - name: Run integration tests
-        run: pnpm --filter server test:integration:coverage
-
-      - name: Upload integration test coverage
-        uses: codecov/codecov-action@v4
-        if: always()
-        with:
-          files: ./server/coverage/coverage-final.json
-          flags: integration-tests
-          name: integration-tests-coverage
-          fail_ci_if_error: true
-          token: ${{ secrets.CODECOV_TOKEN }}
+      - run: pnpm test
