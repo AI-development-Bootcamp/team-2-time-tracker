@@ -9,7 +9,8 @@
       "Bash(pnpm -r exec tsc:*)",
       "Bash(pnpm list:*)",
       "Bash(pnpm --filter server prisma migrate:*)",
-      "Bash(npx prisma migrate:*)"
+      "Bash(npx prisma migrate:*)",
+      "Bash(gh run list:*)"
     ]
   }
 }
