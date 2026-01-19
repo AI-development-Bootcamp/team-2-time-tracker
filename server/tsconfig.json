@@ -5,7 +5,12 @@
     "rootDir": "./src",
     "noEmit": false,
     "allowImportingTsExtensions": false,
-    "baseUrl": "."
+    "baseUrl": ".",
+    "paths": {
+      "@shared/types": [
+        "../shared/types/src/index.ts"
+      ]
+    }
   },
   "include": [
     "src/**/*"

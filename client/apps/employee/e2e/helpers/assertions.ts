@@ -88,13 +88,18 @@ export async function expectSuccessMessage(page: Page, message?: string | RegExp
  * Assert that page has proper accessibility attributes
  * @param page - Playwright page object
  */
-export async function expectAccessible(page: Page) {
+export async function expectAccessible(page: Page, requireSkipLink = false) {
   // Check for main landmark
   await expect(page.locator('main, [role="main"]')).toBeVisible();
 
   // Check for skip link (good accessibility practice)
-  // Skip link might not always exist, so just verify the selector would work
-  await page.locator('a[href="#main-content"], a:has-text("דלג לתוכן")').first().isVisible().catch(() => false);
+  const skipLink = page.locator('a[href="#main-content"], a:has-text("דלג לתוכן")').first();
+  if (requireSkipLink) {
+    await expect(skipLink).toBeVisible();
+    return;
+  }
+
+  return skipLink.isVisible().catch(() => false);
 }
 
 /**

@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { TEST_USERS } from './helpers/auth';
 
 /**
  * Login Flow E2E Tests
@@ -54,8 +55,8 @@ test.describe('Login Flow', () => {
     // In real CI, you would seed the database with test data
 
     // Fill in valid credentials (example - adjust to your test user)
-    await page.fill('input[name="email"]', 'test.employee@example.com');
-    await page.fill('input[name="password"]', 'Test123!');
+    await page.fill('input[name="email"]', TEST_USERS.EMPLOYEE.email);
+    await page.fill('input[name="password"]', TEST_USERS.EMPLOYEE.password);
 
     // Submit form
     await page.click('button[type="submit"]');
