@@ -31,3 +31,7 @@ Thumbs.db
 
 # Logs
 nul
+
+# Testing/Development pages (not part of official requirements)
+client/apps/employee/src/pages/HomePage.tsx
+client/apps/employee/src/pages/HomePage.css
