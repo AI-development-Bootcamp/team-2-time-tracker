@@ -3,7 +3,7 @@
  * @module absences/absences.documents
  */
 
-import { Request, Response, NextFunction, RequestHandler } from 'express';
+import { Response, NextFunction, RequestHandler } from 'express';
 import { AuthenticatedRequest } from '../../middlewares/auth.middleware';
 import { BadRequestError, NotFoundError, ForbiddenError } from '../../shared/errors';
 import { uploadConfig, hebrewFileErrors } from '../../config/upload';
@@ -36,7 +36,7 @@ export const uploadMiddleware: RequestHandler = multer({
 export async function uploadDocument(req: AuthenticatedRequest, res: Response, next: NextFunction) {
     try {
         const userId = req.user!.userId;
-        const { id: absenceId } = req.params;
+        const absenceId = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
 
         // Verify absence exists and belongs to user
         const absence = await prisma.absenceRequest.findFirst({
@@ -58,8 +58,11 @@ export async function uploadDocument(req: AuthenticatedRequest, res: Response, n
             throw new BadRequestError(hebrewFileErrors.FILE_TOO_LARGE);
         }
 
+        // Extract filename (multer .single() always provides a string)
+        const fileName = Array.isArray(file.originalname) ? file.originalname[0] : file.originalname;
+
         // Generate file path and upload to storage
-        const filePath = storageService.generateFilePath(userId, absenceId, file.originalname);
+        const filePath = storageService.generateFilePath(userId, absenceId, fileName);
         const fileUrl = await storageService.uploadFile(file.buffer, filePath, file.mimetype);
 
         // Save document metadata to database
@@ -67,7 +70,7 @@ export async function uploadDocument(req: AuthenticatedRequest, res: Response, n
             data: {
                 absenceRequestId: absenceId,
                 fileUrl,
-                fileName: file.originalname,
+                fileName,
                 mimeType: file.mimetype,
                 fileSize: file.size,
                 uploadedByUserId: userId,
@@ -102,7 +105,7 @@ export async function uploadDocument(req: AuthenticatedRequest, res: Response, n
 export async function listDocuments(req: AuthenticatedRequest, res: Response, next: NextFunction) {
     try {
         const userId = req.user!.userId;
-        const { id: absenceId } = req.params;
+        const absenceId = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
 
         // Verify absence exists and belongs to user
         const absence = await prisma.absenceRequest.findFirst({
@@ -143,7 +146,8 @@ export async function listDocuments(req: AuthenticatedRequest, res: Response, ne
 export async function downloadDocument(req: AuthenticatedRequest, res: Response, next: NextFunction) {
     try {
         const userId = req.user!.userId;
-        const { id: absenceId, docId } = req.params;
+        const absenceId = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+        const docId = Array.isArray(req.params.docId) ? req.params.docId[0] : req.params.docId;
 
         // Verify absence exists and belongs to user
         const absence = await prisma.absenceRequest.findFirst({
@@ -179,7 +183,8 @@ export async function downloadDocument(req: AuthenticatedRequest, res: Response,
 export async function deleteDocument(req: AuthenticatedRequest, res: Response, next: NextFunction) {
     try {
         const userId = req.user!.userId;
-        const { id: absenceId, docId } = req.params;
+        const absenceId = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+        const docId = Array.isArray(req.params.docId) ? req.params.docId[0] : req.params.docId;
 
         // Verify absence exists and belongs to user
         const absence = await prisma.absenceRequest.findFirst({
