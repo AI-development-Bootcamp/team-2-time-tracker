@@ -120,6 +120,8 @@ Once the server is running, access the Swagger documentation at:
 
 ## Scripts
 
+TypeScript build info files (`*.tsbuildinfo`) are generated artifacts. Recreate them with `tsc --build` when needed.
+
 ### Server
 
 - `pnpm dev` - Start development server with hot reload
