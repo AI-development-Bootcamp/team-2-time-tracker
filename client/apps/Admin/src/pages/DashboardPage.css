@@ -2,72 +2,11 @@
  * Dashboard Page Styles
  */
 
-.dashboard {
-    min-height: 100vh;
-    background: #f3f4f6;
-}
-
-.dashboard__header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 2rem;
-    background: #fff;
-    border-bottom: 1px solid #e5e7eb;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.dashboard__title {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: #1f2937;
-    margin: 0;
-}
-
-.dashboard__user-info {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.dashboard__user-name {
-    font-size: 0.875rem;
-    color: #4b5563;
-}
-
-.dashboard__logout-btn {
-    padding: 0.5rem 1rem;
-    background: #ef4444;
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    font-size: 0.875rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-
-.dashboard__logout-btn:hover {
-    background: #dc2626;
-}
-
-.dashboard__content {
+.dashboard-page__content {
     padding: 2rem;
 }
 
-.dashboard__welcome {
-    background: #fff;
-    padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.dashboard__welcome h2 {
-    margin: 0 0 0.5rem 0;
-    color: #1f2937;
-}
-
-.dashboard__welcome p {
-    margin: 0;
+.dashboard-page__content p {
     color: #6b7280;
+    font-size: 0.875rem;
 }
