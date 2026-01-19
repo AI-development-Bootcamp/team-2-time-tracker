@@ -1,0 +1,252 @@
+/**
+ * AbsenceRangePage styles
+ * iOS Settings-inspired design with gray background
+ */
+
+.absence-range-page {
+    width: 100%;
+    min-height: 100vh;
+    background-color: #f2f2f7; /* iOS gray background */
+    padding: 0;
+    padding-top: var(--spacing-md);
+}
+
+.absence-range-page__wrapper {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.absence-range-page__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-md);
+    padding-bottom: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+    position: relative;
+    background-color: #f2f2f7; /* iOS gray background */
+}
+
+.absence-range-page__header-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--spacing-xs);
+    margin-inline: var(--spacing-md);
+}
+
+.absence-range-page__title {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    color: #1c1c1e; /* iOS dark text */
+    margin: 0;
+    text-align: right;
+}
+
+.absence-range-page__close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    color: var(--color-text-secondary);
+    font-size: 28px;
+    line-height: 1;
+    cursor: pointer;
+    border-radius: var(--radius-full);
+    transition: background-color var(--transition-fast), color var(--transition-fast);
+    position: absolute;
+    left: var(--spacing-md);
+}
+
+.absence-range-page__spacer {
+    width: 32px;
+    height: 32px;
+}
+
+.absence-range-page__close:hover {
+    background-color: var(--color-gray-100);
+    color: var(--color-text-primary);
+}
+
+.absence-range-page__content {
+    padding: var(--spacing-md);
+    width: 100%;
+    background-color: #ffffff; /* White card */
+    border-radius: 10px; /* iOS rounded corners */
+    margin: 0 var(--spacing-md);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); /* Subtle shadow */
+}
+
+.absence-range-page__search-zone {
+    background-color: #ffc1cc; /* Pink background */
+    border-radius: 10px; /* iOS rounded corners */
+    padding: var(--spacing-lg);
+    margin: var(--spacing-md);
+    min-height: 100px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); /* Subtle shadow */
+}
+
+/* Form Styles */
+.absence-range-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    direction: rtl;
+}
+
+.absence-range-form__field {
+    width: 100%;
+}
+
+.absence-range-form__date-range {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.absence-range-form__date-range-header {
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-xs);
+}
+
+.absence-range-form__date-fields {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.absence-range-form__date-field {
+    width: 100%;
+}
+
+.absence-range-form__label {
+    display: block;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-xs);
+    text-align: right;
+}
+
+.absence-range-form__range-picker-toggle {
+    margin-bottom: var(--spacing-md);
+}
+
+.absence-range-form__range-button {
+    background: transparent;
+    border: 1px solid var(--color-gray-300);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-primary);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    width: 100%;
+    text-align: right;
+}
+
+.absence-range-form__range-button:hover {
+    background-color: var(--color-gray-50);
+    border-color: var(--color-gray-400);
+}
+
+.absence-range-form__range-picker {
+    width: 100%;
+}
+
+.absence-range-form__workdays {
+    padding: var(--spacing-sm);
+    background-color: var(--color-gray-50);
+    border-radius: var(--radius-md);
+    text-align: right;
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+}
+
+.absence-range-form__workdays strong {
+    color: var(--color-text-primary);
+    font-weight: var(--font-weight-bold);
+}
+
+.absence-range-form__upload-section {
+    width: 100%;
+}
+
+.absence-range-form__error {
+    color: var(--color-error);
+    font-size: var(--font-size-sm);
+    margin-top: var(--spacing-xs);
+    display: block;
+}
+
+.absence-range-form__form-error {
+    padding: var(--spacing-sm);
+    background-color: var(--color-error-light);
+    color: var(--color-error);
+    border-radius: var(--radius-md);
+    text-align: right;
+    font-size: var(--font-size-sm);
+}
+
+.absence-range-form__actions {
+    width: 100%;
+    margin-top: var(--spacing-md);
+}
+
+/* Mobile Responsive */
+@media (min-width: 640px) {
+    .absence-range-page {
+        padding: var(--spacing-lg);
+    }
+
+    .absence-range-page__header {
+        padding: var(--spacing-lg);
+    }
+
+    .absence-range-page__content {
+        padding: var(--spacing-lg);
+    }
+
+    .absence-range-page__search-zone {
+        padding: var(--spacing-xl);
+    }
+
+    .absence-range-form__date-fields {
+        flex-direction: row;
+        gap: var(--spacing-md);
+    }
+
+    .absence-range-form__date-field {
+        flex: 1;
+    }
+}
+
+/* Dark Mode - iOS style */
+[data-theme="dark"] .absence-range-page {
+    background-color: #000000; /* iOS dark background */
+}
+
+[data-theme="dark"] .absence-range-page__header {
+    background-color: #000000;
+}
+
+[data-theme="dark"] .absence-range-page__title {
+    color: #ffffff;
+}
+
+[data-theme="dark"] .absence-range-page__content,
+[data-theme="dark"] .absence-range-page__search-zone {
+    background-color: #1c1c1e; /* iOS dark card */
+    box-shadow: 0 1px 3px rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .absence-range-page__close:hover {
+    background-color: #2c2c2e;
+}
