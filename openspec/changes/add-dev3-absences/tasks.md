@@ -388,10 +388,10 @@ UI designs are located in `/Screenshots`:
   - [x] 7.1.1.4 Test PENDING_DOCUMENT status logic
   - [x] 7.1.1.5 Test overlapping absence validation
   - [x] 7.1.1.6 Test month lock validation
-- [ ] 7.1.2 Write unit tests for storage.service.ts
-  - [ ] 7.1.2.1 Test file upload to IDrive e2
-  - [ ] 7.1.2.2 Test file deletion
-  - [ ] 7.1.2.3 Test signed URL generation
+- [x] 7.1.2 Write unit tests for storage.service.ts
+  - [x] 7.1.2.1 Test file upload to IDrive e2
+  - [x] 7.1.2.2 Test file deletion
+  - [x] 7.1.2.3 Test signed URL generation
 - [x] 7.1.3 Write integration tests for absence endpoints
   - [x] 7.1.3.1 Test POST /absences (success, validation errors)
   - [x] 7.1.3.2 Test GET /absences (pagination, filtering)
