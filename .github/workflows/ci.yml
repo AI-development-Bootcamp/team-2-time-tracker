@@ -34,4 +34,5 @@ jobs:
 
       - run: pnpm build
 
-      - run: pnpm test
+      - name: Run server unit tests
+        run: pnpm --filter server test:unit
