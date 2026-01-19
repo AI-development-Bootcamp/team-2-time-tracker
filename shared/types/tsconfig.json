@@ -8,7 +8,8 @@
         "declarationMap": true,
         "moduleResolution": "NodeNext",
         "module": "NodeNext",
-        "allowImportingTsExtensions": false
+        "allowImportingTsExtensions": false,
+        "composite": true
     },
     "include": [
         "src/**/*"

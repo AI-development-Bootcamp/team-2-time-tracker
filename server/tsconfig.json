@@ -8,11 +8,14 @@
     "baseUrl": ".",
     "paths": {
       "@shared/types": [
-        "../shared/types/src/index.ts"
+        "../shared/types/dist/index"
       ]
     }
   },
   "include": [
     "src/**/*"
+  ],
+  "references": [
+    { "path": "../shared/types" }
   ]
 }

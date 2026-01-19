@@ -11,7 +11,9 @@
       "Bash(pnpm --filter server prisma migrate:*)",
       "Bash(npx prisma migrate:*)",
       "Bash(gh run list:*)",
-      "Bash(gh pr view:*)"
+      "Bash(gh pr view:*)",
+      "Bash(git fetch:*)",
+      "Bash(git ls-tree:*)"
     ]
   }
 }
