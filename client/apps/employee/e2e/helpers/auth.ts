@@ -61,6 +61,7 @@ export async function login(page: Page, user: TestUser) {
 /**
  * Logout helper function
  * @param page - Playwright page object
+ * @throws Error if logout button is not visible
  */
 export async function logout(page: Page) {
   // Find logout button (adjust selector as needed)
@@ -68,10 +69,17 @@ export async function logout(page: Page) {
     .locator('button:has-text("התנתק"), button:has-text("Logout")')
     .first();
 
-  if (await logoutButton.isVisible()) {
-    await logoutButton.click();
-    await page.waitForURL(/\/login/);
+  const isVisible = await logoutButton.isVisible();
+  if (!isVisible) {
+    const currentUrl = page.url();
+    throw new Error(
+      `Logout button not found on page. Current URL: ${currentUrl}. ` +
+      `Expected locator: 'button:has-text("התנתק"), button:has-text("Logout")'`
+    );
   }
+
+  await logoutButton.click();
+  await page.waitForURL(/\/login/);
 }
 
 /**

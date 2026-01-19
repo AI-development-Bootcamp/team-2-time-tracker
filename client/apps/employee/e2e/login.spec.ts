@@ -148,15 +148,19 @@ test.describe('Login Flow', () => {
     // Find and click logout button
     const logoutButton = page.locator('button:has-text("התנתק"), button:has-text("Logout")').first();
 
-    if (await logoutButton.isVisible()) {
-      await logoutButton.click();
+    // Assert logout button is visible before interacting
+    await expect(
+      logoutButton,
+      'Logout button should be visible after login. Locator: button:has-text("התנתק"), button:has-text("Logout")'
+    ).toBeVisible();
 
-      // Should redirect back to login
-      await expect(page).toHaveURL(/\/login/);
+    await logoutButton.click();
 
-      // Trying to access protected route should redirect to login
-      await page.goto('/');
-      await expect(page).toHaveURL(/\/login/);
-    }
+    // Should redirect back to login
+    await expect(page).toHaveURL(/\/login/);
+
+    // Trying to access protected route should redirect to login
+    await page.goto('/');
+    await expect(page).toHaveURL(/\/login/);
   });
 });

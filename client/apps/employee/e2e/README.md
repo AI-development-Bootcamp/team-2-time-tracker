@@ -39,7 +39,7 @@ pnpm --filter @client/employee test:e2e --project="Mobile Chrome"
 
 ## 📁 Test Structure
 
-```
+```text
 e2e/
 ├── login.spec.ts          # Login flow tests
 ├── homepage.spec.ts       # Homepage/dashboard tests

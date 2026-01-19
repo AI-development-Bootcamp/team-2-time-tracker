@@ -29,6 +29,8 @@ jobs:
           --health-timeout 5s
           --health-retries 5
 
+    # checkov:skip=CKV_SECRET_6: These are ephemeral test credentials for CI-only PostgreSQL service container
+    # See: https://docs.bridgecrew.io/docs/secrets_6
     env:
       DATABASE_URL: postgresql://timetracker:timetracker123@localhost:5432/timetracker_e2e
       NODE_ENV: test

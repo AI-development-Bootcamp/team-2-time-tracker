@@ -47,15 +47,16 @@ test.describe('Homepage', () => {
     await expect(mainContent).toBeInViewport();
   });
 
-  test('should navigate between pages', async ({ page }) => {
-    // This is a placeholder test - will be expanded when navigation is implemented
-    // Example: Click on "דיווח שעות" link
+  test.skip('should navigate between pages', async ({ page }) => {
+    // Skip: Navigation feature not yet implemented
+    // When implemented, this test should:
+    // 1. Assert the timeReportLink is visible
+    // 2. Click the link
+    // 3. Assert navigation to /time-report occurred
     const timeReportLink = page.locator('a:has-text("דיווח שעות"), a:has-text("Time Report")').first();
 
-    if (await timeReportLink.isVisible()) {
-      await timeReportLink.click();
-      // Verify navigation occurred
-      // await expect(page).toHaveURL(/\/time-report/);
-    }
+    await expect(timeReportLink).toBeVisible();
+    await timeReportLink.click();
+    await expect(page).toHaveURL(/\/time-report/);
   });
 });

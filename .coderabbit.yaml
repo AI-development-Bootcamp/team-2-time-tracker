@@ -35,46 +35,47 @@ reviews:
     #   - main
     #   - develop
 
+  # Path-based instructions for more focused reviews
+  path_instructions:
+    - path: "server/**/*.ts"
+      instructions: |
+        - Review for TypeScript best practices
+        - Check for proper error handling
+        - Verify Prisma usage is correct
+        - Ensure proper typing
+        - Check for security vulnerabilities (SQL injection, XSS, etc.)
+
+    - path: "client/**/*.tsx"
+      instructions: |
+        - Review React best practices
+        - Check for proper hooks usage
+        - Verify accessibility (a11y)
+        - Check for performance issues (unnecessary re-renders)
+
+    - path: "**/*.test.ts"
+      instructions: |
+        - Verify test coverage
+        - Check test quality and clarity
+        - Ensure proper mocking
+        - Verify edge cases are tested
+
+    - path: ".github/workflows/**"
+      instructions: |
+        - Review CI/CD pipeline changes carefully
+        - Check for security issues in workflows
+        - Verify proper use of secrets
+
 # Chat settings
 chat:
   auto_reply: true
 
 # Knowledge base - paths to important documentation
 knowledge_base:
-  - "README.md"
-  - "CLAUDE.md"
-  - ".github/**/*.md"
-  - "docs/**/*.md"
-
-# Path-based instructions for more focused reviews
-path_instructions:
-  - path: "server/**/*.ts"
-    instructions: |
-      - Review for TypeScript best practices
-      - Check for proper error handling
-      - Verify Prisma usage is correct
-      - Ensure proper typing
-      - Check for security vulnerabilities (SQL injection, XSS, etc.)
-
-  - path: "client/**/*.tsx"
-    instructions: |
-      - Review React best practices
-      - Check for proper hooks usage
-      - Verify accessibility (a11y)
-      - Check for performance issues (unnecessary re-renders)
-
-  - path: "**/*.test.ts"
-    instructions: |
-      - Verify test coverage
-      - Check test quality and clarity
-      - Ensure proper mocking
-      - Verify edge cases are tested
-
-  - path: ".github/workflows/**"
-    instructions: |
-      - Review CI/CD pipeline changes carefully
-      - Check for security issues in workflows
-      - Verify proper use of secrets
+  paths:
+    - "README.md"
+    - "CLAUDE.md"
+    - ".github/**/*.md"
+    - "docs/**/*.md"
 
 # Tone instructions
 tone_instructions: |
