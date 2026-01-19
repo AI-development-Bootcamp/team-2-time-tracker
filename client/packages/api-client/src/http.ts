@@ -2,7 +2,7 @@ import axios, { AxiosInstance, AxiosError, InternalAxiosRequestConfig, AxiosProg
 
 export type { AxiosProgressEvent };
 
-const API_BASE_URL = import.meta.env?.VITE_API_URL || 'http://localhost:3000/api';
+const API_BASE_URL = import.meta.env?.VITE_API_URL || '/api';
 
 export const httpClient: AxiosInstance = axios.create({
     baseURL: API_BASE_URL,
@@ -37,7 +37,7 @@ httpClient.interceptors.response.use(
             try {
                 const refreshToken = localStorage.getItem('refreshToken');
                 if (refreshToken) {
-                    const refreshResponse = await axios.post(`${API_BASE_URL}/auth/refresh`, { refreshToken });
+                    const refreshResponse = await httpClient.post('/auth/refresh', { refreshToken });
                     const { token } = refreshResponse.data.data;
                     localStorage.setItem('accessToken', token);
 
