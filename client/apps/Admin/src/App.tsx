@@ -10,9 +10,9 @@ import DashboardPage from './pages/DashboardPage';
 
 /**
  * @description Main Admin application component with routing
- * @returns {JSX.Element} Application component
+ * @returns {React.JSX.Element} Application component
  */
-function App(): JSX.Element {
+function App(): React.JSX.Element {
     return (
         <BrowserRouter>
             <Routes>
