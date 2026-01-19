@@ -110,3 +110,16 @@
     }
 }
 
+/* Dark Mode */
+[data-theme="dark"] .absence-page {
+    background-color: var(--color-background);
+}
+
+[data-theme="dark"] .absence-page__wrapper {
+    background-color: var(--color-background);
+}
+
+[data-theme="dark"] .absence-page__close:hover {
+    background-color: var(--color-gray-800);
+}
+

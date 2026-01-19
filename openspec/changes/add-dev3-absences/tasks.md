@@ -240,35 +240,35 @@ UI designs are located in `/Screenshots`:
 ## 4. Styling & Responsive Design
 
 ### 4.1 CSS Modules / BEM Styles
-- [ ] 4.1.1 Create `AbsenceForm.module.css`
-  - [ ] 4.1.1.1 Mobile-first responsive layout
-  - [ ] 4.1.1.2 RTL support for form elements
-  - [ ] 4.1.1.3 Tab switcher styles
-  - [ ] 4.1.1.4 Dropdown styles with emoji support
-  - [ ] 4.1.1.5 Date input field styles
-  - [ ] 4.1.1.6 Button styles (primary: dark blue #2C3E50, secondary: white)
-- [ ] 4.1.2 Create `HebrewDatePicker.module.css`
-  - [ ] 4.1.2.1 Calendar modal styles
-  - [ ] 4.1.2.2 Date cell styles (selected: blue circle, range: light blue background)
-  - [ ] 4.1.2.3 RTL layout (week starts from right)
-  - [ ] 4.1.2.4 Header navigation styles
-  - [ ] 4.1.2.5 Disabled days styles (Friday-Saturday)
-- [ ] 4.1.3 Create `DocumentUploader.module.css`
-  - [ ] 4.1.3.1 Dropzone styles (dashed border: blue)
-  - [ ] 4.1.3.2 Upload icon styles
-  - [ ] 4.1.3.3 File type text styles
-  - [ ] 4.1.3.4 Uploaded file display styles
-  - [ ] 4.1.3.5 Progress indicator styles
-- [ ] 4.1.4 Create `AbsencePage.module.css`
-  - [ ] 4.1.4.1 Page header styles
-  - [ ] 4.1.4.2 "Search zone" bottom section (pink background)
-  - [ ] 4.1.4.3 Close button (X) styles
-  - [ ] 4.1.4.4 Mobile-responsive layout
+- [x] 4.1.1 Create `AbsenceForm.css`
+  - [x] 4.1.1.1 Mobile-first responsive layout
+  - [x] 4.1.1.2 RTL support for form elements
+  - [x] 4.1.1.3 Tab switcher styles
+  - [x] 4.1.1.4 Dropdown styles with emoji support
+  - [x] 4.1.1.5 Date input field styles
+  - [x] 4.1.1.6 Button styles (primary: dark blue #2C3E50, secondary: white)
+- [x] 4.1.2 Create `DatePicker.css` (Hebrew Date Picker)
+  - [x] 4.1.2.1 Calendar modal styles
+  - [x] 4.1.2.2 Date cell styles (selected: blue circle, range: light blue background)
+  - [x] 4.1.2.3 RTL layout (week starts from right)
+  - [x] 4.1.2.4 Header navigation styles
+  - [x] 4.1.2.5 Disabled days styles (Friday-Saturday)
+- [x] 4.1.3 Create `DocumentUploader.css`
+  - [x] 4.1.3.1 Dropzone styles (dashed border: blue)
+  - [x] 4.1.3.2 Upload icon styles
+  - [x] 4.1.3.3 File type text styles
+  - [x] 4.1.3.4 Uploaded file display styles
+  - [x] 4.1.3.5 Progress indicator styles
+- [x] 4.1.4 Create `AbsencePage.css`
+  - [x] 4.1.4.1 Page header styles
+  - [x] 4.1.4.2 "Search zone" bottom section (pink background)
+  - [x] 4.1.4.3 Close button (X) styles
+  - [x] 4.1.4.4 Mobile-responsive layout
 
 ### 4.2 Theme Integration
-- [ ] 4.2.1 Use existing color palette from design system
-- [ ] 4.2.2 Ensure consistency with other pages
-- [ ] 4.2.3 Add dark mode support (if applicable)
+- [x] 4.2.1 Use existing color palette from design system
+- [x] 4.2.2 Ensure consistency with other pages
+- [x] 4.2.3 Add dark mode support (if applicable)
 
 ## 5. Israeli Workweek Logic
 

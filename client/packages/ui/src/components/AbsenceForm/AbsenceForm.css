@@ -286,3 +286,24 @@
         flex: 1;
     }
 }
+
+/* Dark Mode */
+[data-theme="dark"] .absence-form__dropzone {
+    border-color: var(--color-primary-500);
+    background-color: rgba(59, 130, 246, 0.1);
+}
+
+[data-theme="dark"] .absence-form__dropzone:hover,
+[data-theme="dark"] .absence-form__dropzone:focus {
+    border-color: var(--color-primary-400);
+    background-color: rgba(59, 130, 246, 0.15);
+}
+
+[data-theme="dark"] .absence-form__file-display {
+    background-color: var(--color-gray-800);
+    border-color: var(--color-border);
+}
+
+[data-theme="dark"] .absence-form__form-error {
+    background-color: rgba(239, 68, 68, 0.1);
+}

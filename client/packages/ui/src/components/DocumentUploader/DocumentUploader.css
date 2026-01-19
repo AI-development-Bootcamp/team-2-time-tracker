@@ -186,3 +186,29 @@
     }
 }
 
+/* Dark Mode */
+[data-theme="dark"] .document-uploader__dropzone {
+    border-color: var(--color-primary-500);
+    background-color: rgba(59, 130, 246, 0.1);
+}
+
+[data-theme="dark"] .document-uploader__dropzone:hover:not(.document-uploader__dropzone--disabled),
+[data-theme="dark"] .document-uploader__dropzone:focus:not(.document-uploader__dropzone--disabled) {
+    border-color: var(--color-primary-400);
+    background-color: rgba(59, 130, 246, 0.15);
+}
+
+[data-theme="dark"] .document-uploader__dropzone--active {
+    border-color: var(--color-primary-400);
+    background-color: rgba(59, 130, 246, 0.2);
+}
+
+[data-theme="dark"] .document-uploader__file-display {
+    background-color: var(--color-gray-800);
+    border-color: var(--color-border);
+}
+
+[data-theme="dark"] .document-uploader__progress-bar {
+    background-color: var(--color-gray-700);
+}
+

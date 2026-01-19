@@ -29,12 +29,12 @@
 
 /* Variants */
 .button--primary {
-    background-color: #1E1E1E;
+    background-color: #2C3E50;
     color: white;
 }
 
 .button--primary:hover:not(:disabled) {
-    background-color: #2a2a2a;
+    background-color: #1a252f;
 }
 
 .button--secondary {
