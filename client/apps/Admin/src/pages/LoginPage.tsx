@@ -3,7 +3,7 @@
  * @module pages/LoginPage
  */
 
-import { useState, FormEvent } from 'react';
+import { useState, FormEvent, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../stores/authStore';
 import loginBackground from '../assets/images/login-background.png';
@@ -15,11 +15,18 @@ import './LoginPage.css';
  */
 function LoginPage(): JSX.Element {
     const navigate = useNavigate();
-    const { login, isLoading, error, clearError } = useAuthStore();
+    const { login, isLoading, error, clearError, isAuthenticated } = useAuthStore();
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [rememberMe, setRememberMe] = useState(false);
+
+    // Redirect to dashboard if already authenticated
+    useEffect(() => {
+        if (isAuthenticated) {
+            navigate('/', { replace: true });
+        }
+    }, [isAuthenticated, navigate]);
 
     /**
      * @description Handles form submission for login

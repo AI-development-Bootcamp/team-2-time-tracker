@@ -6,7 +6,7 @@
 
 .admin-layout__sidebar {
   width: 240px;
-  background-color: #1a1d29;
+  background-color: #141E3E;
   color: #ffffff;
   display: flex;
   flex-direction: column;
@@ -19,7 +19,10 @@
 
 .admin-layout__logo {
   padding: 2rem 1.5rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
 }
 
 .admin-layout__logo-placeholder {
@@ -32,6 +35,52 @@
 .admin-layout__nav {
   flex: 1;
   padding: 1.5rem 1rem;
+}
+
+.admin-layout__footer {
+  padding: 1.5rem 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.admin-layout__user {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-bottom: 1rem;
+  padding: 0 0.5rem;
+}
+
+.admin-layout__user-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.admin-layout__user-email {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.admin-layout__logout-btn {
+  width: 100%;
+  padding: 0.625rem 1rem;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.admin-layout__logout-btn:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.admin-layout__logout-btn:active {
+  background-color: rgba(255, 255, 255, 0.2);
 }
 
 .admin-layout__content {
