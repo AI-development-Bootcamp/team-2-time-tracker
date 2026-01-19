@@ -291,23 +291,23 @@ UI designs are located in `/Screenshots`:
 ## 6. Shared DTOs
 
 ### 6.1 Add DTOs to @shared/types
-- [ ] 6.1.1 Create `absences.dto.ts` with all DTOs
-  - [ ] 6.1.1.1 `CreateAbsenceRequestDto`
-  - [ ] 6.1.1.2 `UpdateAbsenceRequestDto`
-  - [ ] 6.1.1.3 `AbsenceRequestDto`
-  - [ ] 6.1.1.4 `AbsenceDayDto`
-  - [ ] 6.1.1.5 `AbsenceDocumentDto`
-  - [ ] 6.1.1.6 `ListAbsencesResponseDto`
-  - [ ] 6.1.1.7 `CreateAbsenceResponseDto`
-  - [ ] 6.1.1.8 `UploadAbsenceDocumentResponseDto`
-- [ ] 6.1.2 Create Zod schemas for absence validation
-  - [ ] 6.1.2.1 `createAbsenceSchema` (type, startDate, endDate, isHalfDay, note)
-  - [ ] 6.1.2.2 `updateAbsenceSchema`
-  - [ ] 6.1.2.3 Validate date range (endDate >= startDate)
-  - [ ] 6.1.2.4 Validate note max length (500 chars)
-- [ ] 6.1.3 Add AbsenceType enum (`VACATION`, `SICK`, `RESERVES`) - 3 types only
-- [ ] 6.1.4 Add AbsenceStatus enum (`PENDING_DOCUMENT`, `SUBMITTED`)
-- [ ] 6.1.5 Export all types from `@shared/types` index
+- [x] 6.1.1 Create `absences.dto.ts` with all DTOs
+  - [x] 6.1.1.1 `CreateAbsenceRequestDto`
+  - [x] 6.1.1.2 `UpdateAbsenceRequestDto`
+  - [x] 6.1.1.3 `AbsenceRequestDto`
+  - [x] 6.1.1.4 `AbsenceDayDto`
+  - [x] 6.1.1.5 `AbsenceDocumentDto`
+  - [x] 6.1.1.6 `ListAbsencesResponseDto`
+  - [x] 6.1.1.7 `CreateAbsenceResponseDto`
+  - [x] 6.1.1.8 `UploadAbsenceDocumentResponseDto`
+- [x] 6.1.2 Create Zod schemas for absence validation
+  - [x] 6.1.2.1 `createAbsenceSchema` (type, startDate, endDate, isHalfDay, note)
+  - [x] 6.1.2.2 `updateAbsenceSchema`
+  - [x] 6.1.2.3 Validate date range (endDate >= startDate)
+  - [x] 6.1.2.4 Validate note max length (500 chars)
+- [x] 6.1.3 Add AbsenceType enum (`VACATION`, `SICK`, `RESERVES`) - 3 types only
+- [x] 6.1.4 Add AbsenceStatus enum (`PENDING_DOCUMENT`, `SUBMITTED`)
+- [x] 6.1.5 Export all types from `@shared/types` index
 
 ## 7. Testing
 
