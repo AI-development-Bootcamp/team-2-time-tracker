@@ -35,6 +35,11 @@ export const uploadMiddleware: RequestHandler = multer({
  */
 export async function uploadDocument(req: AuthenticatedRequest, res: Response, next: NextFunction) {
     try {
+        // Check if storage is configured
+        if (!storageService.isStorageConfigured()) {
+            throw new BadRequestError('שירות העלאת קבצים אינו זמין כרגע. אנא פנה למנהל המערכת.');
+        }
+
         const userId = req.user!.userId;
         const absenceId = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
 

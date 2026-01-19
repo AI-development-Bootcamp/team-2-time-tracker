@@ -6,6 +6,7 @@
 import { AbsenceType, AbsenceStatus } from '@prisma/client';
 import { BadRequestError, NotFoundError } from '../../shared/errors';
 import * as absencesRepo from './absences.repo';
+import { prisma } from '../../db';
 
 const HALF_DAY_MINUTES = 270;
 const FULL_DAY_MINUTES = 540;
@@ -60,6 +61,20 @@ export async function createAbsence(
         note?: string;
     }
 ) {
+    // Validate userId
+    if (!userId) {
+        throw new BadRequestError('User ID is required');
+    }
+
+    // Verify user exists in database
+    const user = await prisma.user.findUnique({
+        where: { id: userId },
+    });
+
+    if (!user) {
+        throw new BadRequestError('User not found. Please login again.');
+    }
+
     const startDate = new Date(data.startDate);
     const endDate = new Date(data.endDate);
 

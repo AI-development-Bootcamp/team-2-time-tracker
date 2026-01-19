@@ -9,6 +9,7 @@
     "lint": "eslint src/**/*.ts",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
+    "test:idrive": "dotenv -e .env -- tsx scripts/test-idrive-connection.ts",
     "db:migrate": "dotenv -e .env -- prisma migrate deploy",
     "db:migrate:dev": "dotenv -e .env -- prisma migrate dev",
     "db:generate": "dotenv -e .env -- prisma generate",

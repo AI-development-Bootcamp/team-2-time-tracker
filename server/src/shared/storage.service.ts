@@ -78,13 +78,20 @@ export async function uploadFile(
     });
 
     try {
+        logger.info(`Attempting to upload file: ${filePath}`);
         await client.send(command);
         const fileUrl = `${storageConfig.endpoint}/${storageConfig.bucket}/${filePath}`;
         logger.info(`File uploaded successfully: ${filePath}`);
         return fileUrl;
     } catch (error) {
-        logger.error('Failed to upload file to storage', { error, filePath });
-        throw new Error('Failed to upload file to storage');
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        logger.error('Failed to upload file to storage', { 
+            error: errorMessage, 
+            filePath,
+            bucket: storageConfig.bucket,
+            endpoint: storageConfig.endpoint 
+        });
+        throw new Error(`Failed to upload file to storage: ${errorMessage}`);
     }
 }
 

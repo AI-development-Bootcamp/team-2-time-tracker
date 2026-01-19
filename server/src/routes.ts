@@ -4,13 +4,12 @@ import { swaggerSpec } from './config/swagger';
 import { authRouter } from './modules/auth/auth.routes';
 import { usersRouter } from './modules/users/users.routes';
 import absencesRouter from './modules/absences/absences.routes';
+import healthRouter from './modules/health/health.routes';
 
 const router: Router = Router();
 
-// Health Check
-router.get('/health', (_req, res) => {
-    res.json({ status: 'ok', timestamp: new Date().toISOString(), version: '1.0.0' });
-});
+// Health Check Routes
+router.use('/health', healthRouter);
 
 // Swagger Docs
 router.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
