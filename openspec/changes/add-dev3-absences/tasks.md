@@ -192,31 +192,31 @@ UI designs are located in `/Screenshots`:
 - [x] 2.8.8 Handle navigation back on success
 
 ### 2.8.9 Date Range Absence Page (`AbsenceRangePage.tsx`)
-- [ ] 2.8.9.1 Create separate page for date range absence reporting
-- [ ] 2.8.9.2 Add page header "דיווח העדרות - לפי טווח ימים"
-- [ ] 2.8.9.3 Implement form fields:
-  - [ ] 2.8.9.3.1 Add absence type dropdown (חופשה/מחלה/מילואים)
-  - [ ] 2.8.9.3.2 Add "תאריך התחלה" (Start Date) field with Hebrew date picker
-  - [ ] 2.8.9.3.3 Add "תאריך סיום" (End Date) field with Hebrew date picker
-  - [ ] 2.8.9.3.4 Display "סה"כ ימי דיווח: X ימים" (Total Reporting Days) - calculated automatically
-  - [ ] 2.8.9.3.5 Add "צירוף קבצים רלוונטים" (Attach Relevant Files) section
-  - [ ] 2.8.9.3.6 Add "שמירה" (Save) button
-- [ ] 2.8.9.4 Implement date range calendar picker
-  - [ ] 2.8.9.4.1 Allow selecting start and end dates
-  - [ ] 2.8.9.4.2 Highlight selected range in blue
-  - [ ] 2.8.9.4.3 Exclude Friday-Saturday from selection
-  - [ ] 2.8.9.4.4 Calculate workdays between dates automatically
-  - [ ] 2.8.9.4.5 Show "שמירה" and "ניקה" buttons in calendar modal
-- [ ] 2.8.9.5 Connect to backend API
-  - [ ] 2.8.9.5.1 Wire up form submission to POST /absences with date range
-  - [ ] 2.8.9.5.2 Backend expands date range to individual workdays automatically
-  - [ ] 2.8.9.5.3 Enable document upload after absence creation
-  - [ ] 2.8.9.5.4 Handle success/error responses
-- [ ] 2.8.9.6 Add navigation
-  - [ ] 2.8.9.6.1 Add close button (X) to return to previous page
-  - [ ] 2.8.9.6.2 Navigate back after successful submission
-- [ ] 2.8.9.7 Add mobile-responsive layout with RTL support
-- [ ] 2.8.9.8 Add bottom "Search zone" section (consistent with single day page)
+- [x] 2.8.9.1 Create separate page for date range absence reporting
+- [x] 2.8.9.2 Add page header "דיווח העדרות - לפי טווח ימים"
+- [x] 2.8.9.3 Implement form fields:
+  - [x] 2.8.9.3.1 Add absence type dropdown (חופשה/מחלה/מילואים)
+  - [x] 2.8.9.3.2 Add "תאריך התחלה" (Start Date) field with Hebrew date picker
+  - [x] 2.8.9.3.3 Add "תאריך סיום" (End Date) field with Hebrew date picker
+  - [x] 2.8.9.3.4 Display "סה"כ ימי דיווח: X ימים" (Total Reporting Days) - calculated automatically
+  - [x] 2.8.9.3.5 Add "צירוף קבצים רלוונטים" (Attach Relevant Files) section
+  - [x] 2.8.9.3.6 Add "שמירה" (Save) button
+- [x] 2.8.9.4 Implement date range calendar picker
+  - [x] 2.8.9.4.1 Allow selecting start and end dates
+  - [x] 2.8.9.4.2 Highlight selected range in blue
+  - [x] 2.8.9.4.3 Exclude Friday-Saturday from selection
+  - [x] 2.8.9.4.4 Calculate workdays between dates automatically
+  - [x] 2.8.9.4.5 Show "שמירה" and "ניקה" buttons in calendar modal
+- [x] 2.8.9.5 Connect to backend API
+  - [x] 2.8.9.5.1 Wire up form submission to POST /absences with date range
+  - [x] 2.8.9.5.2 Backend expands date range to individual workdays automatically
+  - [x] 2.8.9.5.3 Enable document upload after absence creation
+  - [x] 2.8.9.5.4 Handle success/error responses
+- [x] 2.8.9.6 Add navigation
+  - [x] 2.8.9.6.1 Add close button (X) to return to previous page
+  - [x] 2.8.9.6.2 Navigate back after successful submission
+- [x] 2.8.9.7 Add mobile-responsive layout with RTL support
+- [x] 2.8.9.8 Add bottom "Search zone" section (consistent with single day page)
 
 ### 2.9 Absence Store (`absence.store.ts`)
 - [x] 2.9.1 Create Zustand store for absence state
