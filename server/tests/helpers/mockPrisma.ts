@@ -26,12 +26,9 @@ export const mockPrisma = {
     user: mockPrismaUser,
     refreshToken: mockPrismaRefreshToken,
     $transaction: vi.fn((callback) => callback(mockPrisma)),
+    $connect: vi.fn(),
+    $disconnect: vi.fn(),
 };
-
-// Mock the prisma module
-vi.mock('../../src/db', () => ({
-    prisma: mockPrisma,
-}));
 
 /**
  * Reset all Prisma mocks

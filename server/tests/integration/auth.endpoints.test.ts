@@ -2,20 +2,21 @@
  * @fileoverview Integration tests for auth endpoints
  */
 
-import { describe, it, expect, vi, beforeEach, beforeAll, afterAll } from 'vitest';
-import express, { Express } from 'express';
-import request from 'supertest';
-import { router } from '../../src/routes';
-import { errorHandler } from '../../src/middlewares/error.middleware';
-import {
-    mockPrisma,
-    mockPrismaUser,
-    mockPrismaRefreshToken,
-    resetPrismaMocks,
-    createMockUser,
-    createMockRefreshToken,
-} from '../helpers/mockPrisma';
-import bcrypt from 'bcrypt';
+import { describe, it, expect, vi, beforeEach, beforeAll } from 'vitest';
+
+// Mock pg Pool to prevent real database connections
+vi.mock('pg', () => ({
+    Pool: vi.fn(() => ({
+        connect: vi.fn(),
+        query: vi.fn(),
+        end: vi.fn(),
+    })),
+}));
+
+// Mock Prisma adapter
+vi.mock('@prisma/adapter-pg', () => ({
+    PrismaPg: vi.fn(() => ({})),
+}));
 
 // Mock bcrypt
 vi.mock('bcrypt', () => ({
@@ -53,13 +54,34 @@ vi.mock('../../src/config/jwt', () => ({
     },
 }));
 
+// Import mocks helpers after vi.mock declarations
+import {
+    mockPrisma,
+    mockPrismaUser,
+    mockPrismaRefreshToken,
+    resetPrismaMocks,
+    createMockUser,
+    createMockRefreshToken,
+} from '../helpers/mockPrisma';
+
+// Mock the db module with our mock prisma
+vi.mock('../../src/db', () => ({
+    prisma: mockPrisma,
+}));
+
+import express, { Express } from 'express';
+import request from 'supertest';
+import { router } from '../../src/routes';
+import { errorMiddleware } from '../../src/middlewares/error.middleware';
+import bcrypt from 'bcrypt';
+
 let app: Express;
 
 beforeAll(() => {
     app = express();
     app.use(express.json());
     app.use('/api', router);
-    app.use(errorHandler);
+    app.use(errorMiddleware);
 });
 
 describe('Auth Endpoints', () => {

@@ -3,16 +3,20 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
-import {
-    mockPrisma,
-    mockPrismaUser,
-    mockPrismaRefreshToken,
-    resetPrismaMocks,
-    createMockUser,
-    createMockRefreshToken,
-} from '../helpers/mockPrisma';
+
+// Mock pg Pool to prevent real database connections
+vi.mock('pg', () => ({
+    Pool: vi.fn(() => ({
+        connect: vi.fn(),
+        query: vi.fn(),
+        end: vi.fn(),
+    })),
+}));
+
+// Mock Prisma adapter
+vi.mock('@prisma/adapter-pg', () => ({
+    PrismaPg: vi.fn(() => ({})),
+}));
 
 // Mock bcrypt
 vi.mock('bcrypt', () => ({
@@ -46,7 +50,24 @@ vi.mock('../../src/config/jwt', () => ({
     },
 }));
 
+// Import mocks helpers after vi.mock declarations
+import {
+    mockPrisma,
+    mockPrismaUser,
+    mockPrismaRefreshToken,
+    resetPrismaMocks,
+    createMockUser,
+    createMockRefreshToken,
+} from '../helpers/mockPrisma';
+
+// Mock the db module with our mock prisma
+vi.mock('../../src/db', () => ({
+    prisma: mockPrisma,
+}));
+
 // Import after mocks
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 import * as authService from '../../src/modules/auth/auth.service';
 import { UnauthorizedError, BadRequestError } from '../../src/shared/errors';
 
