@@ -131,3 +131,87 @@ export interface BatchCreateTimeEntriesResponseDto {
         workday: WorkdaySummaryDto;
     };
 }
+
+/**
+ * Workday status enum type
+ */
+export type WorkdayStatus = 'FULL' | 'MISSING' | 'EXCEPTION' | 'WEEKEND';
+
+/**
+ * Calendar day DTO for monthly calendar view
+ */
+export interface CalendarDayDto {
+    date: string;
+    status: WorkdayStatus;
+    isLocked: boolean;
+    isSubmitted: boolean;
+    minutes: number;
+}
+
+/**
+ * Absence request minimal DTO (placeholder until absences module is integrated)
+ */
+export interface AbsenceRequestMinimalDto {
+    id: string;
+    type: string;
+    startDate: string;
+    endDate: string;
+    minutes: number;
+}
+
+/**
+ * Response DTO for getting a single workday
+ */
+export interface GetWorkdayResponseDto {
+    success: boolean;
+    data: {
+        date: string;
+        status: WorkdayStatus;
+        isLocked: boolean;
+        isSubmitted: boolean;
+        summary: WorkdaySummaryDto;
+        timeEntries: TimeEntryDto[];
+        absences: AbsenceRequestMinimalDto[];
+    };
+}
+
+/**
+ * Monthly calendar summary DTO
+ */
+export interface MonthlyCalendarSummaryDto {
+    totalTargetMinutes: number;
+    totalWorkMinutes: number;
+    balanceMinutes: number;
+}
+
+/**
+ * Response DTO for getting monthly calendar
+ */
+export interface GetMonthlyCalendarResponseDto {
+    success: boolean;
+    data: {
+        month: string;
+        days: CalendarDayDto[];
+        summary: MonthlyCalendarSummaryDto;
+    };
+}
+
+/**
+ * Response DTO for submitting a workday
+ */
+export interface SubmitWorkdayResponseDto {
+    success: boolean;
+    data: {
+        date: string;
+        isSubmitted: boolean;
+        submittedAt: string;
+    };
+}
+
+/**
+ * Response DTO for cancelling a workday submission
+ */
+export interface CancelWorkdayResponseDto {
+    success: boolean;
+    message: string;
+}

@@ -43,3 +43,17 @@ export const updateTimeEntrySchema = z.object({
 export const batchCreateTimeEntriesSchema = z.object({
     entries: z.array(createTimeEntrySchema).min(1, 'At least one entry is required'),
 });
+
+/**
+ * Date path parameter schema (YYYY-MM-DD)
+ */
+export const dateParamSchema = z.object({
+    date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Date must be in YYYY-MM-DD format'),
+});
+
+/**
+ * Month path parameter schema (YYYY-MM)
+ */
+export const monthParamSchema = z.object({
+    month: z.string().regex(/^\d{4}-\d{2}$/, 'Month must be in YYYY-MM format'),
+});

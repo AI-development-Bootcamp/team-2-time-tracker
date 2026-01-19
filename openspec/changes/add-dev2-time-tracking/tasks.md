@@ -107,81 +107,81 @@
 ## 4. Workday Capability (specs/workday)
 
 ### Backend
-- [ ] 4.1 Create `workday.service.ts`
-- [ ] 4.2 Integrate workday with time-reports routes
+- [x] 4.1 Create `workday.service.ts`
+- [x] 4.2 Integrate workday with time-reports routes
 
 ### Endpoints
-- [ ] 4.3 Implement `GET /workday/:date` (daily summary)
-- [ ] 4.4 Implement `POST /workday/:date/submit` (submit day)
-- [ ] 4.5 Implement `POST /workday/:date/cancel` (cancel submission)
-- [ ] 4.6 Implement `GET /workday/calendar/:month` (monthly view)
+- [x] 4.3 Implement `GET /workday/:date` (daily summary)
+- [x] 4.4 Implement `POST /workday/:date/submit` (submit day)
+- [x] 4.5 Implement `POST /workday/:date/cancel` (cancel submission)
+- [x] 4.6 Implement `GET /workday/calendar/:month` (monthly view)
 
 ### Business Logic
-- [ ] 4.7 Calculate workday summary (work + absence minutes)
-- [ ] 4.8 Validate total equals 540 before submit
-- [ ] 4.9 Validate month not locked
-- [ ] 4.10 Validate day not already submitted
-- [ ] 4.11 Update workday status (FULL/MISSING/EXCEPTION) on retrieval and entry/absence changes
-- [ ] 4.12 Implement automatic workday creation on first entry/absence
-- [ ] 4.13 Implement immediate lock propagation when month is locked
-- [ ] 4.14 Handle workday retrieval for dates with no entries (create on-the-fly)
-- [ ] 4.15 Validate timer is stopped before allowing workday submission
+- [x] 4.7 Calculate workday summary (work + absence minutes)
+- [x] 4.8 Validate total equals 540 before submit
+- [x] 4.9 Validate month not locked
+- [x] 4.10 Validate day not already submitted
+- [x] 4.11 Update workday status (FULL/MISSING/EXCEPTION) on retrieval and entry/absence changes
+- [x] 4.12 Implement automatic workday creation on first entry/absence
+- [x] 4.13 Implement immediate lock propagation when month is locked
+- [x] 4.14 Handle workday retrieval for dates with no entries (create on-the-fly)
+- [x] 4.15 Validate timer is stopped before allowing workday submission
 
 ### Frontend
-- [ ] 4.16 Create `WorkdayProgress.tsx` component
-- [ ] 4.17 Implement progress bar with color coding (red/green/orange)
-- [ ] 4.18 Create daily summary card
-- [ ] 4.19 Create monthly calendar view component (show all days, mark weekends)
-- [ ] 4.20 Create workday store (`workday.store.ts`)
+- [x] 4.16 Create `WorkdayProgress.tsx` component
+- [x] 4.17 Implement progress bar with color coding (red/green/orange)
+- [x] 4.18 Create daily summary card
+- [x] 4.19 Create monthly calendar view component (show all days, mark weekends)
+- [x] 4.20 Create workday store (`workday.store.ts`)
 
 ### Testing & Documentation
-- [ ] 4.21 Write unit tests for workday.service.ts
-- [ ] 4.22 Write tests for WorkdayProgress component
-- [ ] 4.23 Document workday endpoints in Swagger
+- [x] 4.21 Write unit tests for workday.service.ts
+- [x] 4.22 Write tests for WorkdayProgress component
+- [x] 4.23 Document workday endpoints in Swagger
 
 ---
 
 ## 5. Selectors Capability (specs/selectors)
 
 ### Backend
-- [ ] 5.1 Create `selectors.routes.ts`
-- [ ] 5.2 Create `selectors.controller.ts`
-- [ ] 5.3 Create `selectors.service.ts`
-- [ ] 5.4 Create `selectors.repo.ts`
+- [x] 5.1 Create `selectors.routes.ts`
+- [x] 5.2 Create `selectors.controller.ts`
+- [x] 5.3 Create `selectors.service.ts`
+- [x] 5.4 Create `selectors.repo.ts`
 
 ### Endpoints
-- [ ] 5.5 Implement `GET /selectors/clients` (with frequency sort)
-- [ ] 5.6 Implement `GET /selectors/projects` (filter by client)
-- [ ] 5.7 Implement `GET /selectors/tasks` (filter by project)
-- [ ] 5.8 Implement `GET /my/assignments` (user's task assignments)
-- [ ] 5.9 Implement `GET /my/statistics/:month` (user monthly stats)
+- [x] 5.5 Implement `GET /selectors/clients` (with frequency sort)
+- [x] 5.6 Implement `GET /selectors/projects` (filter by client)
+- [x] 5.7 Implement `GET /selectors/tasks` (filter by project)
+- [x] 5.8 Implement `GET /my/assignments` (user's task assignments)
+- [x] 5.9 Implement `GET /my/statistics/:month` (user monthly stats)
 
 ### Business Logic
-- [ ] 5.10 Filter selectors by user's task assignments
-- [ ] 5.11 Sort by usage frequency (count user's time entries)
-- [ ] 5.12 Track reportType for task display
+- [x] 5.10 Filter selectors by user's task assignments
+- [x] 5.11 Sort by usage frequency (count user's time entries)
+- [x] 5.12 Track reportType for task display
 
 ### Frontend
-- [ ] 5.13 Create `FrequentSelectors.tsx` (cascading dropdowns)
-- [ ] 5.14 Implement auto-select when single option (trigger after data fetch)
-- [ ] 5.15 Implement cascade behavior (client -> project -> task)
-- [ ] 5.16 Add frequency sorting toggle
-- [ ] 5.17 Ensure auto-select is undoable by user
-- [ ] 5.18 Implement cascade auto-select (parent selection triggers child check)
+- [x] 5.13 Create `FrequentSelectors.tsx` (cascading dropdowns)
+- [x] 5.14 Implement auto-select when single option (trigger after data fetch)
+- [x] 5.15 Implement cascade behavior (client -> project -> task)
+- [x] 5.16 Add frequency sorting toggle
+- [x] 5.17 Ensure auto-select is undoable by user
+- [x] 5.18 Implement cascade auto-select (parent selection triggers child check)
 
 ### Documentation
-- [ ] 5.19 Document selectors endpoints in Swagger
+- [x] 5.19 Document selectors endpoints in Swagger
 
 ---
 
 ## 6. Dashboard Integration (Cross-Cutting)
 
-- [ ] 6.1 Create `DailyReportPage.tsx`
-- [ ] 6.2 Integrate TimerCard component
-- [ ] 6.3 Integrate WorkdayProgress component
-- [ ] 6.4 Integrate TimeEntryForm (modal)
-- [ ] 6.5 Integrate TimeEntryList for today's entries
-- [ ] 6.6 Integrate FrequentSelectors in form
+- [x] 6.1 Create `DailyReportPage.tsx`
+- [x] 6.2 Integrate TimerCard component
+- [x] 6.3 Integrate WorkdayProgress component
+- [x] 6.4 Integrate TimeEntryForm (modal)
+- [x] 6.5 Integrate TimeEntryList for today's entries
+- [x] 6.6 Integrate FrequentSelectors in form
 
 ---
 

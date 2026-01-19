@@ -1,0 +1,216 @@
+.workday-progress {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e9ecef;
+    direction: rtl;
+}
+
+.workday-progress__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.workday-progress__title {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1a1a2e;
+}
+
+/* Status Badge */
+.workday-progress__status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.workday-progress__status-badge--full {
+    background: rgba(72, 187, 120, 0.15);
+    color: #2f855a;
+}
+
+.workday-progress__status-badge--missing {
+    background: rgba(245, 101, 101, 0.15);
+    color: #c53030;
+}
+
+.workday-progress__status-badge--exception {
+    background: rgba(237, 137, 54, 0.15);
+    color: #c05621;
+}
+
+/* Progress Bar */
+.workday-progress__bar-container {
+    position: relative;
+    height: 24px;
+    background: #e9ecef;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 24px;
+}
+
+.workday-progress__bar {
+    height: 100%;
+    border-radius: 12px;
+    transition: width 0.5s ease-out;
+}
+
+.workday-progress--full .workday-progress__bar {
+    background: linear-gradient(90deg, #48bb78 0%, #38a169 100%);
+}
+
+.workday-progress--missing .workday-progress__bar {
+    background: linear-gradient(90deg, #f56565 0%, #e53e3e 100%);
+}
+
+.workday-progress--exception .workday-progress__bar {
+    background: linear-gradient(90deg, #ed8936 0%, #dd6b20 100%);
+}
+
+.workday-progress__percentage {
+    position: absolute;
+    inset-inline-end: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #1a1a2e;
+}
+
+/* Stats Grid */
+.workday-progress__stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.workday-progress__stat {
+    text-align: center;
+    padding: 12px 8px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.workday-progress__stat-label {
+    display: block;
+    font-size: 0.75rem;
+    color: #718096;
+    margin-bottom: 4px;
+}
+
+.workday-progress__stat-value {
+    display: block;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1a1a2e;
+    font-family: 'SF Mono', 'Roboto Mono', monospace;
+}
+
+.workday-progress__stat--highlight {
+    background: #edf2f7;
+}
+
+.workday-progress__stat--positive .workday-progress__stat-value {
+    color: #2f855a;
+}
+
+.workday-progress__stat--negative .workday-progress__stat-value {
+    color: #c53030;
+}
+
+/* Status Notices */
+.workday-progress__lock-notice,
+.workday-progress__submitted-notice {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    margin-bottom: 16px;
+}
+
+.workday-progress__lock-notice {
+    background: rgba(160, 174, 192, 0.15);
+    color: #4a5568;
+}
+
+.workday-progress__submitted-notice {
+    background: rgba(72, 187, 120, 0.15);
+    color: #2f855a;
+}
+
+.workday-progress__lock-icon,
+.workday-progress__check-icon {
+    font-size: 1rem;
+}
+
+/* Error */
+.workday-progress__error {
+    background: rgba(245, 101, 101, 0.15);
+    color: #c53030;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    font-size: 0.875rem;
+    cursor: pointer;
+}
+
+/* Actions */
+.workday-progress__actions {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+}
+
+.workday-progress__button {
+    padding: 12px 32px;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+}
+
+.workday-progress__button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.workday-progress__button--submit {
+    background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+    color: white;
+}
+
+.workday-progress__button--submit:hover:not(:disabled) {
+    background: linear-gradient(135deg, #38a169 0%, #2f855a 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(72, 187, 120, 0.4);
+}
+
+.workday-progress__button--cancel {
+    background: linear-gradient(135deg, #a0aec0 0%, #718096 100%);
+    color: white;
+}
+
+.workday-progress__button--cancel:hover:not(:disabled) {
+    background: linear-gradient(135deg, #718096 0%, #4a5568 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(113, 128, 150, 0.4);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .workday-progress__stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

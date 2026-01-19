@@ -8,7 +8,12 @@
     "start": "node dist/app.js",
     "lint": "eslint src/**/*.ts",
     "test": "vitest run",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "db:init": "tsx src/db/init.ts",
+    "db:migrate": "prisma migrate deploy",
+    "db:seed": "tsx src/db/init.ts --no-migrate",
+    "db:reset": "prisma migrate reset --force && tsx src/db/init.ts",
+    "db:studio": "prisma studio"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.2.0",

@@ -12,8 +12,9 @@ export * from './enums/reportType.enum';
 export * from './constants/workday.constants';
 
 // DTOs
-export * from './dtos/auth.dto';
-export * from './dtos/users.dto';
+export * from './dtos/timer.dto';
+export * from './dtos/selectors.dto';
+export * from './enums/roles.enum';
 export * from './dtos/timer.dto';
 export * from './dtos/timeReports.dto';
 

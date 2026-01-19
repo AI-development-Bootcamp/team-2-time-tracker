@@ -1,5 +1,7 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTimerStore } from '../app/stores/timer.store';
+import { StopTimerModal } from './StopTimerModal';
+import { WorkLocation } from '@shared/types';
 import './TimerCard.css';
 
 /**
@@ -14,11 +16,13 @@ export function TimerCard() {
         isLoading,
         error,
         startTimer,
+        stopTimer,
         fetchStatus,
         tick,
         clearError,
     } = useTimerStore();
 
+    const [isStopModalOpen, setIsStopModalOpen] = useState(false);
     const intervalRef = useRef<number | null>(null);
 
     // Fetch timer status on mount
@@ -58,6 +62,20 @@ export function TimerCard() {
         startTimer().catch(() => {
             // Error handled in store
         });
+    }
+
+    function handleStopClick() {
+        setIsStopModalOpen(true);
+    }
+
+    function handleConfirmStop(data: { taskId: string; location: WorkLocation; description: string }) {
+        stopTimer(data)
+            .then(() => {
+                setIsStopModalOpen(false);
+            })
+            .catch(() => {
+                // Error handled in store, keep modal open
+            });
     }
 
     return (
@@ -102,12 +120,20 @@ export function TimerCard() {
                 ) : (
                     <button
                         className="timer-card__button timer-card__button--stop"
+                        onClick={handleStopClick}
                         disabled={isLoading}
                     >
                         {isLoading ? 'עוצר...' : 'עצור טיימר'}
                     </button>
                 )}
             </div>
+
+            <StopTimerModal
+                isOpen={isStopModalOpen}
+                isLoading={isLoading}
+                onClose={() => setIsStopModalOpen(false)}
+                onConfirm={handleConfirmStop}
+            />
         </div>
     );
 }

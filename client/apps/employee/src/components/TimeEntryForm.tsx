@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -14,6 +14,7 @@ import {
     FormSubmitButton,
     Button,
 } from '@client/ui';
+import { FrequentSelectors } from './FrequentSelectors';
 import './TimeEntryForm.css';
 
 interface TimeEntryFormProps {
@@ -33,6 +34,8 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
         register,
         handleSubmit,
         reset,
+        setValue,
+        setError,
         formState: { errors, isSubmitting },
     } = useForm<CreateTimeEntryInput>({
         resolver: zodResolver(createTimeEntrySchema),
@@ -42,7 +45,7 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
             endTime: '18:00',
             location: WorkLocation.OFFICE,
             description: '',
-            taskId: '', // TODO: Replace with selector
+            taskId: '',
             ...initialData,
         },
     });
@@ -66,10 +69,29 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
             await onSubmit(data);
             onOpenChange(false);
             reset();
-        } catch (error) {
+        } catch (error: any) {
             console.error('Failed to submit time entry:', error);
+
+            let errorMessage = 'שגיאה בשמירת הדיווח';
+            if (error.response?.data?.error) {
+                const apiError = error.response.data.error;
+                errorMessage = typeof apiError === 'string'
+                    ? apiError
+                    : (apiError.message || JSON.stringify(apiError));
+            } else if (error.message) {
+                errorMessage = error.message;
+            }
+
+            setError('root', {
+                type: 'submit',
+                message: errorMessage
+            });
         }
     };
+
+    const handleSelectorChange = useCallback((selection: any) => {
+        setValue('taskId', selection.taskId || '', { shouldValidate: true });
+    }, [setValue]);
 
     return (
         <Dialog
@@ -117,12 +139,14 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
                     )}
                 </div>
 
-                <FormField
-                    label="Task ID (UUID)"
-                    placeholder="Enter Task UUID"
-                    error={errors.taskId?.message}
-                    {...register('taskId')}
+                <FrequentSelectors
+                    onSelectionChange={handleSelectorChange}
+                    initialSelection={{ taskId: initialData?.taskId }}
+                    disabled={isSubmitting}
                 />
+                {errors.taskId?.message && (
+                    <span className="input-field__error">{errors.taskId.message}</span>
+                )}
 
                 <div className="input-field input-field--full-width">
                     <label className="input-field__label">Description</label>
@@ -135,6 +159,12 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
                         <span className="input-field__error">{errors.description.message}</span>
                     )}
                 </div>
+
+                {errors.root && (
+                    <div className="input-field__error" style={{ marginBottom: '1rem', textAlign: 'center' }}>
+                        {errors.root.message}
+                    </div>
+                )}
 
                 <FormActions>
                     <Button

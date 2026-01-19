@@ -49,24 +49,24 @@ enum ReportType {
 // =========================
 
 model User {
-  id                 String            @id @default(uuid())
-  email              String            @unique
+  id                 String           @id @default(uuid())
+  email              String           @unique
   password           String
-  fullName           String            @map("full_name")
-  role               UserRole          @default(EMPLOYEE)
-  isActive           Boolean           @default(true) @map("is_active")
-  mustChangePassword Boolean           @default(true) @map("must_change_password")
-  createdAt          DateTime          @default(now()) @map("created_at")
-  updatedAt          DateTime          @updatedAt @map("updated_at")
+  fullName           String           @map("full_name")
+  role               UserRole         @default(EMPLOYEE)
+  isActive           Boolean          @default(true) @map("is_active")
+  mustChangePassword Boolean          @default(true) @map("must_change_password")
+  createdAt          DateTime         @default(now()) @map("created_at")
+  updatedAt          DateTime         @updatedAt @map("updated_at")
   refreshTokens      RefreshToken[]
   taskAssignments    TaskAssignment[]
   timers             Timer[]
   timeEntries        TimeEntry[]
-  deletedTimeEntries TimeEntry[]       @relation("DeletedTimeEntries")
+  deletedTimeEntries TimeEntry[]      @relation("DeletedTimeEntries")
   workdaySummaries   WorkdaySummary[]
-  lockedMonths       MonthLock[]       @relation("LockedByAdmin")
-  unlockedMonths     MonthLock[]       @relation("UnlockedByAdmin")
-  assignedTasks      TaskAssignment[]  @relation("AssignedByAdmin")
+  lockedMonths       MonthLock[]      @relation("LockedByAdmin")
+  unlockedMonths     MonthLock[]      @relation("UnlockedByAdmin")
+  assignedTasks      TaskAssignment[] @relation("AssignedByAdmin")
 
   @@map("users")
 }
@@ -140,14 +140,14 @@ model Task {
 }
 
 model TaskAssignment {
-  id               String   @id @default(uuid())
-  userId           String   @map("user_id")
-  user             User     @relation(fields: [userId], references: [id])
-  taskId           String   @map("task_id")
-  task             Task     @relation(fields: [taskId], references: [id])
-  assignedByAdminId String  @map("assigned_by_admin_id")
-  assignedByAdmin  User     @relation("AssignedByAdmin", fields: [assignedByAdminId], references: [id])
-  createdAt        DateTime @default(now()) @map("created_at")
+  id                String   @id @default(uuid())
+  userId            String   @map("user_id")
+  user              User     @relation(fields: [userId], references: [id])
+  taskId            String   @map("task_id")
+  task              Task     @relation(fields: [taskId], references: [id])
+  assignedByAdminId String   @map("assigned_by_admin_id")
+  assignedByAdmin   User     @relation("AssignedByAdmin", fields: [assignedByAdminId], references: [id])
+  createdAt         DateTime @default(now()) @map("created_at")
 
   @@unique([userId, taskId])
   @@index([userId])
@@ -160,15 +160,15 @@ model TaskAssignment {
 // =========================
 
 model MonthLock {
-  id                 String           @id @default(uuid())
-  month              DateTime         @unique @db.Date
-  lockedAt           DateTime         @map("locked_at")
-  lockedByAdminId    String           @map("locked_by_admin_id")
-  lockedByAdmin      User             @relation("LockedByAdmin", fields: [lockedByAdminId], references: [id])
-  unlockedAt         DateTime?        @map("unlocked_at")
-  unlockedByAdminId  String?          @map("unlocked_by_admin_id")
-  unlockedByAdmin    User?            @relation("UnlockedByAdmin", fields: [unlockedByAdminId], references: [id])
-  workdaySummaries   WorkdaySummary[]
+  id                String           @id @default(uuid())
+  month             DateTime         @unique @db.Date
+  lockedAt          DateTime         @map("locked_at")
+  lockedByAdminId   String           @map("locked_by_admin_id")
+  lockedByAdmin     User             @relation("LockedByAdmin", fields: [lockedByAdminId], references: [id])
+  unlockedAt        DateTime?        @map("unlocked_at")
+  unlockedByAdminId String?          @map("unlocked_by_admin_id")
+  unlockedByAdmin   User?            @relation("UnlockedByAdmin", fields: [unlockedByAdminId], references: [id])
+  workdaySummaries  WorkdaySummary[]
 
   @@index([month])
   @@map("month_locks")

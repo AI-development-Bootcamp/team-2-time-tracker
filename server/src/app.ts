@@ -11,7 +11,7 @@ import { logger } from './shared/logger';
 import { AppError } from './shared/errors';
 import { requestIdMiddleware } from './middlewares/requestId.middleware';
 import { errorMiddleware } from './middlewares/error.middleware';
-import { seedDatabase } from './db/seed';
+import { initializeDatabase, disconnectDatabase } from './db';
 
 export const createApp = (): Express => {
     const app = express();
@@ -61,9 +61,43 @@ export const createApp = (): Express => {
 // Start Server if run directly
 if (require.main === module) {
     const app = createApp();
-    app.listen(env.PORT, async () => {
-        await seedDatabase();
-        logger.info(`Server running on port ${env.PORT} in ${env.NODE_ENV} mode`);
-        logger.info(`Docs available at http://localhost:${env.PORT}/api/docs`);
-    });
+
+    // Bootstrap function to initialize database before starting server
+    const bootstrap = async () => {
+        try {
+            // Initialize database (migrations + seed)
+            await initializeDatabase();
+
+            // Start Express server
+            const server = app.listen(env.PORT, () => {
+                logger.info(`🚀 Server running on port ${env.PORT} in ${env.NODE_ENV} mode`);
+                logger.info(`📚 Docs available at http://localhost:${env.PORT}/api/docs`);
+            });
+
+            // Graceful shutdown handlers
+            const shutdown = async (signal: string) => {
+                logger.info(`${signal} received, shutting down gracefully...`);
+                server.close(async () => {
+                    await disconnectDatabase();
+                    logger.info('Server closed successfully');
+                    process.exit(0);
+                });
+
+                // Force shutdown after 10 seconds
+                setTimeout(() => {
+                    logger.error('Forced shutdown after timeout');
+                    process.exit(1);
+                }, 10000);
+            };
+
+            process.on('SIGTERM', () => shutdown('SIGTERM'));
+            process.on('SIGINT', () => shutdown('SIGINT'));
+
+        } catch (error) {
+            logger.error('Failed to start server:', error);
+            process.exit(1);
+        }
+    };
+
+    bootstrap();
 }

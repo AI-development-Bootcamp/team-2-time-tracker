@@ -24,6 +24,7 @@ const options: swaggerJsdoc.Options = {
             { name: 'Time Entries', description: 'Time entry management endpoints' },
             { name: 'Admin - Users', description: 'Admin user management endpoints' },
             { name: 'Health', description: 'Health check endpoints' },
+            { name: 'Selectors', description: 'Dropdown selector endpoints' },
         ],
         components: {
             securitySchemes: {
@@ -35,6 +36,62 @@ const options: swaggerJsdoc.Options = {
                 },
             },
             schemas: {
+                // Selectors Schemas
+                ClientSelectorDto: {
+                    type: 'object',
+                    properties: {
+                        id: { type: 'string', format: 'uuid' },
+                        name: { type: 'string', example: 'Google' },
+                        usageCount: { type: 'integer', example: 10 },
+                    },
+                },
+                ProjectSelectorDto: {
+                    type: 'object',
+                    properties: {
+                        id: { type: 'string', format: 'uuid' },
+                        name: { type: 'string', example: 'Android App' },
+                        clientId: { type: 'string', format: 'uuid' },
+                        usageCount: { type: 'integer', example: 5 },
+                    },
+                },
+                TaskSelectorDto: {
+                    type: 'object',
+                    properties: {
+                        id: { type: 'string', format: 'uuid' },
+                        name: { type: 'string', example: 'Bug Fixes' },
+                        projectId: { type: 'string', format: 'uuid' },
+                        reportType: { type: 'string', enum: ['TOTAL_HOURS', 'ENTRY_EXIT'] },
+                        usageCount: { type: 'integer', example: 2 },
+                    },
+                },
+                UserAssignmentDto: {
+                    type: 'object',
+                    properties: {
+                        id: { type: 'string', format: 'uuid' },
+                        name: { type: 'string', example: 'Design Review' },
+                        projectId: { type: 'string', format: 'uuid' },
+                        projectName: { type: 'string', example: 'Website' },
+                        clientName: { type: 'string', example: 'Acme Corp' },
+                        reportType: { type: 'string', enum: ['TOTAL_HOURS', 'ENTRY_EXIT'] },
+                    },
+                },
+                MonthlyStatisticsDto: {
+                    type: 'object',
+                    properties: {
+                        success: { type: 'boolean', example: true },
+                        data: {
+                            type: 'object',
+                            properties: {
+                                totalWorkDays: { type: 'integer', example: 22 },
+                                submittedDays: { type: 'integer', example: 20 },
+                                missingDays: { type: 'integer', example: 2 },
+                                totalWorkMinutes: { type: 'integer', example: 10800 },
+                                totalAbsenceMinutes: { type: 'integer', example: 0 },
+                                completionPercentage: { type: 'integer', example: 91 },
+                            },
+                        },
+                    },
+                },
                 // Auth Schemas
                 LoginRequest: {
                     type: 'object',
