@@ -6,7 +6,6 @@
     "build": "pnpm -r build",
     "test": "pnpm -r test",
     "lint": "cross-env ESLINT_USE_FLAT_CONFIG=false pnpm -r lint",
-    "migrate": "pnpm --filter server prisma migrate dev",
     "clean": "rm -rf node_modules **/*/node_modules"
   },
   "devDependencies": {
