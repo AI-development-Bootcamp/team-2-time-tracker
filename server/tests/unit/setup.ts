@@ -4,7 +4,7 @@
 
 import { vi, beforeEach } from 'vitest';
 
-// Mock Prisma before any imports
+// Create mock objects that can be imported
 export const mockPrismaUser = {
     findUnique: vi.fn(),
     findMany: vi.fn(),
@@ -35,15 +35,10 @@ export const mockPrisma = {
     user: mockPrismaUser,
     refreshToken: mockPrismaRefreshToken,
     timeEntry: mockPrismaTimeEntry,
-    $transaction: vi.fn((callback) => callback(mockPrisma)),
+    $transaction: vi.fn((callback: (prisma: typeof mockPrisma) => unknown) => callback(mockPrisma)),
     $connect: vi.fn(),
     $disconnect: vi.fn(),
 };
-
-// Mock the database module
-vi.mock('../../src/db', () => ({
-    prisma: mockPrisma,
-}));
 
 // Reset all mocks before each test
 beforeEach(() => {

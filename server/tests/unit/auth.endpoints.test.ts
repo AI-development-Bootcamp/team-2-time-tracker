@@ -5,17 +5,55 @@
 import { describe, it, expect, vi, beforeEach, beforeAll } from 'vitest';
 import express, { Express } from 'express';
 import request from 'supertest';
-import { router } from '../../src/routes';
-import { errorMiddleware } from '../../src/middlewares/error.middleware';
-import { mockPrismaUser, mockPrismaRefreshToken } from './setup';
-import bcrypt from 'bcrypt';
+
+// Use vi.hoisted to define all mocks that vi.mock needs to reference
+const { mockBcrypt, mockPrismaUser, mockPrismaRefreshToken, mockPrisma } = vi.hoisted(() => {
+    const mockBcrypt = {
+        compare: vi.fn(),
+        hash: vi.fn(),
+    };
+
+    const mockPrismaUser = {
+        findUnique: vi.fn(),
+        findMany: vi.fn(),
+        create: vi.fn(),
+        update: vi.fn(),
+        updateMany: vi.fn(),
+        delete: vi.fn(),
+        count: vi.fn(),
+    };
+
+    const mockPrismaRefreshToken = {
+        create: vi.fn(),
+        findFirst: vi.fn(),
+        findUnique: vi.fn(),
+        updateMany: vi.fn(),
+        delete: vi.fn(),
+    };
+
+    const mockPrismaTimeEntry = {
+        findMany: vi.fn(),
+        findUnique: vi.fn(),
+        create: vi.fn(),
+        update: vi.fn(),
+        delete: vi.fn(),
+    };
+
+    const mockPrisma: Record<string, unknown> = {
+        user: mockPrismaUser,
+        refreshToken: mockPrismaRefreshToken,
+        timeEntry: mockPrismaTimeEntry,
+        $connect: vi.fn(),
+        $disconnect: vi.fn(),
+    };
+    mockPrisma.$transaction = vi.fn((callback: (prisma: typeof mockPrisma) => unknown) => callback(mockPrisma));
+
+    return { mockBcrypt, mockPrismaUser, mockPrismaRefreshToken, mockPrisma };
+});
 
 // Mock bcrypt
 vi.mock('bcrypt', () => ({
-    default: {
-        compare: vi.fn(),
-        hash: vi.fn(),
-    },
+    default: mockBcrypt,
 }));
 
 // Mock jsonwebtoken
@@ -46,6 +84,15 @@ vi.mock('../../src/config/jwt', () => ({
     },
 }));
 
+// Mock the database module
+vi.mock('../../src/db', () => ({
+    prisma: mockPrisma,
+}));
+
+// Import after mocks are set up
+import { router } from '../../src/routes';
+import { errorMiddleware } from '../../src/middlewares/error.middleware';
+
 let app: Express;
 
 beforeAll(() => {
@@ -75,7 +122,7 @@ describe('Auth Endpoints', () => {
                 updatedAt: new Date(),
             };
             mockPrismaUser.findUnique.mockResolvedValue(mockUser);
-            (bcrypt.compare as any).mockResolvedValue(true);
+            mockBcrypt.compare.mockResolvedValue(true);
             mockPrismaRefreshToken.create.mockResolvedValue({
                 id: 'test-token-id',
                 token: 'test-refresh-token',
