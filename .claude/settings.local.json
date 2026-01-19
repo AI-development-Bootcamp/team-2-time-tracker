@@ -5,7 +5,9 @@
       "Bash(findstr:*)",
       "Bash(more:*)",
       "Bash(pnpm install:*)",
-      "Bash(pnpm test:integration:*)"
+      "Bash(pnpm test:integration:*)",
+      "Bash(pnpm -r exec tsc:*)",
+      "Bash(pnpm list:*)"
     ]
   }
 }
