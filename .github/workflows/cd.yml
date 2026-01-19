@@ -1,0 +1,52 @@
+name: Docker Setup Deployment
+
+on:
+  push:
+    branches:
+      - 'docker-setup'
+
+jobs:
+  server:
+    name: Deploy Server
+    runs-on: ubuntu-latest
+    environment: deploy 
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy Server to Render
+        run: |
+          echo "🚀 Sending deploy hook to Render Server..."
+          curl -X POST "$DEPLOY_URL" -f -s -o /dev/null && echo "✅ Success" || echo "❌ Failed"
+        env:
+          DEPLOY_URL: ${{ secrets.RENDER_DEPLOY_SERVER }}
+
+  client:
+    name: Deploy Employee
+    runs-on: ubuntu-latest
+    environment: deploy
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy Client to Render
+        run: |
+          echo "🚀 Sending deploy hook to Render Employee..."
+          curl -X POST "$DEPLOY_URL" -f -s -o /dev/null && echo "✅ Success" || echo "❌ Failed"
+        env:
+          DEPLOY_URL: ${{ secrets.RENDER_DEPLOY_EMPLOYEE }}
+
+  admin:
+    name: Deploy Admin
+    runs-on: ubuntu-latest
+    environment: deploy
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy Admin to Render
+        run: |
+          echo "🚀 Sending deploy hook to Render Admin..."
+          curl -X POST "$DEPLOY_URL" -f -s -o /dev/null && echo "✅ Success" || echo "❌ Failed"
+        env:
+          DEPLOY_URL: ${{ secrets.RENDER_DEPLOY_ADMIN }}
