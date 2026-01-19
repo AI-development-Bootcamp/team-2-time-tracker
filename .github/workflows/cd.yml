@@ -16,8 +16,17 @@ jobs:
 
       - name: Deploy Server to Render
         run: |
+          if [ -z "$DEPLOY_URL" ]; then
+            echo "❌ Error: DEPLOY_URL is not set"
+            exit 1
+          fi
           echo "🚀 Sending deploy hook to Render Server..."
-          curl -X POST "$DEPLOY_URL" -f -s -o /dev/null && echo "✅ Success" || echo "❌ Failed"
+          if curl -X POST "$DEPLOY_URL" -f -s -o /dev/null; then
+            echo "✅ Success"
+          else
+            echo "❌ Failed"
+            exit 1
+          fi
         env:
           DEPLOY_URL: ${{ secrets.RENDER_DEPLOY_SERVER }}
 
@@ -31,8 +40,17 @@ jobs:
 
       - name: Deploy Client to Render
         run: |
+          if [ -z "$DEPLOY_URL" ]; then
+            echo "❌ Error: DEPLOY_URL is not set"
+            exit 1
+          fi
           echo "🚀 Sending deploy hook to Render Employee..."
-          curl -X POST "$DEPLOY_URL" -f -s -o /dev/null && echo "✅ Success" || echo "❌ Failed"
+          if curl -X POST "$DEPLOY_URL" -f -s -o /dev/null; then
+            echo "✅ Success"
+          else
+            echo "❌ Failed"
+            exit 1
+          fi
         env:
           DEPLOY_URL: ${{ secrets.RENDER_DEPLOY_EMPLOYEE }}
 
@@ -46,7 +64,16 @@ jobs:
 
       - name: Deploy Admin to Render
         run: |
+          if [ -z "$DEPLOY_URL" ]; then
+            echo "❌ Error: DEPLOY_URL is not set"
+            exit 1
+          fi
           echo "🚀 Sending deploy hook to Render Admin..."
-          curl -X POST "$DEPLOY_URL" -f -s -o /dev/null && echo "✅ Success" || echo "❌ Failed"
+          if curl -X POST "$DEPLOY_URL" -f -s -o /dev/null; then
+            echo "✅ Success"
+          else
+            echo "❌ Failed"
+            exit 1
+          fi
         env:
           DEPLOY_URL: ${{ secrets.RENDER_DEPLOY_ADMIN }}
