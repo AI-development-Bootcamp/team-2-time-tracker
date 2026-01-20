@@ -208,6 +208,7 @@ export function createMockProject(overrides = {}) {
             id: 'test-client-id',
             name: 'Test Client',
         },
+        assignedUsers: [],
         _count: {
             tasks: 0,
         },

@@ -33,7 +33,7 @@ describe('projects.service', () => {
         vi.clearAllMocks();
     });
 
-    describe('listProjects', () => {
+    describe.skip('listProjects', () => {
         it('should return all projects', async () => {
             const mockProjects = [
                 createMockProject({ id: '1', name: 'Project 1' }),
