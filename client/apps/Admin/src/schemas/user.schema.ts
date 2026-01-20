@@ -31,9 +31,7 @@ export const createUserSchema = z.object({
         .regex(/[A-Z]/, 'סיסמה חייבת להכיל לפחות אות גדולה אחת באנגלית')
         .regex(/[a-z]/, 'סיסמה חייבת להכיל לפחות אות קטנה אחת באנגלית')
         .regex(/[0-9]/, 'סיסמה חייבת להכיל לפחות ספרה אחת'),
-    role: z.enum([UserRole.EMPLOYEE, UserRole.ADMIN], {
-        errorMap: () => ({ message: 'יש לבחור תפקיד תקין' }),
-    }),
+    role: z.enum([UserRole.EMPLOYEE, UserRole.ADMIN], ),
 });
 
 /**

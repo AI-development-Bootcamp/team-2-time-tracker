@@ -5,7 +5,6 @@
 
 import { AdminLayout } from '../components/AdminLayout';
 import { DashboardHeader } from '../components/DashboardHeader';
-import { useAuthStore } from '../stores/authStore';
 import './DashboardPage.css';
 
 /**
@@ -13,11 +12,7 @@ import './DashboardPage.css';
  * @returns Dashboard page component
  */
 function DashboardPage() {
-    const { user, logout } = useAuthStore();
 
-    async function handleLogout(): Promise<void> {
-        await logout();
-    }
 
     return (
         <AdminLayout>
