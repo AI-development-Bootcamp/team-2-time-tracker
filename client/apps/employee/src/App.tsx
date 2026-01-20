@@ -12,25 +12,29 @@ import './index.css';
 
 function App() {
     return (
-        <ToastProvider>
-            <BrowserRouter>
-                <Routes>
-                    <Route path="/login" element={<LoginPage />} />
+        <div className="mobile-simulation-root">
+            <div className="mobile-simulation-frame">
+                <ToastProvider>
+                    <BrowserRouter>
+                        <Routes>
+                            <Route path="/login" element={<LoginPage />} />
 
-                    <Route element={<ProtectedRoute />}>
-                        <Route element={<Layout />}>
-                            <Route path="/" element={<DailyReportPage />} />
-                            <Route path="/history" element={<TimeEntryHistoryPage />} />
-                            <Route path="/change-password" element={<ChangePasswordPage />} />
-                            {/* Add more protected routes here */}
-                        </Route>
-                    </Route>
+                            <Route element={<ProtectedRoute />}>
+                                <Route element={<Layout />}>
+                                    <Route path="/" element={<DailyReportPage />} />
+                                    <Route path="/history" element={<TimeEntryHistoryPage />} />
+                                    <Route path="/change-password" element={<ChangePasswordPage />} />
+                                    {/* Add more protected routes here */}
+                                </Route>
+                            </Route>
 
-                    {/* Fallback route */}
-                    <Route path="*" element={<Navigate to="/" replace />} />
-                </Routes>
-            </BrowserRouter>
-        </ToastProvider>
+                            {/* Fallback route */}
+                            <Route path="*" element={<Navigate to="/" replace />} />
+                        </Routes>
+                    </BrowserRouter>
+                </ToastProvider>
+            </div>
+        </div>
     );
 }
 

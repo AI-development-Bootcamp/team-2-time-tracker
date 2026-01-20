@@ -24,6 +24,7 @@ export const DailyReportPage: React.FC = () => {
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [isStopTimerModalOpen, setIsStopTimerModalOpen] = useState(false);
     const [editingEntry, setEditingEntry] = useState<TimeEntryDto | null>(null);
+    const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().split('T')[0]);
     const [daysData, setDaysData] = useState<DayData[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -98,6 +99,7 @@ export const DailyReportPage: React.FC = () => {
     };
 
     const handleManualReport = () => {
+        setSelectedDate(new Date().toISOString().split('T')[0]);
         setEditingEntry(null);
         setIsFormOpen(true);
     };
@@ -108,9 +110,9 @@ export const DailyReportPage: React.FC = () => {
     };
 
     const handleAddEntry = (date: string) => {
-        // Open the manual report form
-        // TODO: Pre-fill the date in the form
+        // Open the manual report form with pre-filled date
         console.log('Add entry for date:', date);
+        setSelectedDate(date);
         setEditingEntry(null);
         setIsFormOpen(true);
     };
@@ -197,6 +199,8 @@ export const DailyReportPage: React.FC = () => {
 
             {/* Entry Form Modal */}
             <MultiProjectTimeEntryForm
+                initialData={editingEntry}
+                defaultDate={selectedDate}
                 open={isFormOpen}
                 onOpenChange={setIsFormOpen}
                 onSubmit={handleFormSubmit}

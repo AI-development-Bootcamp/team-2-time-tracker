@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { selectorsApi } from '@client/api-client';
-import { ClientSelectorDto, ProjectSelectorDto, TaskSelectorDto, WorkLocation, CreateTimeEntryInput } from '@shared/types';
+import { ClientSelectorDto, ProjectSelectorDto, TaskSelectorDto, WorkLocation, CreateTimeEntryInput, TimeEntryDto } from '@shared/types';
 import { Dialog, Button } from '@client/ui';
 import './MultiProjectTimeEntryForm.css';
 
@@ -13,16 +13,21 @@ interface ProjectEntryForm {
 }
 
 interface MultiProjectTimeEntryFormProps {
+    initialData?: TimeEntryDto | null;
+    defaultDate?: string;
     open: boolean;
     onOpenChange: (open: boolean) => void;
     onSubmit: (data: CreateTimeEntryInput) => Promise<void>;
 }
 
 export const MultiProjectTimeEntryForm: React.FC<MultiProjectTimeEntryFormProps> = ({
+    initialData,
+    defaultDate,
     open,
     onOpenChange,
     onSubmit,
 }) => {
+    const [currentDate, setCurrentDate] = useState<string>(new Date().toISOString().split('T')[0]);
     const [startTime, setStartTime] = useState('09:00');
     const [endTime, setEndTime] = useState('15:00');
     const [projectForms, setProjectForms] = useState<ProjectEntryForm[]>([
@@ -38,14 +43,47 @@ export const MultiProjectTimeEntryForm: React.FC<MultiProjectTimeEntryFormProps>
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
+    const resetForm = () => {
+        setProjectForms([{ id: '1', projectId: '', taskId: '', location: WorkLocation.OFFICE, description: '' }]);
+        setStartTime('09:00');
+        setEndTime('15:00');
+        setError(null);
+    };
+
     // Fetch all data when modal opens
     useEffect(() => {
         if (open) {
             fetchAllData();
-        } else {
-            resetForm();
+
+            // Set date
+            if (initialData?.workDate) {
+                setCurrentDate(initialData.workDate);
+            } else if (defaultDate) {
+                setCurrentDate(defaultDate);
+            } else {
+                setCurrentDate(new Date().toISOString().split('T')[0]);
+            }
+
+            if (initialData) {
+                // Populate form for editing
+                setStartTime(initialData.startTime);
+                setEndTime(initialData.endTime);
+
+                // Safe access to project ID
+                const projectId = initialData.task.project?.id || '';
+
+                setProjectForms([{
+                    id: '1',
+                    projectId: projectId,
+                    taskId: initialData.task.id,
+                    location: initialData.location,
+                    description: initialData.description || ''
+                }]);
+            } else {
+                resetForm();
+            }
         }
-    }, [open]);
+    }, [open, initialData, defaultDate]);
 
     const fetchAllData = async () => {
         setLoading(true);
@@ -148,7 +186,7 @@ export const MultiProjectTimeEntryForm: React.FC<MultiProjectTimeEntryFormProps>
             // Submit each project as a separate time entry
             for (const form of projectForms) {
                 const entryData: CreateTimeEntryInput = {
-                    workDate: new Date().toISOString().split('T')[0],
+                    workDate: currentDate,
                     startTime,
                     endTime,
                     location: form.location,
@@ -168,27 +206,30 @@ export const MultiProjectTimeEntryForm: React.FC<MultiProjectTimeEntryFormProps>
         }
     };
 
-    const resetForm = () => {
-        setProjectForms([{ id: '1', projectId: '', taskId: '', location: WorkLocation.OFFICE, description: '' }]);
-        setStartTime('09:00');
-        setEndTime('15:00');
-        setError(null);
-    };
-
     if (loading) {
         return (
-            <Dialog open={open} onOpenChange={onOpenChange} title="דיווח ידני">
+            <Dialog
+                open={open}
+                onOpenChange={onOpenChange}
+                title="דיווח ידני"
+                className="multi-project-form-dialog"
+            >
                 <div className="multi-project-form__loading">טוען נתונים...</div>
             </Dialog>
         );
     }
 
     return (
-        <Dialog open={open} onOpenChange={onOpenChange} title="דיווח ידני">
+        <Dialog
+            open={open}
+            onOpenChange={onOpenChange}
+            title="דיווח ידני"
+            className="multi-project-form-dialog"
+        >
             <div className="multi-project-form">
                 {/* Date display */}
                 <div className="multi-project-form__date">
-                    {new Date().toLocaleDateString('he-IL', {
+                    {new Date(currentDate).toLocaleDateString('he-IL', {
                         weekday: 'long',
                         day: '2-digit',
                         month: '2-digit',

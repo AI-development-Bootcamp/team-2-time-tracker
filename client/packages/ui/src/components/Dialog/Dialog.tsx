@@ -18,6 +18,8 @@ interface DialogProps {
     description?: string;
     /** Dialog content */
     children: React.ReactNode;
+    /** Optional class name for the content */
+    className?: string;
 }
 
 /**
@@ -40,26 +42,25 @@ export function Dialog({
     title,
     description,
     children,
+    className,
 }: DialogProps) {
     return (
         <DialogPrimitive.Root open={open} onOpenChange={onOpenChange}>
-            <DialogPrimitive.Portal>
-                <DialogPrimitive.Overlay className="dialog__overlay" />
-                <DialogPrimitive.Content className="dialog__content">
-                    <DialogPrimitive.Title className="dialog__title">
-                        {title}
-                    </DialogPrimitive.Title>
-                    {description && (
-                        <DialogPrimitive.Description className="dialog__description">
-                            {description}
-                        </DialogPrimitive.Description>
-                    )}
-                    <div className="dialog__body">{children}</div>
-                    <DialogPrimitive.Close className="dialog__close" aria-label="Close">
-                        <CloseIcon />
-                    </DialogPrimitive.Close>
-                </DialogPrimitive.Content>
-            </DialogPrimitive.Portal>
+            <DialogPrimitive.Overlay className="dialog__overlay" />
+            <DialogPrimitive.Content className={`dialog__content ${className || ''}`}>
+                <DialogPrimitive.Title className="dialog__title">
+                    {title}
+                </DialogPrimitive.Title>
+                {description && (
+                    <DialogPrimitive.Description className="dialog__description">
+                        {description}
+                    </DialogPrimitive.Description>
+                )}
+                <div className="dialog__body">{children}</div>
+                <DialogPrimitive.Close className="dialog__close" aria-label="Close">
+                    <CloseIcon />
+                </DialogPrimitive.Close>
+            </DialogPrimitive.Content>
         </DialogPrimitive.Root>
     );
 }

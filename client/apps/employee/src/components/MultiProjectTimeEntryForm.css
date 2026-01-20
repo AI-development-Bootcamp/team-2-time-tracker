@@ -135,3 +135,15 @@
 .multi-project-form__actions {
     margin-top: 8px;
 }
+
+.multi-project-form-dialog {
+    width: 90vw;
+    max-width: 400px;
+}
+
+@media (max-width: 768px) {
+    .multi-project-form-dialog {
+        width: 90vw;
+        max-width: none;
+    }
+}

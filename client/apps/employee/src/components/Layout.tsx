@@ -13,22 +13,21 @@ export default function Layout() {
 
     return (
         <div style={{
-            height: '100vh',
+            height: '100%',
             display: 'flex',
             flexDirection: 'column',
-            overflow: 'hidden',
-            background: 'rgb(242, 242, 247)'
+            overflow: 'hidden'
         }}>
             <header className="bg-white shadow" style={{ flexShrink: 0 }}>
-                <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 flex justify-between items-center">
-                    <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+                <div className="px-4 py-4 flex justify-between items-center">
+                    <h1 className="text-xl font-bold tracking-tight text-gray-900">
                         <Link to="/">Time Tracker</Link>
                     </h1>
-                    <div className="flex items-center gap-4">
-                        <span className="text-sm text-gray-600">
-                            שלום, {user?.fullName}
+                    <div className="flex items-center gap-2">
+                        <span className="text-xs text-gray-600">
+                            {user?.fullName?.split(' ')[0]}
                         </span>
-                        <Button variant="outline" size="sm" onClick={handleLogout}>
+                        <Button variant="outline" size="sm" onClick={handleLogout} style={{ fontSize: '12px', padding: '4px 8px', height: 'auto' }}>
                             התנתק
                         </Button>
                     </div>
