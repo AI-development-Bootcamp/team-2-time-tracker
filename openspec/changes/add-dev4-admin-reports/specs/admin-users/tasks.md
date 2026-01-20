@@ -14,10 +14,8 @@ This module handles user management functionality for administrators.
 
 ### 1.2 User Listing & Filtering
 - [x] 1.2.1 Implement `GET /admin/users` endpoint with pagination
-- [x] 1.2.2 Add filtering by status (active/inactive)
-- [x] 1.2.3 Add filtering by role (ADMIN/EMPLOYEE)
-- [x] 1.2.4 Add search functionality (name or email)
-- [x] 1.2.5 Add pagination metadata to response
+- [ ] 1.2.2 Add filtering by employee name
+- [x] 1.2.3 Add pagination metadata to response
 
 ### 1.3 User CRUD Operations
 - [x] 1.3.1 Implement `POST /admin/users` (create user)
@@ -44,28 +42,16 @@ This module handles user management functionality for administrators.
 
 ## 2. Frontend - Admin Users
 
-### 2.1 Users Page
-- [ ] 2.1.1 Create `client/apps/admin/src/pages/UsersPage.tsx`
-- [ ] 2.1.2 Implement users data table with TanStack Table
-- [ ] 2.1.3 Add pagination controls
-- [ ] 2.1.4 Add search input field
-- [ ] 2.1.5 Add status filter dropdown
-- [ ] 2.1.6 Add role filter dropdown
+### 2.1 User Forms & Actions
+- [ ] 2.1.1 Create `UserForm.tsx` component for creating new user
+- [ ] 2.1.2 Add form validation (email, password strength)
+- [ ] 2.1.3 Create `UserStatusToggle.tsx` component
 
-### 2.2 User Forms & Actions
-- [ ] 2.2.1 Create `UserForm.tsx` component for create/edit
-- [ ] 2.2.2 Add form validation (email, password strength)
-- [ ] 2.2.3 Create `UserStatusToggle.tsx` component
-- [ ] 2.2.4 Implement reset password dialog
-- [ ] 2.2.5 Add confirmation dialogs for destructive actions
-
-### 2.3 State Management
-- [ ] 2.3.1 Create Zustand store for users state
-- [ ] 2.3.2 Implement fetch users action
-- [ ] 2.3.3 Implement create user action
-- [ ] 2.3.4 Implement update user action
-- [ ] 2.3.5 Implement status toggle action
-- [ ] 2.3.6 Implement reset password action
+### 2.2 State Management
+- [ ] 2.2.1 Create Zustand store for users state
+- [ ] 2.2.2 Implement fetch users action
+- [ ] 2.2.3 Implement create user action
+- [ ] 2.2.4 Implement status toggle action
 
 ## 3. Shared Types & DTOs
 
