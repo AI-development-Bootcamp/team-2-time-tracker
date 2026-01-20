@@ -1,3 +1,16 @@
+/**
+ * @fileoverview FooterActions Component
+ * 
+ * This component renders the fixed footer bar at the bottom of the mobile layout.
+ * It provides the primary actions for the daily report page:
+ * 1. Timer Control: A prominent button to Start/Stop the work timer.
+ *    - Displays "Start Timer" with a play icon when idle.
+ *    - Displays the elapsed time and a stop icon when running.
+ * 2. Manual Report: A button to open the manual time entry form.
+ * 
+ * The component interacts with the `useTimerStore` to manage timer state and updates.
+ */
+
 import React, { useEffect, useRef } from 'react';
 import { useTimerStore } from '../app/stores/timer.store';
 import './FooterActions.css';
@@ -7,6 +20,13 @@ interface FooterActionsProps {
     onManualReport: () => void;
 }
 
+/**
+ * FooterActions Component
+ * 
+ * @param {FooterActionsProps} props
+ * @param {() => void} props.onStopTimer - Callback fired when the user clicks the "Stop Timer" button
+ * @param {() => void} props.onManualReport - Callback fired when the user clicks the "Manual Report" (plus) button
+ */
 export const FooterActions: React.FC<FooterActionsProps> = ({
     onStopTimer,
     onManualReport,
@@ -43,7 +63,10 @@ export const FooterActions: React.FC<FooterActionsProps> = ({
     }, [isRunning, tick]);
 
     /**
-     * Format elapsed time to HH:MM:SS string
+     * Formats the elapsed time of the current timer into a readable HH:MM:SS string.
+     * Calculates the difference between the current time and the timer's start time.
+     * 
+     * @returns {string} Formatted elapsed time (e.g., "01:23:45") or "00:00:00" if no timer is active.
      */
     const formatTime = (): string => {
         if (!timer) return '00:00:00';
@@ -59,6 +82,11 @@ export const FooterActions: React.FC<FooterActionsProps> = ({
         return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     };
 
+    /**
+     * Handles the click event for the main timer button.
+     * - If the timer is runnning, it triggers the `onStopTimer` callback (which typically opens the unified report form).
+     * - If the timer is stopped, it directly calls `startTimer` from the store to begin a new session.
+     */
     const handleTimerButtonClick = async () => {
         if (isRunning) {
             // Timer is running - stop it

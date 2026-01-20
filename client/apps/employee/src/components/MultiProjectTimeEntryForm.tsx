@@ -1,9 +1,28 @@
+/**
+ * @fileoverview MultiProjectTimeEntryForm Component
+ * 
+ * A comprehensive form for creating daily time reports. 
+ * Supports both:
+ * 1. Manual Entry: Editing normal daily reports.
+ * 2. Timer Stop Protocol: Finalizing a tracked session (via "Stop Timer").
+ * 
+ * Features:
+ * - Multi-Project Support: Allows adding multiple project entries for a single time block.
+ * - Dynamic Data Loading: Fetches Clients, Projects, and Tasks on open.
+ * - Contextual Modes:
+ *   - "Locked" Mode: When stopping a timer, start/end times are fixed.
+ *   - "Manual" Mode: User can freely edit all fields.
+ */
+
 import React, { useState, useEffect } from 'react';
 import { selectorsApi } from '@client/api-client';
 import { ClientSelectorDto, ProjectSelectorDto, TaskSelectorDto, WorkLocation, CreateTimeEntryInput, TimeEntryDto } from '@shared/types';
 import { Dialog, Button } from '@client/ui';
 import './MultiProjectTimeEntryForm.css';
 
+/**
+ * Local state interface for a single project entry row
+ */
 interface ProjectEntryForm {
     id: string;
     projectId: string;
@@ -12,17 +31,33 @@ interface ProjectEntryForm {
     description: string;
 }
 
+/**
+ * Component Props
+ */
 interface MultiProjectTimeEntryFormProps {
+    /** Existing entry data for editing mode */
     initialData?: TimeEntryDto | null;
+    /** Default date to pre-fill (YYYY-MM-DD) */
     defaultDate?: string;
+    /** Pre-filled start time (HH:MM) */
     initialStartTime?: string;
+    /** Pre-filled end time (HH:MM) */
     initialEndTime?: string;
+    /** If true, locks the time input fields (used for Stop Timer flow) */
     isTimeLocked?: boolean;
+    /** Controls modal visibility */
     open: boolean;
+    /** Handler for changing modal open state */
     onOpenChange: (open: boolean) => void;
+    /** Submission handler - called once per project entry */
     onSubmit: (data: CreateTimeEntryInput) => Promise<void>;
 }
 
+/**
+ * MultiProjectTimeEntryForm Component
+ * 
+ * @param {MultiProjectTimeEntryFormProps} props
+ */
 export const MultiProjectTimeEntryForm: React.FC<MultiProjectTimeEntryFormProps> = ({
     initialData,
     defaultDate,

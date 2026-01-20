@@ -1,3 +1,13 @@
+/**
+ * @fileoverview FrequentSelectors Component
+ * 
+ * Provides a cascading dropdown interface for selecting Client -> Project -> Task.
+ * Features:
+ * - Sort options: Most frequently used (default) or Alphabetical.
+ * - Auto-selection: Automatically selects an option if it's the only one available (and user hasn't manually overridden).
+ * - State Management: Handles dependencies between specific dropdowns (e.g., clearing project when client changes).
+ */
+
 import React, { useState, useEffect } from 'react';
 import { selectorsApi } from '@client/api-client';
 import { ClientSelectorDto, ProjectSelectorDto, TaskSelectorDto } from '@shared/types';
@@ -30,15 +40,12 @@ export interface FrequentSelectorsProps {
 type SortMode = 'frequency' | 'alpha';
 
 /**
- * @description FrequentSelectors component - Cascading dropdowns for Client -> Project -> Task selection
- * with auto-select and frequency sorting features
+ * FrequentSelectors Component
+ * 
+ * Renders three dependent select inputs for hierarchical data selection.
+ * Handles data fetching from the API based on current selections and sort preference.
  * 
  * @param {FrequentSelectorsProps} props - Component props
- * @returns {JSX.Element} FrequentSelectors component
- * 
- * @example
- *   initialSelection={{ clientId: 'abc-123' }}
- * />
  */
 export const FrequentSelectors: React.FC<FrequentSelectorsProps> = ({
     onSelectionChange,
@@ -69,7 +76,7 @@ export const FrequentSelectors: React.FC<FrequentSelectorsProps> = ({
     });
 
     /**
-     * @description Fetch clients from API
+     * @description Fetch clients from API whenever sort mode changes
      */
     useEffect(() => {
         const fetchClients = async () => {
@@ -87,7 +94,7 @@ export const FrequentSelectors: React.FC<FrequentSelectorsProps> = ({
     }, [sortMode]);
 
     /**
-     * @description Fetch projects when client changes
+     * @description Fetch projects when the selected client changes
      */
     useEffect(() => {
         if (!clientId) {
@@ -110,7 +117,7 @@ export const FrequentSelectors: React.FC<FrequentSelectorsProps> = ({
     }, [clientId, sortMode]);
 
     /**
-     * @description Fetch tasks when project changes
+     * @description Fetch tasks when the selected project changes
      */
     useEffect(() => {
         if (!projectId) {
@@ -133,7 +140,13 @@ export const FrequentSelectors: React.FC<FrequentSelectorsProps> = ({
     }, [projectId, sortMode]);
 
     /**
-     * @description Auto-select when only one option is available
+     * Helper function to auto-select an option if it's the single available choice.
+     * Prevents auto-selection if the user has explicitly interacted with this level before.
+     * 
+     * @param items - List of available options
+     * @param currentValue - Currently selected value (if any)
+     * @param setValue - State setter function
+     * @param level - The hierarchy level ('client', 'project', 'task')
      */
     const autoSelectSingle = (
         items: any[],
@@ -154,7 +167,8 @@ export const FrequentSelectors: React.FC<FrequentSelectorsProps> = ({
     };
 
     /**
-     * @description Handle client selection change
+     * Handles changes to the Client dropdown.
+     * Resets Project and Task selections.
      */
     const handleClientChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const value = e.target.value || null;
@@ -165,7 +179,8 @@ export const FrequentSelectors: React.FC<FrequentSelectorsProps> = ({
     };
 
     /**
-     * @description Handle project selection change
+     * Handles changes to the Project dropdown.
+     * Resets Task selection.
      */
     const handleProjectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const value = e.target.value || null;
@@ -175,7 +190,7 @@ export const FrequentSelectors: React.FC<FrequentSelectorsProps> = ({
     };
 
     /**
-     * @description Handle task selection change
+     * Handles changes to the Task dropdown.
      */
     const handleTaskChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const value = e.target.value || null;

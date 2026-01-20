@@ -1,11 +1,31 @@
+/**
+ * @fileoverview Layout Component
+ * 
+ * Provides the main application structure for authenticated users.
+ * Features:
+ * - Header: Includes app title, user info, and logout button.
+ * - Main Content Area: Renders the active route component via <Outlet />.
+ * - Mobile-optimized container styling.
+ */
+
 import { Outlet, Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../app/stores/auth.store';
 import { Button } from '@client/ui';
 
+/**
+ * Layout Component
+ * 
+ * Wraps all protected routes.
+ * Handles user logout and navigation.
+ */
 export default function Layout() {
     const { user, logout } = useAuthStore();
     const navigate = useNavigate();
 
+    /**
+     * Handles user logout.
+     * Clears auth state and redirects to login page.
+     */
     const handleLogout = async () => {
         await logout();
         navigate('/login');

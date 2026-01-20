@@ -1,3 +1,13 @@
+/**
+ * @fileoverview TimeEntryForm Component
+ * 
+ * Simple form for adding/editing time entries in the History view.
+ * Features:
+ * - Single entry creation/editing.
+ * - Validation using Zod schema.
+ * - Uses FrequentSelectors for project/task selection.
+ */
+
 import React, { useEffect, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -24,6 +34,11 @@ interface TimeEntryFormProps {
     onSubmit: (data: CreateTimeEntryInput) => Promise<void>;
 }
 
+/**
+ * TimeEntryForm Component
+ * 
+ * Used primarily in the history page for administrative edits.
+ */
 export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
     open,
     onOpenChange,

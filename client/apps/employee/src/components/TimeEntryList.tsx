@@ -1,7 +1,21 @@
+/**
+ * @fileoverview TimeEntryList Component
+ * 
+ * Renders the list of time entries grouped by day.
+ * Features:
+ * - Expandable/Collapsible day groups.
+ * - Visual status badges (Total Hours, Missing, Submitted).
+ * - Edit entry actions.
+ * - Add entry action for empty days.
+ */
+
 import React, { useState } from 'react';
 import { TimeEntryDto, GetWorkdayResponseDto } from '@shared/types';
 import './TimeEntryList.css';
 
+/**
+ * Data structure representing a single day's entries and status.
+ */
 export interface DayData {
     date: string;
     workday: GetWorkdayResponseDto | null;
@@ -15,6 +29,11 @@ interface TimeEntryListProps {
     onAddEntry?: (date: string) => void;
 }
 
+/**
+ * TimeEntryList Component
+ * 
+ * Displays a historical list of work entries.
+ */
 export const TimeEntryList: React.FC<TimeEntryListProps> = ({
     daysData,
     onEdit,
