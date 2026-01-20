@@ -5,6 +5,7 @@
 
 import { AdminLayout } from '../components/AdminLayout';
 import { DashboardHeader } from '../components/DashboardHeader';
+import { useAuthStore } from '../stores/authStore';
 import './DashboardPage.css';
 
 /**
