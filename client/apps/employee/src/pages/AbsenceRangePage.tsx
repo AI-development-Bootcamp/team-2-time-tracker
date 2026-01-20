@@ -129,7 +129,8 @@ export default function AbsenceRangePage() {
      * Maps form data to CreateAbsenceRequestDto
      */
     const mapFormDataToDto = (data: AbsenceRangeFormData): CreateAbsenceRequestDto => {
-        if (!data.dateRange.from || !data.dateRange.to) {
+        const { dateRange } = data;
+        if (!dateRange?.from || !dateRange?.to) {
             throw new Error('תאריכים לא תקינים');
         }
 
@@ -143,8 +144,8 @@ export default function AbsenceRangePage() {
 
         return {
             type: data.absenceType as AbsenceType,
-            startDate: formatDate(data.dateRange.from),
-            endDate: formatDate(data.dateRange.to),
+            startDate: formatDate(dateRange.from),
+            endDate: formatDate(dateRange.to),
             isHalfDay: false, // Range absences are always full day
             note: data.note,
         };

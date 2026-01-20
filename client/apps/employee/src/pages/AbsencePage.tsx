@@ -15,7 +15,6 @@ export default function AbsencePage() {
     const navigate = useNavigate();
     const toast = useToast();
     const [uploadProgress, setUploadProgress] = useState(0);
-    const [dateMode, setDateMode] = useState<'single' | 'range'>('range');
 
     // Get store actions
     const {
@@ -109,8 +108,14 @@ export default function AbsencePage() {
 
     /**
      * Maps AbsenceFormData to CreateAbsenceRequestDto
+     * This page only handles single day absences
      */
     const mapFormDataToDto = (data: AbsenceFormData): CreateAbsenceRequestDto => {
+        // This page only handles single day mode
+        if (data.dateMode !== 'single' || !data.singleDate) {
+            throw new Error('דף זה מיועד לדיווח יום בודד בלבד');
+        }
+
         // Determine absence type and isHalfDay
         let type: AbsenceType = AbsenceType.VACATION;
         let isHalfDay = false;
@@ -131,20 +136,6 @@ export default function AbsencePage() {
             }
         }
 
-        // Determine start and end dates
-        let startDate: Date;
-        let endDate: Date;
-
-        if (data.dateMode === 'single' && data.singleDate) {
-            startDate = data.singleDate;
-            endDate = data.singleDate;
-        } else if (data.dateMode === 'range' && data.dateRange?.from) {
-            startDate = data.dateRange.from;
-            endDate = data.dateRange.to || data.dateRange.from;
-        } else {
-            throw new Error('תאריכים לא תקינים');
-        }
-
         // Format dates as YYYY-MM-DD (backend expects this format)
         const formatDate = (date: Date): string => {
             const year = date.getFullYear();
@@ -152,6 +143,9 @@ export default function AbsencePage() {
             const day = String(date.getDate()).padStart(2, '0');
             return `${year}-${month}-${day}`;
         };
+
+        const startDate = data.singleDate;
+        const endDate = data.singleDate;
 
         return {
             type,
@@ -167,7 +161,11 @@ export default function AbsencePage() {
     };
 
     const handleModeChange = (mode: 'single' | 'range') => {
-        setDateMode(mode);
+        // If user switches to range mode, navigate to range page
+        if (mode === 'range') {
+            navigate('/absences/range');
+        }
+        // If mode is 'single', stay on this page (default behavior)
     };
 
     // Get loading and error states from store and mutations
@@ -188,13 +186,8 @@ export default function AbsencePage() {
                         ×
                     </button>
                     <div className="absence-page__header-content">
-                        <h1 className="absence-page__title">דיווח ידני</h1>
-                        {dateMode === 'single' && (
-                            <h2 className="absence-page__subtitle">יום בודד</h2>
-                        )}
-                        {dateMode === 'range' && (
-                            <h2 className="absence-page__subtitle">לפי טווח ימים</h2>
-                        )}
+                        <h1 className="absence-page__title">דיווח היעדרות</h1>
+                        <h2 className="absence-page__subtitle">יום בודד</h2>
                     </div>
                     <div className="absence-page__spacer"></div>
                 </div>
@@ -207,6 +200,7 @@ export default function AbsencePage() {
                         error={errorMessage}
                         uploadProgress={uploadProgress}
                         isUploading={isUploading}
+                        defaultValues={{ dateMode: 'single' }}
                     />
                 </div>
             </div>

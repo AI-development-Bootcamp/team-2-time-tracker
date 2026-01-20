@@ -305,7 +305,15 @@ export function AbsenceForm({
                     <button
                         type="button"
                         className="absence-form__range-link"
-                        onClick={() => handleDateModeChange('range')}
+                        onClick={() => {
+                            // If onModeChange is provided, use it (for navigation)
+                            // Otherwise, change mode locally
+                            if (onModeChange) {
+                                onModeChange('range');
+                            } else {
+                                handleDateModeChange('range');
+                            }
+                        }}
                     >
                         <span>לדווח על העדרות יותר מיום אחד</span>
                         <ChevronLeftIcon />
