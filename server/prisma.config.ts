@@ -1,12 +1,7 @@
 /// <reference types="node" />
 import { defineConfig } from '@prisma/config';
 
-const databaseUrl = process.env.DATABASE_URL;
-
-// Fail-fast if DATABASE_URL is missing
-if (!databaseUrl) {
-  throw new Error('DATABASE_URL environment variable is required');
-}
+const databaseUrl = process.env.DATABASE_URL || 'postgresql://dummy:dummy@localhost:5432/dummy';
 
 export default defineConfig({
   datasource: {
