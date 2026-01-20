@@ -36,8 +36,3 @@ jobs:
 
       - name: Run server unit tests
         run: pnpm --filter server test:unit
-
-      # NOTE: E2E tests (client/apps/employee/e2e/) are not run in CI.
-      # They require a full stack setup: running server, database with seeded
-      # test users, and the client app. Run locally with:
-      #   pnpm --filter @client/employee test:e2e

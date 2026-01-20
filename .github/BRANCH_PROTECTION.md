@@ -26,7 +26,6 @@ This repository requires mandatory CI enforcement. Follow these steps to configu
 - `validate-pr` (from PR Checks workflow)
 - `code-quality` (from PR Checks workflow)
 - `security` (from PR Checks workflow)
-- `e2e-tests` (from E2E Tests workflow)
 - `smoke-test` (from Smoke Tests workflow)
 - `analyze` (from CodeQL workflow)
 - `scan-dependencies` (from Container Scan workflow)
@@ -68,7 +67,7 @@ After configuring branch protection:
    - Create new pull request from `test-branch-protection` to `main`
 
 3. **Verify Required Checks**
-   - All 9 status checks should appear in the PR
+   - All 8 status checks should appear in the PR
    - Merge button should be blocked until all checks pass
    - If checks fail, merge must be prevented
 
@@ -90,7 +89,6 @@ After configuring branch protection:
 |----------|------|---------|---------|
 | **CI** | `ci.yml` | Build, lint, type-check, unit/integration tests | Every push/PR |
 | **PR Checks** | `pr-checks.yml` | PR validation, code quality, security audit | Every PR |
-| **E2E Tests** | `e2e.yml` | End-to-end testing with Playwright | Every push/PR (when client/server changed) |
 | **Smoke Tests** | `smoke-tests.yml` | Critical path validation | Every push/PR |
 | **CodeQL** | `codeql.yml` | SAST security scanning | Every push/PR + weekly |
 | **Container Scan** | `container-scan.yml` | Trivy vulnerability scanning | Every push/PR + daily |

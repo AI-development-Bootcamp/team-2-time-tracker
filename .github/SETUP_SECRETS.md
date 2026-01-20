@@ -11,12 +11,12 @@ These secrets are required for running tests in CI:
 1. **JWT_SECRET_TEST**
    - Description: JWT secret key for test environment
    - Recommended value: Generate a secure random string (e.g., `openssl rand -base64 32`)
-   - Used in: CI workflow, E2E tests
+   - Used in: CI workflow
 
 2. **JWT_REFRESH_SECRET_TEST**
    - Description: JWT refresh token secret key for test environment
    - Recommended value: Generate a secure random string (e.g., `openssl rand -base64 32`)
-   - Used in: CI workflow, E2E tests
+   - Used in: CI workflow
 
 3. **CODECOV_TOKEN** (Optional)
    - Description: Token for uploading coverage reports to Codecov
