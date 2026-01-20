@@ -188,3 +188,60 @@ export function createMockClient(overrides = {}) {
         ...overrides,
     };
 }
+
+/**
+ * Create a mock project object
+ */
+export function createMockProject(overrides = {}) {
+    return {
+        id: 'test-project-id',
+        name: 'Test Project',
+        clientId: 'test-client-id',
+        status: 'ACTIVE',
+        reportType: 'TOTAL_HOURS',
+        startDate: null,
+        endDate: null,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        client: {
+            id: 'test-client-id',
+            name: 'Test Client',
+        },
+        _count: {
+            tasks: 0,
+        },
+        ...overrides,
+    };
+}
+
+/**
+ * Create a mock task object
+ */
+export function createMockTask(overrides = {}) {
+    return {
+        id: 'test-task-id',
+        name: 'Test Task',
+        projectId: 'test-project-id',
+        status: 'OPEN',
+        startDate: null,
+        endDate: null,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        project: {
+            id: 'test-project-id',
+            name: 'Test Project',
+            clientId: 'test-client-id',
+            startDate: null,
+            endDate: null,
+            client: {
+                id: 'test-client-id',
+                name: 'Test Client',
+            },
+        },
+        _count: {
+            assignments: 0,
+            timeEntries: 0,
+        },
+        ...overrides,
+    };
+}
