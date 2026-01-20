@@ -6,10 +6,16 @@
     "noEmit": false,
     "allowImportingTsExtensions": false,
     "baseUrl": ".",
-    "module": "CommonJS",
-    "moduleResolution": "Node"
+    "paths": {
+      "@shared/types": [
+        "../shared/types/dist/index"
+      ]
+    }
   },
   "include": [
     "src/**/*"
+  ],
+  "references": [
+    { "path": "../shared/types" }
   ]
 }
