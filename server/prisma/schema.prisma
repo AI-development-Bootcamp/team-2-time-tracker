@@ -44,29 +44,50 @@ enum ReportType {
   ENTRY_EXIT
 }
 
+enum AbsenceType {
+  VACATION
+  SICK
+  RESERVES
+  OTHER
+}
+
+enum AbsenceStatus {
+  PENDING_DOCUMENT
+  SUBMITTED
+}
+
+enum WorkdayStatus {
+  MISSING
+  FULL
+  EXCEPTION
+}
+
 // =========================
 // User & Auth Models
 // =========================
 
 model User {
-  id                 String           @id @default(uuid())
-  email              String           @unique
+  id                 String            @id @default(uuid())
+  email              String            @unique
   password           String
-  fullName           String           @map("full_name")
-  role               UserRole         @default(EMPLOYEE)
-  isActive           Boolean          @default(true) @map("is_active")
-  mustChangePassword Boolean          @default(true) @map("must_change_password")
-  createdAt          DateTime         @default(now()) @map("created_at")
-  updatedAt          DateTime         @updatedAt @map("updated_at")
+  fullName           String            @map("full_name")
+  role               UserRole          @default(EMPLOYEE)
+  isActive           Boolean           @default(true) @map("is_active")
+  mustChangePassword Boolean           @default(true) @map("must_change_password")
+  createdAt          DateTime          @default(now()) @map("created_at")
+  updatedAt          DateTime          @updatedAt @map("updated_at")
   refreshTokens      RefreshToken[]
   taskAssignments    TaskAssignment[]
   timers             Timer[]
   timeEntries        TimeEntry[]
-  deletedTimeEntries TimeEntry[]      @relation("DeletedTimeEntries")
+  deletedTimeEntries TimeEntry[]       @relation("DeletedTimeEntries")
   workdaySummaries   WorkdaySummary[]
-  lockedMonths       MonthLock[]      @relation("LockedByAdmin")
-  unlockedMonths     MonthLock[]      @relation("UnlockedByAdmin")
-  assignedTasks      TaskAssignment[] @relation("AssignedByAdmin")
+  lockedMonths       MonthLock[]       @relation("LockedByAdmin")
+  unlockedMonths     MonthLock[]       @relation("UnlockedByAdmin")
+  assignedTasks      TaskAssignment[]  @relation("AssignedByAdmin")
+  absenceRequests    AbsenceRequest[]
+  absenceDays        AbsenceDay[]
+  uploadedDocuments  AbsenceDocument[] @relation("UploadedDocuments")
 
   @@map("users")
 }
@@ -156,6 +177,63 @@ model TaskAssignment {
 }
 
 // =========================
+// Absence Models
+// =========================
+
+model AbsenceRequest {
+  id            String            @id @default(uuid())
+  userId        String            @map("user_id")
+  user          User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type          AbsenceType
+  startDate     DateTime          @map("start_date") @db.Date
+  endDate       DateTime          @map("end_date") @db.Date
+  isHalfDay     Boolean           @default(false) @map("is_half_day")
+  status        AbsenceStatus     @default(SUBMITTED)
+  note          String?           @db.Text
+  createdAt     DateTime          @default(now()) @map("created_at")
+  updatedAt     DateTime          @updatedAt @map("updated_at")
+  absenceDays   AbsenceDay[]
+  documents     AbsenceDocument[]
+
+  @@index([userId, startDate, endDate])
+  @@index([status])
+  @@index([type])
+  @@map("absence_requests")
+}
+
+model AbsenceDay {
+  id               String         @id @default(uuid())
+  absenceRequestId String         @map("absence_request_id")
+  absenceRequest   AbsenceRequest @relation(fields: [absenceRequestId], references: [id], onDelete: Cascade)
+  userId           String         @map("user_id")
+  user             User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workDate         DateTime       @map("work_date") @db.Date
+  minutes          Int
+  createdAt        DateTime       @default(now()) @map("created_at")
+
+  @@unique([userId, workDate, absenceRequestId])
+  @@index([userId, workDate])
+  @@index([absenceRequestId])
+  @@map("absence_days")
+}
+
+model AbsenceDocument {
+  id               String         @id @default(uuid())
+  absenceRequestId String         @map("absence_request_id")
+  absenceRequest   AbsenceRequest @relation(fields: [absenceRequestId], references: [id], onDelete: Cascade)
+  fileUrl          String         @map("file_url")
+  fileName         String?        @map("file_name")
+  mimeType         String?        @map("mime_type")
+  fileSize         Int?           @map("file_size")
+  uploadedByUserId String         @map("uploaded_by_user_id")
+  uploadedBy       User           @relation("UploadedDocuments", fields: [uploadedByUserId], references: [id])
+  uploadedAt       DateTime       @default(now()) @map("uploaded_at")
+
+  @@index([absenceRequestId])
+  @@map("absence_documents")
+}
+
+// =========================
 // Month Lock Model
 // =========================
 
@@ -233,21 +311,21 @@ model TimeEntry {
 // =========================
 
 model WorkdaySummary {
-  id                 String     @id @default(uuid())
-  userId             String     @map("user_id")
-  user               User       @relation(fields: [userId], references: [id])
-  workDate           DateTime   @map("work_date") @db.Date
-  targetMinutes      Int        @default(540) @map("target_minutes")
-  workMinutes        Int        @default(0) @map("work_minutes")
-  absenceMinutes     Int        @default(0) @map("absence_minutes")
-  status             String     @default("MISSING")
-  isLocked           Boolean    @default(false) @map("is_locked")
-  lockedMonthId      String?    @map("locked_month_id")
-  lockedMonth        MonthLock? @relation(fields: [lockedMonthId], references: [id])
-  isSubmitted        Boolean    @default(false) @map("is_submitted")
-  submittedAt        DateTime?  @map("submitted_at")
-  requiresExactTotal Boolean    @default(false) @map("requires_exact_total")
-  updatedAt          DateTime   @updatedAt @map("updated_at")
+  id                 String         @id @default(uuid())
+  userId             String         @map("user_id")
+  user               User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workDate           DateTime       @map("work_date") @db.Date
+  targetMinutes      Int            @default(540) @map("target_minutes")
+  workMinutes        Int            @default(0) @map("work_minutes")
+  absenceMinutes     Int            @default(0) @map("absence_minutes")
+  status             WorkdayStatus  @default(MISSING)
+  isLocked           Boolean        @default(false) @map("is_locked")
+  lockedMonthId      String?        @map("locked_month_id")
+  lockedMonth        MonthLock?     @relation(fields: [lockedMonthId], references: [id])
+  isSubmitted        Boolean        @default(false) @map("is_submitted")
+  submittedAt        DateTime?      @map("submitted_at")
+  requiresExactTotal Boolean        @default(false) @map("requires_exact_total")
+  updatedAt          DateTime       @updatedAt @map("updated_at")
 
   @@unique([userId, workDate])
   @@index([userId, workDate])

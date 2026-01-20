@@ -16,9 +16,10 @@ export * from './dtos/auth.dto';
 export * from './dtos/timer.dto';
 export * from './dtos/selectors.dto';
 export * from './dtos/timeReports.dto';
+export * from './dtos/absences.dto';
 
 // Schemas
 export * from './zod/auth.schema';
 export * from './zod/timer.schema';
 export * from './zod/timeReports.schema';
-
+export * from './zod/absences.schema';

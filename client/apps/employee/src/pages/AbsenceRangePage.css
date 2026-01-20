@@ -1,0 +1,312 @@
+/**
+ * AbsenceRangePage styles
+ * iOS Settings-inspired design with gray background
+ */
+
+.absence-range-page {
+    width: 100%;
+    min-height: 100vh;
+    background-color: #f2f2f7; /* iOS gray background */
+    padding: 0;
+    padding-top: var(--spacing-md);
+}
+
+.absence-range-page__wrapper {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.absence-range-page__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-md);
+    padding-bottom: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+    background-color: #f2f2f7; /* iOS gray background */
+}
+
+.absence-range-page__title {
+    flex: 1;
+    font-size: 17px;
+    font-weight: var(--font-weight-semibold);
+    color: #000000;
+    margin: 0;
+    text-align: center;
+}
+
+.absence-range-page__close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    color: #000000;
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+    transition: opacity var(--transition-fast);
+}
+
+.absence-range-page__close:hover {
+    opacity: 0.6;
+}
+
+.absence-range-page__back {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    color: #007AFF; /* iOS blue */
+    font-size: 28px;
+    font-weight: 300;
+    line-height: 1;
+    cursor: pointer;
+    transition: opacity var(--transition-fast);
+}
+
+.absence-range-page__back:hover {
+    opacity: 0.6;
+}
+
+.absence-range-page__content {
+    padding: 0;
+    width: 100%;
+    background-color: transparent;
+    margin: 0;
+    direction: rtl;
+    text-align: right;
+}
+
+.absence-range-page__search-zone {
+    background-color: #ffc1cc; /* Pink background */
+    border-radius: 10px; /* iOS rounded corners */
+    padding: var(--spacing-lg);
+    margin: var(--spacing-md);
+    min-height: 100px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); /* Subtle shadow */
+}
+
+/* Form Styles */
+.absence-range-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    direction: rtl;
+}
+
+.absence-range-form__field {
+    width: 100%;
+    direction: rtl;
+    text-align: right;
+    padding: 0 var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+}
+
+.absence-range-form__field .select__trigger {
+    background-color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    padding: 11px 16px;
+    min-height: 44px;
+}
+
+.absence-range-form__field .select__value {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.absence-range-form__date-range {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    direction: rtl;
+    text-align: right;
+    padding: 0 var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+}
+
+.absence-range-form__date-range-header {
+    font-size: 13px;
+    font-weight: var(--font-weight-normal);
+    color: #000000;
+    margin-bottom: var(--spacing-sm);
+    direction: rtl;
+    text-align: right;
+}
+
+.absence-range-form__date-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    direction: rtl;
+    background-color: #ffffff;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.absence-range-form__date-field-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 11px 16px;
+    border-bottom: 0.5px solid #c6c6c8;
+    min-height: 44px;
+}
+
+.absence-range-form__date-field-wrapper:last-child {
+    border-bottom: none;
+}
+
+.absence-range-form__label {
+    font-size: 17px;
+    font-weight: var(--font-weight-normal);
+    color: #000000;
+    margin: 0;
+    text-align: right;
+}
+
+.absence-range-form__date-picker-wrapper {
+    flex: 0 0 auto;
+}
+
+/* Hide the date picker default styling and make it look like plain text */
+.absence-range-form__date-picker-wrapper .date-picker {
+    display: inline-block;
+}
+
+.absence-range-form__date-picker-wrapper .date-picker__trigger {
+    background: transparent;
+    border: none;
+    padding: 0;
+    height: auto;
+    min-height: auto;
+    font-size: 17px;
+    color: #000000;
+    text-align: left;
+    direction: ltr;
+}
+
+.absence-range-form__date-picker-wrapper .date-picker__trigger:hover {
+    background: transparent;
+}
+
+.absence-range-form__date-picker-wrapper .date-picker__trigger:focus {
+    box-shadow: none;
+    border: none;
+}
+
+.absence-range-form__date-picker-wrapper .date-picker__placeholder {
+    color: #c7c7cc;
+}
+
+.absence-range-form__range-picker-toggle {
+    display: none; /* Hide the toggle button */
+}
+
+.absence-range-form__range-button {
+    display: none; /* Hide the range button */
+}
+
+.absence-range-form__range-picker {
+    width: 100%;
+    direction: rtl;
+    text-align: right;
+}
+
+.absence-range-form__workdays {
+    padding: 0;
+    margin-top: var(--spacing-xs);
+    text-align: right;
+    font-size: 13px;
+    color: #007AFF; /* iOS blue */
+}
+
+.absence-range-form__workdays strong {
+    color: #007AFF;
+    font-weight: var(--font-weight-normal);
+}
+
+.absence-range-form__upload-section {
+    width: 100%;
+    padding: 0 var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+}
+
+.absence-range-form__error {
+    color: var(--color-error);
+    font-size: var(--font-size-sm);
+    margin-top: var(--spacing-xs);
+    display: block;
+}
+
+.absence-range-form__form-error {
+    padding: var(--spacing-sm);
+    background-color: var(--color-error-light);
+    color: var(--color-error);
+    border-radius: var(--radius-md);
+    text-align: right;
+    font-size: var(--font-size-sm);
+}
+
+.absence-range-form__actions {
+    width: 100%;
+    padding: 0 var(--spacing-md);
+    margin-top: var(--spacing-lg);
+}
+
+/* Mobile Responsive */
+@media (min-width: 640px) {
+    .absence-range-page {
+        padding: var(--spacing-lg);
+    }
+
+    .absence-range-page__header {
+        padding: var(--spacing-lg);
+    }
+
+    .absence-range-page__content {
+        padding: var(--spacing-lg);
+    }
+
+    .absence-range-page__search-zone {
+        padding: var(--spacing-xl);
+    }
+
+    .absence-range-form__date-fields {
+        flex-direction: column;
+        gap: 0;
+    }
+}
+
+/* Dark Mode - iOS style */
+[data-theme="dark"] .absence-range-page {
+    background-color: #000000; /* iOS dark background */
+}
+
+[data-theme="dark"] .absence-range-page__header {
+    background-color: #000000;
+}
+
+[data-theme="dark"] .absence-range-page__title {
+    color: #ffffff;
+}
+
+[data-theme="dark"] .absence-range-page__content,
+[data-theme="dark"] .absence-range-page__search-zone {
+    background-color: #1c1c1e; /* iOS dark card */
+    box-shadow: 0 1px 3px rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .absence-range-page__close:hover {
+    background-color: #2c2c2e;
+}

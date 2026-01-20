@@ -51,7 +51,17 @@ DATABASE_URL=postgresql://username:password@localhost:5432/timetracker
 JWT_SECRET=your-very-secure-jwt-secret-key-min-32-chars
 JWT_EXPIRES_IN=2h
 CORS_ORIGIN=http://localhost:5173
+
+# IDrive e2 Storage (Optional - for file uploads)
+# If not configured, file upload feature will be disabled
+IDRIVE_ACCESS_KEY=your_access_key
+IDRIVE_SECRET_KEY=your_secret_key
+IDRIVE_BUCKET=your_bucket_name
+IDRIVE_ENDPOINT=https://endpoint.idrivee2.com
+IDRIVE_REGION=us-east-1
 ```
+
+**Note:** File upload functionality (for absence documents) requires IDrive e2 storage configuration. If these environment variables are not set, users will receive an error message when attempting to upload files, but they can still create absence requests without attachments.
 
 ### 4. Set up the database
 

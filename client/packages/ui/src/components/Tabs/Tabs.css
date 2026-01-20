@@ -1,0 +1,103 @@
+/**
+ * Tabs Component Styles
+ * Uses BEM naming convention with RTL support
+ */
+
+.tabs {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.tabs__list {
+    display: flex;
+    gap: var(--spacing-xs);
+    padding: 2px;
+    background-color: #e5e5ea; /* iOS segmented control background */
+    border-radius: 9px; /* iOS style rounded */
+}
+
+.tabs__list--standalone {
+    width: 100%;
+}
+
+.tabs__trigger {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 7px var(--spacing-md);
+    font-family: var(--font-family);
+    font-size: 13px; /* iOS style font size */
+    font-weight: var(--font-weight-medium);
+    color: #000000;
+    background-color: transparent;
+    border: none;
+    border-radius: 7px; /* iOS style rounded */
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.tabs__trigger:hover:not(:disabled) {
+    color: var(--color-text-primary);
+}
+
+.tabs__trigger:focus-visible {
+    outline: 2px solid var(--color-border-focus);
+    outline-offset: 2px;
+}
+
+.tabs__trigger[data-state="active"],
+.tabs__trigger--active {
+    background-color: #ffffff;
+    color: #000000;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12), 0 3px 1px rgba(0, 0, 0, 0.04); /* iOS shadow */
+}
+
+.tabs__trigger:disabled,
+.tabs__trigger[aria-disabled="true"] {
+    color: var(--color-text-muted);
+    cursor: not-allowed;
+}
+
+.tabs__content {
+    padding-top: var(--spacing-md);
+    outline: none;
+}
+
+.tabs__content:focus-visible {
+    outline: 2px solid var(--color-border-focus);
+    outline-offset: 2px;
+    border-radius: var(--radius-md);
+}
+
+/* Animation for content */
+.tabs__content[data-state="active"] {
+    animation: tabs-fade-in 0.2s ease;
+}
+
+@keyframes tabs-fade-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Dark mode - iOS style */
+[data-theme="dark"] .tabs__list {
+    background-color: #2c2c2e; /* iOS dark segmented control */
+}
+
+[data-theme="dark"] .tabs__trigger {
+    color: #ffffff;
+}
+
+[data-theme="dark"] .tabs__trigger[data-state="active"],
+[data-theme="dark"] .tabs__trigger--active {
+    background-color: #3a3a3c; /* iOS dark selected */
+    color: #ffffff;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.24), 0 3px 1px rgba(0, 0, 0, 0.08);
+}

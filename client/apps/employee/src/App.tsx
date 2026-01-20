@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ToastProvider } from '@client/ui';
 import ProtectedRoute from './components/ProtectedRoute';
 import Layout from './components/Layout';
@@ -6,9 +7,22 @@ import LoginPage from './pages/LoginPage';
 import { TimeEntryHistoryPage } from './pages/TimeEntryHistoryPage';
 import { DailyReportPage } from './pages/DailyReportPage';
 import ChangePasswordPage from './pages/ChangePasswordPage';
+import AbsencePage from './pages/AbsencePage';
+import AbsenceRangePage from './pages/AbsenceRangePage';
 
 import '@client/ui/styles/tokens.css';
 import './index.css';
+
+// Create a client for TanStack Query
+const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            refetchOnWindowFocus: false,
+            retry: 1,
+            staleTime: 30000,
+        },
+    },
+});
 
 function App() {
     return (

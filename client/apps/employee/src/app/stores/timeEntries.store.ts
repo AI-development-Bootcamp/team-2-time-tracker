@@ -1,22 +1,100 @@
+/**
+ * @fileoverview Zustand store for time entries management
+ * @module stores/timeEntries.store
+ */
+
 import { create } from 'zustand';
 import { CreateTimeEntryInput, TimeEntryDto } from '@shared/types';
 import { httpClient as apiClient } from '@client/api-client';
 
+/**
+ * Time entry store state interface
+ * @description Manages time entries with CRUD operations and local state caching
+ */
 interface TimeEntryStore {
+    /** Cached time entries */
     entries: TimeEntryDto[];
+    /** Loading state for async operations */
     isLoading: boolean;
+    /** Error message from operations */
     error: string | null;
 
+    /**
+     * Set all time entries
+     * @param {TimeEntryDto[]} entries - Array of time entries to set
+     */
     setEntries: (entries: TimeEntryDto[]) => void;
+
+    /**
+     * Add a new entry to the store
+     * @description Adds entry only if it doesn't already exist (checks by ID)
+     * @param {TimeEntryDto} entry - Time entry to add
+     */
     addEntry: (entry: TimeEntryDto) => void;
+
+    /**
+     * Update an existing entry in the store
+     * @param {TimeEntryDto} entry - Updated time entry
+     */
     updateEntry: (entry: TimeEntryDto) => void;
+
+    /**
+     * Remove an entry from the store
+     * @param {string} id - ID of entry to remove
+     */
     removeEntry: (id: string) => void;
+
+    /**
+     * Create a new time entry via API
+     * @description Creates time entry on server and adds to local store
+     * @param {CreateTimeEntryInput} data - Time entry data
+     * @returns {Promise<TimeEntryDto>} Created time entry
+     * @throws {Error} When creation fails
+     */
     createTimeEntry: (data: CreateTimeEntryInput) => Promise<TimeEntryDto>;
+
+    /**
+     * Update an existing time entry via API
+     * @param {string} id - ID of entry to update
+     * @param {Partial<CreateTimeEntryInput>} data - Partial update data
+     * @returns {Promise<TimeEntryDto>} Updated time entry
+     * @throws {Error} When update fails
+     */
     updateTimeEntry: (id: string, data: Partial<CreateTimeEntryInput>) => Promise<TimeEntryDto>;
+
+    /**
+     * Delete a time entry via API
+     * @param {string} id - ID of entry to delete
+     * @returns {Promise<void>}
+     * @throws {Error} When deletion fails
+     */
     deleteTimeEntry: (id: string) => Promise<void>;
+
+    /**
+     * Clear error message
+     */
     clearError: () => void;
 }
 
+/**
+ * Zustand store for time entries management
+ * @description Manages time entries with local caching and API integration.
+ * Provides CRUD operations for time entries.
+ * @example
+ * ```tsx
+ * const { entries, createTimeEntry, isLoading } = useTimeEntryStore();
+ * 
+ * // Create new entry
+ * const entry = await createTimeEntry({
+ *   workDate: '2026-01-20',
+ *   taskId: 'task-123',
+ *   location: 'OFFICE',
+ *   startTime: '09:00',
+ *   endTime: '17:00',
+ *   description: 'Development work'
+ * });
+ * ```
+ */
 export const useTimeEntryStore = create<TimeEntryStore>((set, get) => ({
     entries: [],
     isLoading: false,

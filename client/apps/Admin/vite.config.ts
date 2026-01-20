@@ -12,6 +12,7 @@ export default defineConfig({
             '@client/utils': path.resolve(__dirname, '../../packages/utils/src'),
             '@shared/types': path.resolve(__dirname, '../../../shared/types/src'),
         },
+        dedupe: ['react', 'react-dom'],
     },
     server: {
         port: 5174,

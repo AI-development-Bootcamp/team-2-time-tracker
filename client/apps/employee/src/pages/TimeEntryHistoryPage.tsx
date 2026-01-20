@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import {
     TimeEntryDto,
     CreateTimeEntryInput
@@ -10,8 +10,33 @@ import {
     useToast
 } from '@client/ui';
 import { TimeEntryForm } from '../components/TimeEntryForm';
-import { TimeEntryList } from '../components/TimeEntryList';
+import { TimeEntryList, DayData } from '../components/TimeEntryList';
 import './TimeEntryHistoryPage.css';
+
+/**
+ * Group time entries by work date
+ * @description Transforms flat array of entries into day-grouped structure for TimeEntryList
+ * @param {TimeEntryDto[]} entries - Flat array of time entries
+ * @returns {DayData[]} Entries grouped by date, sorted newest first
+ */
+function groupEntriesByDate(entries: TimeEntryDto[]): DayData[] {
+    const grouped = entries.reduce((acc, entry) => {
+        const date = entry.workDate;
+        if (!acc[date]) {
+            acc[date] = {
+                date,
+                workday: null, // Workday data not available in history endpoint
+                entries: []
+            };
+        }
+        acc[date].entries.push(entry);
+        return acc;
+    }, {} as Record<string, DayData>);
+
+    return Object.values(grouped).sort((a, b) =>
+        new Date(b.date).getTime() - new Date(a.date).getTime()
+    );
+}
 
 export function TimeEntryHistoryPage() {
     const { success, error } = useToast();
@@ -29,6 +54,9 @@ export function TimeEntryHistoryPage() {
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [editingEntry, setEditingEntry] = useState<TimeEntryDto | null>(null);
     const [deleteCandidate, setDeleteCandidate] = useState<TimeEntryDto | null>(null);
+
+    // Transform entries into day-grouped format
+    const daysData = useMemo(() => groupEntriesByDate(entries), [entries]);
 
     const fetchHistory = useCallback(async (page = 1) => {
         setIsLoading(true);
@@ -64,8 +92,11 @@ export function TimeEntryHistoryPage() {
         setIsFormOpen(true);
     };
 
-    const handleDeleteClick = (entry: TimeEntryDto) => {
-        setDeleteCandidate(entry);
+    const handleDeleteClick = (id: string) => {
+        const entry = entries.find(e => e.id === id);
+        if (entry) {
+            setDeleteCandidate(entry);
+        }
     };
 
     const handleFormSubmit = async (data: CreateTimeEntryInput) => {
@@ -116,7 +147,7 @@ export function TimeEntryHistoryPage() {
                     <div>Loading...</div>
                 ) : (
                     <TimeEntryList
-                        entries={entries}
+                        daysData={daysData}
                         onEdit={handleEdit}
                         onDelete={handleDeleteClick}
                     />

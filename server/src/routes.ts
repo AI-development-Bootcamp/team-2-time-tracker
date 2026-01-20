@@ -8,13 +8,13 @@ import { timeReportsRouter } from './modules/time-reports/timeReports.routes';
 import { workdayRouter } from './modules/time-reports/workday.routes';
 import { selectorsRouter } from './modules/selectors/selectors.routes';
 import { myRouter } from './modules/selectors/my.routes';
+import absencesRouter from './modules/absences/absences.routes';
+import healthRouter from './modules/health/health.routes';
 
 const router: Router = Router();
 
-// Health Check
-router.get('/health', (_req, res) => {
-    res.json({ status: 'ok', timestamp: new Date().toISOString(), version: '1.0.0' });
-});
+// Health Check Routes
+router.use('/health', healthRouter);
 
 // Swagger Docs
 router.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
@@ -27,6 +27,7 @@ router.use('/time-entries', timeReportsRouter);
 router.use('/workday', workdayRouter);
 router.use('/selectors', selectorsRouter);
 router.use('/my', myRouter);
+router.use('/absences', absencesRouter);
 
 export { router };
 
