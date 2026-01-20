@@ -1,34 +1,60 @@
 /**
- * @fileoverview Integration tests for auth endpoints
+ * @fileoverview Unit tests for auth endpoints with mocks
  */
 
 import { describe, it, expect, vi, beforeEach, beforeAll } from 'vitest';
-
-// Mock Prisma and dependencies BEFORE any imports
-vi.mock('@prisma/client');
-vi.mock('pg');
-vi.mock('@prisma/adapter-pg');
-
 import express, { Express } from 'express';
 import request from 'supertest';
-import {
-    mockPrisma,
-    mockPrismaUser,
-    mockPrismaRefreshToken,
-    resetPrismaMocks,
-    createMockUser,
-    createMockRefreshToken,
-} from '../helpers/mockPrisma';
-import { router } from '../../src/routes';
-import { errorMiddleware } from '../../src/middlewares/error.middleware';
-import bcrypt from 'bcrypt';
+
+// Use vi.hoisted to define all mocks that vi.mock needs to reference.
+// Factory function is inlined here because vi.hoisted runs before imports are resolved.
+const { mockBcrypt, mockPrismaUser, mockPrismaRefreshToken, mockPrisma } = vi.hoisted(() => {
+    const mockBcrypt = {
+        compare: vi.fn(),
+        hash: vi.fn(),
+    };
+
+    const mockPrismaUser = {
+        findUnique: vi.fn(),
+        findMany: vi.fn(),
+        create: vi.fn(),
+        update: vi.fn(),
+        updateMany: vi.fn(),
+        delete: vi.fn(),
+        count: vi.fn(),
+    };
+
+    const mockPrismaRefreshToken = {
+        create: vi.fn(),
+        findFirst: vi.fn(),
+        findUnique: vi.fn(),
+        updateMany: vi.fn(),
+        delete: vi.fn(),
+    };
+
+    const mockPrismaTimeEntry = {
+        findMany: vi.fn(),
+        findUnique: vi.fn(),
+        create: vi.fn(),
+        update: vi.fn(),
+        delete: vi.fn(),
+    };
+
+    const mockPrisma = {
+        user: mockPrismaUser,
+        refreshToken: mockPrismaRefreshToken,
+        timeEntry: mockPrismaTimeEntry,
+        $connect: vi.fn(),
+        $disconnect: vi.fn(),
+        $transaction: vi.fn((callback: (prisma: typeof mockPrisma) => unknown) => callback(mockPrisma)),
+    };
+
+    return { mockBcrypt, mockPrismaUser, mockPrismaRefreshToken, mockPrisma };
+});
 
 // Mock bcrypt
 vi.mock('bcrypt', () => ({
-    default: {
-        compare: vi.fn(),
-        hash: vi.fn(),
-    },
+    default: mockBcrypt,
 }));
 
 // Mock jsonwebtoken
@@ -59,6 +85,15 @@ vi.mock('../../src/config/jwt', () => ({
     },
 }));
 
+// Mock the database module
+vi.mock('../../src/db', () => ({
+    prisma: mockPrisma,
+}));
+
+// Import after mocks are set up
+import { router } from '../../src/routes';
+import { errorMiddleware } from '../../src/middlewares/error.middleware';
+
 let app: Express;
 
 beforeAll(() => {
@@ -70,16 +105,33 @@ beforeAll(() => {
 
 describe('Auth Endpoints', () => {
     beforeEach(() => {
-        resetPrismaMocks();
         vi.clearAllMocks();
     });
 
     describe('POST /api/auth/login', () => {
         it('should return 200 and tokens on successful login', async () => {
-            const mockUser = createMockUser();
+            const mockUser = {
+                id: 'test-user-id',
+                email: 'test@example.com',
+                password: '$2b$12$hashedpassword',
+                firstName: 'Test',
+                lastName: 'User',
+                role: 'EMPLOYEE',
+                isActive: true,
+                mustChangePassword: false,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            };
             mockPrismaUser.findUnique.mockResolvedValue(mockUser);
-            (bcrypt.compare as any).mockResolvedValue(true);
-            mockPrismaRefreshToken.create.mockResolvedValue(createMockRefreshToken());
+            mockBcrypt.compare.mockResolvedValue(true);
+            mockPrismaRefreshToken.create.mockResolvedValue({
+                id: 'test-token-id',
+                token: 'test-refresh-token',
+                userId: 'test-user-id',
+                expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+                revokedAt: null,
+                createdAt: new Date(),
+            });
 
             const response = await request(app)
                 .post('/api/auth/login')
@@ -122,8 +174,23 @@ describe('Auth Endpoints', () => {
 
     describe('POST /api/auth/refresh', () => {
         it('should return new access token', async () => {
-            const mockUser = createMockUser();
-            const mockToken = createMockRefreshToken({ user: mockUser });
+            const mockUser = {
+                id: 'test-user-id',
+                email: 'test@example.com',
+                firstName: 'Test',
+                lastName: 'User',
+                role: 'EMPLOYEE',
+                isActive: true,
+            };
+            const mockToken = {
+                id: 'test-token-id',
+                token: 'test-refresh-token',
+                userId: 'test-user-id',
+                expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+                revokedAt: null,
+                createdAt: new Date(),
+                user: mockUser,
+            };
             mockPrismaRefreshToken.findFirst.mockResolvedValue(mockToken);
 
             const response = await request(app)
@@ -148,7 +215,17 @@ describe('Auth Endpoints', () => {
 
     describe('GET /api/auth/me', () => {
         it('should return current user for authenticated request', async () => {
-            const mockUser = createMockUser();
+            const mockUser = {
+                id: 'test-user-id',
+                email: 'test@example.com',
+                firstName: 'Test',
+                lastName: 'User',
+                role: 'EMPLOYEE',
+                isActive: true,
+                mustChangePassword: false,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            };
             mockPrismaUser.findUnique.mockResolvedValue(mockUser);
 
             const response = await request(app)
@@ -169,7 +246,17 @@ describe('Auth Endpoints', () => {
 
     describe('POST /api/auth/logout', () => {
         it('should logout successfully', async () => {
-            const mockUser = createMockUser();
+            const mockUser = {
+                id: 'test-user-id',
+                email: 'test@example.com',
+                firstName: 'Test',
+                lastName: 'User',
+                role: 'EMPLOYEE',
+                isActive: true,
+                mustChangePassword: false,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            };
             mockPrismaUser.findUnique.mockResolvedValue(mockUser);
             mockPrismaRefreshToken.updateMany.mockResolvedValue({ count: 1 });
 

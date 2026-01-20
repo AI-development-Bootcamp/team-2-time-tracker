@@ -9,9 +9,10 @@ import './DashboardPage.css';
 
 /**
  * @description Admin dashboard page with logout functionality
- * @returns Dashboard page component
+ * @returns {React.JSX.Element} Dashboard page component
  */
-function DashboardPage() {
+function DashboardPage(): React.JSX.Element {
+    
 
 
     return (

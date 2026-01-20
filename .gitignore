@@ -13,11 +13,17 @@ coverage/
 .env.local
 .env.*.local
 
+# Claude Code
+.claude/settings.json
+.claude/settings.local.json
+
 # Logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+server/logs/*.log
+nul
 
 # OS
 .DS_Store
@@ -31,9 +37,3 @@ Screenshots/
 .idea/
 *.swp
 *.swo
-
-
-# Logs
-nul
-*.log
-Logs

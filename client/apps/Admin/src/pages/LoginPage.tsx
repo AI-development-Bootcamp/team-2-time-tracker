@@ -11,9 +11,9 @@ import './LoginPage.css';
 
 /**
  * @description Admin login page with full-page background image and centered login form
- * @returns Login page component
+ * @returns {React.JSX.Element} Login page component
  */
-function LoginPage() {
+function LoginPage(): React.JSX.Element {
     const navigate = useNavigate();
     const { login, isLoading, error, clearError, isAuthenticated } = useAuthStore();
 
