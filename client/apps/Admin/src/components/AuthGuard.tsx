@@ -16,9 +16,9 @@ interface AuthGuardProps {
  * Redirects unauthenticated users to the login page.
  * @param {AuthGuardProps} props - Component props
  * @param {React.ReactNode} props.children - Protected content to render
- * @returns {JSX.Element} Protected content or redirect
+ * @returns Protected content or redirect
  */
-function AuthGuard({ children }: AuthGuardProps): JSX.Element {
+function AuthGuard({ children }: AuthGuardProps) {
     const location = useLocation();
     const { isAuthenticated, isLoading, checkAuth } = useAuthStore();
 

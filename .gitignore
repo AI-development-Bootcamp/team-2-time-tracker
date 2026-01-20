@@ -6,6 +6,7 @@ node_modules/
 dist/
 build/
 coverage/
+*.tsbuildinfo
 
 # Environment
 .env
@@ -34,3 +35,4 @@ Screenshots/
 
 # Logs
 nul
+*.log
