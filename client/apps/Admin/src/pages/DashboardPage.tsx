@@ -8,10 +8,16 @@ import { DashboardHeader } from '../components/DashboardHeader';
 import './DashboardPage.css';
 
 /**
- * @description Admin dashboard page with project management
- * @returns {JSX.Element} Dashboard page component
+ * @description Admin dashboard page with logout functionality
+ * @returns Dashboard page component
  */
-function DashboardPage(): JSX.Element {
+function DashboardPage() {
+    const { user, logout } = useAuthStore();
+
+    async function handleLogout(): Promise<void> {
+        await logout();
+    }
+
     return (
         <AdminLayout>
             <DashboardHeader

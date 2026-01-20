@@ -1,38 +1,48 @@
-FROM node:20-alpine AS base
-
-RUN corepack enable && corepack prepare pnpm@latest --activate
-
+# Build stage
+FROM node:20-alpine AS builder
+RUN apk add --no-cache openssl && \
+    corepack enable && corepack prepare pnpm@9 --activate
 WORKDIR /app
 
-# Install dependencies
-FROM base AS deps
+# Copy all package files for workspace (cached layer - changes rarely)
 COPY package.json pnpm-workspace.yaml pnpm-lock.yaml* ./
 COPY server/package.json ./server/
 COPY shared/types/package.json ./shared/types/
+
+# Install all dependencies (cached if package files unchanged)
 RUN pnpm install --frozen-lockfile
 
-# Build
-FROM base AS builder
-COPY --from=deps /app/node_modules ./node_modules
-COPY --from=deps /app/server/node_modules ./server/node_modules
-COPY --from=deps /app/shared/types/node_modules ./shared/types/node_modules
+# Copy source code
 COPY . .
-RUN pnpm --filter @shared/types build
-RUN pnpm --filter server build
 
-# Production
-FROM base AS runner
+# Build shared types, generate prisma client, and build server (single layer)
+ARG DATABASE_URL="postgresql://placeholder:placeholder@localhost:5432/placeholder"
+RUN pnpm --filter @shared/types build && \
+    cd server && npx prisma generate && \
+    cd .. && pnpm --filter server build
+
+# Production stage
+FROM node:20-alpine AS runner
+RUN apk add --no-cache openssl && \
+    corepack enable && corepack prepare pnpm@9 --activate
+WORKDIR /app
+
 ENV NODE_ENV=production
 
-COPY --from=builder /app/package.json ./
+# Copy built artifacts and node_modules from builder (includes generated prisma client)
+COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/server/dist ./server/dist
-COPY --from=builder /app/server/package.json ./server/
+COPY --from=builder /app/server/node_modules ./server/node_modules
 COPY --from=builder /app/shared/types/dist ./shared/types/dist
-COPY --from=builder /app/shared/types/package.json ./shared/types/
 COPY --from=builder /app/server/prisma ./server/prisma
+COPY --from=builder /app/server/prisma.config.ts ./server/prisma.config.ts
+COPY --from=builder /app/server/package.json ./server/package.json
+COPY --from=builder /app/package.json ./package.json
 
 WORKDIR /app/server
-RUN pnpm install --prod
 
 EXPOSE 3000
-CMD ["node", "dist/app.js"]
+
+# Run migrations and start server
+# DATABASE_URL will come from runtime environment (Render sets this)
+CMD ["sh", "-c", "npx prisma migrate deploy && node dist/app.js"]

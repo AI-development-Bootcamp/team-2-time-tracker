@@ -5,7 +5,9 @@
     "rootDir": "./src",
     "noEmit": false,
     "allowImportingTsExtensions": false,
-    "baseUrl": "."
+    "baseUrl": ".",
+    "module": "CommonJS",
+    "moduleResolution": "Node"
   },
   "include": [
     "src/**/*"
