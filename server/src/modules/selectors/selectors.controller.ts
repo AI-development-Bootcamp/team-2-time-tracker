@@ -65,12 +65,10 @@ export class SelectorsController {
     ): Promise<void> {
         try {
             const userId = req.user!.userId;
-            const userRole = req.user!.role;
             const { projectId, sort } = req.query;
 
             const tasks = await selectorsService.getTasks(
                 userId,
-                userRole,
                 projectId as string,
                 sort as string
             );

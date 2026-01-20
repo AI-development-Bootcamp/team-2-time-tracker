@@ -1,17 +1,52 @@
 .daily-report-page {
-    min-height: 100vh;
+    height: 100%;
     background: rgb(242, 242, 247);
     display: flex;
     flex-direction: column;
     position: relative;
+    overflow: hidden;
 }
 
 .daily-report-page__content {
     flex: 1;
     overflow-y: auto;
+    overflow-x: hidden;
     padding: 16px;
-    padding-bottom: 80px;
-    /* Space for fixed footer */
+    padding-bottom: 16px;
+}
+
+/* Smooth scrolling */
+.daily-report-page__content {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+}
+
+/* Custom scrollbar styling */
+.daily-report-page__content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.daily-report-page__content::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.daily-report-page__content::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+}
+
+.daily-report-page__content::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.daily-report-page__loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    font-family: 'Assistant', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 18px;
+    color: rgb(107, 114, 128);
 }
 
 /* Remove old styles that are no longer needed */

@@ -121,6 +121,53 @@
     direction: rtl;
 }
 
+/* Empty State */
+.time-entry-group__empty {
+    padding: 24px 16px;
+    text-align: center;
+    border-top: 1px solid rgb(242, 242, 247);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+.time-entry-group__empty-text {
+    font-family: 'Assistant', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 14px;
+    color: rgb(107, 114, 128);
+    margin: 0;
+}
+
+.time-entry-group__add-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: rgb(254, 90, 137);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Assistant', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.time-entry-group__add-button:hover {
+    background: rgb(244, 70, 117);
+    transform: translateY(-1px);
+}
+
+.time-entry-group__add-button:active {
+    transform: translateY(0);
+}
+
+.time-entry-group__add-button svg {
+    flex-shrink: 0;
+}
+
 /* Entries */
 .time-entry-group__entries {
     border-top: 1px solid rgb(242, 242, 247);

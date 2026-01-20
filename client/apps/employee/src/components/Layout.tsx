@@ -12,8 +12,14 @@ export default function Layout() {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 direction-rtl">
-            <header className="bg-white shadow">
+        <div style={{
+            height: '100vh',
+            display: 'flex',
+            flexDirection: 'column',
+            overflow: 'hidden',
+            background: 'rgb(242, 242, 247)'
+        }}>
+            <header className="bg-white shadow" style={{ flexShrink: 0 }}>
                 <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 flex justify-between items-center">
                     <h1 className="text-3xl font-bold tracking-tight text-gray-900">
                         <Link to="/">Time Tracker</Link>
@@ -28,10 +34,13 @@ export default function Layout() {
                     </div>
                 </div>
             </header>
-            <main>
-                <div className="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8">
-                    <Outlet />
-                </div>
+            <main style={{
+                flex: 1,
+                overflow: 'hidden',
+                display: 'flex',
+                flexDirection: 'column'
+            }}>
+                <Outlet />
             </main>
         </div>
     );

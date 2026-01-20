@@ -33,12 +33,11 @@ export class SelectorsService {
 
     async getTasks(
         userId: string,
-        userRole: string,
         projectId?: string,
         sort: string = 'alpha'
     ): Promise<TaskSelectorDto[]> {
         const sortMode = this.parseSortMode(sort);
-        return this.repo.getTasks(userId, userRole, projectId, sortMode);
+        return this.repo.getTasks(userId, projectId, sortMode);
     }
 
     async getUserAssignments(userId: string): Promise<UserAssignmentDto[]> {

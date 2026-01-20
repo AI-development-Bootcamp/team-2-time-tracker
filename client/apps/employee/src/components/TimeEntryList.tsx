@@ -12,11 +12,13 @@ interface TimeEntryListProps {
     daysData: DayData[];
     onEdit: (entry: TimeEntryDto) => void;
     onDelete: (id: string) => void;
+    onAddEntry?: (date: string) => void;
 }
 
 export const TimeEntryList: React.FC<TimeEntryListProps> = ({
     daysData,
     onEdit,
+    onAddEntry,
 }) => {
     const [expandedDates, setExpandedDates] = useState<Set<string>>(new Set());
 
@@ -157,7 +159,19 @@ export const TimeEntryList: React.FC<TimeEntryListProps> = ({
                         {/* Empty state for expanded day with no entries */}
                         {isExpanded && dayData.entries.length === 0 && (
                             <div className="time-entry-group__empty">
-                                אין דיווחים ליום זה
+                                <p className="time-entry-group__empty-text">אין דיווחים ליום זה</p>
+                                {onAddEntry && (
+                                    <button
+                                        className="time-entry-group__add-button"
+                                        onClick={() => onAddEntry(dayData.date)}
+                                    >
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                            <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" />
+                                            <path d="M12 8v8M8 12h8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                                        </svg>
+                                        <span>הוסף דיווח</span>
+                                    </button>
+                                )}
                             </div>
                         )}
                     </div>

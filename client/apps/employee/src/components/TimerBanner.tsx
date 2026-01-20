@@ -2,11 +2,15 @@ import { useEffect, useRef } from 'react';
 import { useTimerStore } from '../app/stores/timer.store';
 import './TimerBanner.css';
 
+interface TimerBannerProps {
+    onStopClick?: () => void;
+}
+
 /**
  * Fixed timer banner visible on all pages when timer is running
  * Following Figma design specifications
  */
-export function TimerBanner() {
+export function TimerBanner({ onStopClick }: TimerBannerProps) {
     const {
         timer,
         isRunning,
@@ -65,6 +69,12 @@ export function TimerBanner() {
         }
     }
 
+    function handleStopClick() {
+        if (onStopClick) {
+            onStopClick();
+        }
+    }
+
     return (
         <div className="timer-banner">
             <div className="timer-banner__content">
@@ -72,7 +82,7 @@ export function TimerBanner() {
                     <span className="timer-banner__pulse" />
                     <span className="timer-banner__label">טיימר פעיל</span>
                 </div>
-                
+
                 <div className="timer-banner__time">
                     {formatTime(elapsedMinutes)}
                 </div>
@@ -80,6 +90,7 @@ export function TimerBanner() {
                 <div className="timer-banner__actions">
                     <button
                         className="timer-banner__button timer-banner__button--stop"
+                        onClick={handleStopClick}
                         disabled={isLoading}
                     >
                         עצור ושמור
