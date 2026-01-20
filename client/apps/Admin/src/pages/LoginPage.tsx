@@ -38,7 +38,7 @@ function LoginPage(): React.JSX.Element {
 
         try {
             await login(email, password, rememberMe);
-            navigate('/');
+            // Navigation handled by useEffect watching isAuthenticated
         } catch {
             // Error is handled by the store
         }

@@ -8,7 +8,7 @@ import { DashboardHeader } from '../components/DashboardHeader';
 import './DashboardPage.css';
 
 /**
- * @description Admin dashboard page with logout functionality
+ * @description Admin dashboard page
  * @returns {React.JSX.Element} Dashboard page component
  */
 function DashboardPage(): React.JSX.Element {
