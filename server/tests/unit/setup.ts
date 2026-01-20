@@ -44,10 +44,12 @@ export const mockPrisma = {
     $disconnect: vi.fn(),
 };
 
+// Mock the DB module so all imports of ../../src/db use our mocks
+vi.mock('../../src/db', () => ({
+    prisma: mockPrisma,
+}));
+
 // Reset all mocks before each test
 beforeEach(() => {
-    vi.clearAllMocks();
-    Object.values(mockPrismaUser).forEach((mock) => mock.mockReset());
-    Object.values(mockPrismaRefreshToken).forEach((mock) => mock.mockReset());
-    Object.values(mockPrismaTimeEntry).forEach((mock) => mock.mockReset());
+    vi.resetAllMocks();
 });

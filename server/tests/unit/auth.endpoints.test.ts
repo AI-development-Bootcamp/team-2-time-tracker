@@ -2,9 +2,44 @@
  * @fileoverview Unit tests for auth endpoints with mocks
  */
 
-import { describe, it, expect, vi, beforeEach, beforeAll } from 'vitest';
+import { describe, it, expect, vi, beforeEach, beforeAll, type Mock } from 'vitest';
 import express, { Express } from 'express';
 import request from 'supertest';
+// Define mock delegate types for type-safe mocking
+type MockUserDelegate = {
+    findUnique: Mock;
+    findMany: Mock;
+    create: Mock;
+    update: Mock;
+    updateMany: Mock;
+    delete: Mock;
+    count: Mock;
+};
+
+type MockRefreshTokenDelegate = {
+    create: Mock;
+    findFirst: Mock;
+    findUnique: Mock;
+    updateMany: Mock;
+    delete: Mock;
+};
+
+type MockTimeEntryDelegate = {
+    findMany: Mock;
+    findUnique: Mock;
+    create: Mock;
+    update: Mock;
+    delete: Mock;
+};
+
+type MockPrismaClient = {
+    user: MockUserDelegate;
+    refreshToken: MockRefreshTokenDelegate;
+    timeEntry: MockTimeEntryDelegate;
+    $connect: Mock;
+    $disconnect: Mock;
+    $transaction: Mock<(callback: (prisma: MockPrismaClient) => unknown) => unknown>;
+};
 
 // Use vi.hoisted to define all mocks that vi.mock needs to reference
 const { mockBcrypt, mockPrismaUser, mockPrismaRefreshToken, mockPrisma } = vi.hoisted(() => {
@@ -13,7 +48,7 @@ const { mockBcrypt, mockPrismaUser, mockPrismaRefreshToken, mockPrisma } = vi.ho
         hash: vi.fn(),
     };
 
-    const mockPrismaUser = {
+    const mockPrismaUser: MockUserDelegate = {
         findUnique: vi.fn(),
         findMany: vi.fn(),
         create: vi.fn(),
@@ -23,7 +58,7 @@ const { mockBcrypt, mockPrismaUser, mockPrismaRefreshToken, mockPrisma } = vi.ho
         count: vi.fn(),
     };
 
-    const mockPrismaRefreshToken = {
+    const mockPrismaRefreshToken: MockRefreshTokenDelegate = {
         create: vi.fn(),
         findFirst: vi.fn(),
         findUnique: vi.fn(),
@@ -31,7 +66,7 @@ const { mockBcrypt, mockPrismaUser, mockPrismaRefreshToken, mockPrisma } = vi.ho
         delete: vi.fn(),
     };
 
-    const mockPrismaTimeEntry = {
+    const mockPrismaTimeEntry: MockTimeEntryDelegate = {
         findMany: vi.fn(),
         findUnique: vi.fn(),
         create: vi.fn(),
@@ -39,14 +74,14 @@ const { mockBcrypt, mockPrismaUser, mockPrismaRefreshToken, mockPrisma } = vi.ho
         delete: vi.fn(),
     };
 
-    const mockPrisma: Record<string, unknown> = {
+    const mockPrisma: MockPrismaClient = {
         user: mockPrismaUser,
         refreshToken: mockPrismaRefreshToken,
         timeEntry: mockPrismaTimeEntry,
         $connect: vi.fn(),
         $disconnect: vi.fn(),
+        $transaction: vi.fn((callback: (prisma: MockPrismaClient) => unknown) => callback(mockPrisma)),
     };
-    mockPrisma.$transaction = vi.fn((callback: (prisma: typeof mockPrisma) => unknown) => callback(mockPrisma));
 
     return { mockBcrypt, mockPrismaUser, mockPrismaRefreshToken, mockPrisma };
 });
