@@ -38,7 +38,6 @@ export const DailyReportPage: React.FC = () => {
     const {
         timer,
         stopTimer,
-        cancelTimer,
         error: timerError,
         clearError
     } = useTimerStore();
