@@ -33,3 +33,14 @@ export class ForbiddenError extends AppError {
         super(message, 403);
     }
 }
+
+export class ValidationError extends AppError {
+    public readonly code?: string;
+    public readonly details?: any;
+
+    constructor(message: string, code?: string, details?: any) {
+        super(message, 400);
+        this.code = code;
+        this.details = details;
+    }
+}
