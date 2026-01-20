@@ -8,9 +8,8 @@
 - [ ] 1.1.3 Add Task model
 - [ ] 1.1.4 Add TaskAssignment model
 - [ ] 1.1.5 Add MonthLock model
-- [ ] 1.1.6 Add AuditLog model
-- [ ] 1.1.7 Create migration for all admin-related tables
-- [ ] 1.1.8 Add necessary indexes for query optimization
+- [ ] 1.1.6 Create migration for all admin-related tables
+- [ ] 1.1.7 Add necessary indexes for query optimization
 
 ## 2. Admin Users Module
 
@@ -114,13 +113,11 @@
 - [ ] 5.4.2 Implement `PUT /admin/users/:userId/time-entries/:id` (admin edit)
 - [ ] 5.4.3 Implement `DELETE /admin/users/:userId/time-entries/:id` (admin delete)
 - [ ] 5.4.4 Implement `POST /admin/users/:userId/time-entries` (admin create)
-- [ ] 5.4.5 Log all admin edits to audit log
 
 ### 5.5 Admin Absence Management
 - [ ] 5.5.1 Implement `GET /admin/users/:userId/absences` (admin view)
 - [ ] 5.5.2 Implement `PUT /admin/users/:userId/absences/:id` (admin edit)
 - [ ] 5.5.3 Implement `POST /admin/users/:userId/absences` (admin create)
-- [ ] 5.5.4 Log all admin edits to audit log
 
 ### 5.6 Frontend Reports
 - [ ] 5.6.1 Create `AdminDashboardPage.tsx` with overview cards
@@ -150,85 +147,55 @@
 - [ ] 6.3.2 Create `MonthLockToggle.tsx` component
 - [ ] 6.3.3 Display lock status in calendar views
 
-## 7. Audit Logs Module
+## 7. Shared DTOs & Types
 
-### 7.1 Backend Audit Logs Module
-- [ ] 7.1.1 Create `admin/audit-logs.routes.ts`
-- [ ] 7.1.2 Create `admin/audit-logs.controller.ts`
-- [ ] 7.1.3 Create `admin/audit-logs.service.ts`
-- [ ] 7.1.4 Create `admin/audit-logs.repo.ts`
-- [ ] 7.1.5 Create `shared/audit-logger.ts` utility (used by other modules)
+### 7.1 Admin DTOs
+- [ ] 7.1.1 Create `admin-users.dto.ts` in `shared/types/src/dtos/`
+- [ ] 7.1.2 Create `admin-entities.dto.ts` in `shared/types/src/dtos/`
+- [ ] 7.1.3 Create `admin-assignments.dto.ts` in `shared/types/src/dtos/`
+- [ ] 7.1.4 Create `admin-reports.dto.ts` in `shared/types/src/dtos/`
+- [ ] 7.1.5 Create `month-locks.dto.ts` in `shared/types/src/dtos/`
+- [ ] 7.1.6 Export all DTOs from `shared/types/src/index.ts`
 
-### 7.2 Audit Log Endpoints
-- [ ] 7.2.1 Implement `GET /admin/audit-logs` (list with filters)
-- [ ] 7.2.2 Implement `GET /admin/audit-logs/:id` (get single log)
-- [ ] 7.2.3 Support filtering by entity, entityId, adminId, action, date range
+### 7.2 Zod Schemas
+- [ ] 7.2.1 Create validation schemas for all admin DTOs
+- [ ] 7.2.2 Add schemas to `shared/types/src/zod/` directory
 
-### 7.3 Audit Logging Integration
-- [ ] 7.3.1 Integrate audit logging in admin user operations
-- [ ] 7.3.2 Integrate audit logging in admin entity operations
-- [ ] 7.3.3 Integrate audit logging in admin time entry operations
-- [ ] 7.3.4 Integrate audit logging in admin absence operations
-- [ ] 7.3.5 Integrate audit logging in month lock operations
+## 8. Frontend Admin App Setup
 
-### 7.4 Frontend Audit Logs
-- [ ] 7.4.1 Create `AuditLogsPage.tsx` with data table
-- [ ] 7.4.2 Create `AuditLogFilters.tsx` component
-- [ ] 7.4.3 Display old/new value diffs
-- [ ] 7.4.4 Implement date range picker for filtering
+### 8.1 Admin App Structure
+- [ ] 8.1.1 Create admin app routing structure
+- [ ] 8.1.2 Create `AdminLayout.tsx` with sidebar navigation
+- [ ] 8.1.3 Create admin navigation menu items
+- [ ] 8.1.4 Set up admin app state management (Zustand stores)
 
-## 8. Shared DTOs & Types
+### 8.2 Shared Admin Components
+- [ ] 8.2.1 Create `DataTable.tsx` component (TanStack Table wrapper)
+- [ ] 8.2.2 Create `ReportFilters.tsx` component
+- [ ] 8.2.3 Create `StatusBadge.tsx` component
+- [ ] 8.2.4 Create `PaginationControls.tsx` component
 
-### 8.1 Admin DTOs
-- [ ] 8.1.1 Create `admin-users.dto.ts` in `shared/types/src/dtos/`
-- [ ] 8.1.2 Create `admin-entities.dto.ts` in `shared/types/src/dtos/`
-- [ ] 8.1.3 Create `admin-assignments.dto.ts` in `shared/types/src/dtos/`
-- [ ] 8.1.4 Create `admin-reports.dto.ts` in `shared/types/src/dtos/`
-- [ ] 8.1.5 Create `month-locks.dto.ts` in `shared/types/src/dtos/`
-- [ ] 8.1.6 Create `audit-logs.dto.ts` in `shared/types/src/dtos/`
-- [ ] 8.1.7 Export all DTOs from `shared/types/src/index.ts`
+## 9. Testing
 
-### 8.2 Zod Schemas
-- [ ] 8.2.1 Create validation schemas for all admin DTOs
-- [ ] 8.2.2 Add schemas to `shared/types/src/zod/` directory
+### 9.1 Backend Tests
+- [ ] 9.1.1 Write unit tests for admin services
+- [ ] 9.1.2 Write integration tests for admin endpoints
+- [ ] 9.1.3 Test CSV export functionality
+- [ ] 9.1.4 Test month lock validation
+- [ ] 9.1.5 Achieve minimum 60% coverage for admin modules
 
-## 9. Frontend Admin App Setup
+### 9.2 Frontend Tests
+- [ ] 9.2.1 Write tests for admin pages
+- [ ] 9.2.2 Write tests for admin components
+- [ ] 9.2.3 Write tests for admin stores
 
-### 9.1 Admin App Structure
-- [ ] 9.1.1 Create admin app routing structure
-- [ ] 9.1.2 Create `AdminLayout.tsx` with sidebar navigation
-- [ ] 9.1.3 Create admin navigation menu items
-- [ ] 9.1.4 Set up admin app state management (Zustand stores)
+## 10. Documentation
 
-### 9.2 Shared Admin Components
-- [ ] 9.2.1 Create `DataTable.tsx` component (TanStack Table wrapper)
-- [ ] 9.2.2 Create `ReportFilters.tsx` component
-- [ ] 9.2.3 Create `StatusBadge.tsx` component
-- [ ] 9.2.4 Create `PaginationControls.tsx` component
+### 10.1 API Documentation
+- [ ] 10.1.1 Document all admin endpoints in Swagger
+- [ ] 10.1.2 Add examples for all admin DTOs
+- [ ] 10.1.3 Document CSV export format
 
-## 10. Testing
-
-### 10.1 Backend Tests
-- [ ] 10.1.1 Write unit tests for admin services
-- [ ] 10.1.2 Write integration tests for admin endpoints
-- [ ] 10.1.3 Test CSV export functionality
-- [ ] 10.1.4 Test audit logging integration
-- [ ] 10.1.5 Test month lock validation
-- [ ] 10.1.6 Achieve minimum 60% coverage for admin modules
-
-### 10.2 Frontend Tests
-- [ ] 10.2.1 Write tests for admin pages
-- [ ] 10.2.2 Write tests for admin components
-- [ ] 10.2.3 Write tests for admin stores
-
-## 11. Documentation
-
-### 11.1 API Documentation
-- [ ] 11.1.1 Document all admin endpoints in Swagger
-- [ ] 11.1.2 Add examples for all admin DTOs
-- [ ] 11.1.3 Document CSV export format
-
-### 11.2 Code Documentation
-- [ ] 11.2.1 Add JSDoc comments to admin services
-- [ ] 11.2.2 Document audit logging patterns for other developers
+### 10.2 Code Documentation
+- [ ] 10.2.1 Add JSDoc comments to admin services
 

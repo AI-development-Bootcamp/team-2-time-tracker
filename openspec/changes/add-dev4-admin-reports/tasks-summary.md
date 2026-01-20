@@ -4,7 +4,7 @@ This file provides an overview of all the task divisions for the admin panel and
 
 ## Task Division by Spec
 
-The admin panel work has been divided into **6 independent modules**, each with its own spec and task list:
+The admin panel work has been divided into **5 independent modules**, each with its own spec and task list:
 
 ### 1. Admin Users Module
 **File**: [`specs/admin-users/tasks.md`](specs/admin-users/tasks.md)
@@ -18,7 +18,7 @@ The admin panel work has been divided into **6 independent modules**, each with 
 - Frontend user management pages
 
 **Estimated Tasks**: ~60 tasks
-**Dependencies**: Requires audit logs module for logging
+**Dependencies**: None
 
 ---
 
@@ -35,7 +35,7 @@ The admin panel work has been divided into **6 independent modules**, each with 
 - Frontend entity management pages
 
 **Estimated Tasks**: ~85 tasks
-**Dependencies**: Requires audit logs module for logging
+**Dependencies**: None
 
 ---
 
@@ -52,7 +52,6 @@ The admin panel work has been divided into **6 independent modules**, each with 
 **Estimated Tasks**: ~50 tasks
 **Dependencies**:
 - Requires admin entities module (tasks and users must exist)
-- Requires audit logs module for logging
 
 ---
 
@@ -74,7 +73,6 @@ The admin panel work has been divided into **6 independent modules**, each with 
 - Requires dev2 (time entries and workday data)
 - Requires dev3 (absence data)
 - Requires month locks module (for override logic)
-- Requires audit logs module for logging
 
 ---
 
@@ -93,26 +91,6 @@ The admin panel work has been divided into **6 independent modules**, each with 
 **Dependencies**:
 - Must integrate with dev2 (workday, time-entry, timer services)
 - Must integrate with dev3 (absence service)
-- Requires audit logs module for logging
-
----
-
-### 6. Audit Logs Module (FOUNDATION - START HERE)
-**File**: [`specs/audit-logs/tasks.md`](specs/audit-logs/tasks.md)
-**Spec**: [`specs/audit-logs/spec.md`](specs/audit-logs/spec.md)
-
-**Scope**:
-- Shared audit logging service
-- Audit log viewer with filtering
-- Track all admin actions (CREATE, UPDATE, STATUS_CHANGE, etc.)
-- Value diff display
-- Frontend audit logs pages
-- Integration across all admin modules
-
-**Estimated Tasks**: ~65 tasks
-**Dependencies**: None (this is a foundation module)
-
-⚠️ **IMPORTANT**: This module should be implemented FIRST as all other modules depend on it for audit logging.
 
 ---
 
@@ -134,29 +112,28 @@ The admin panel work has been divided into **6 independent modules**, each with 
 
 ## Recommended Developer Assignment Strategy
 
-### Strategy 1: Module-Based Division (6 developers)
+### Strategy 1: Module-Based Division (5 developers)
 Assign each module to a different developer:
 
-1. **Developer A**: Audit Logs Module (foundation, ~65 tasks)
-2. **Developer B**: Admin Users Module (~60 tasks) - depends on A
-3. **Developer C**: Admin Entities Module (~85 tasks) - depends on A
-4. **Developer D**: Admin Assignments Module (~50 tasks) - depends on A, C
-5. **Developer E**: Month Locks Module (~55 tasks) - depends on A, dev2, dev3
-6. **Developer F**: Admin Reports Module (~90 tasks) - depends on A, E, dev2, dev3
+1. **Developer A**: Admin Users Module (~60 tasks)
+2. **Developer B**: Admin Entities Module (~85 tasks)
+3. **Developer C**: Admin Assignments Module (~50 tasks) - depends on B
+4. **Developer D**: Month Locks Module (~55 tasks) - depends on dev2, dev3
+5. **Developer E**: Admin Reports Module (~90 tasks) - depends on D, dev2, dev3
 
 ### Strategy 2: Layer-Based Division (3 developers)
 Assign based on technical layers:
 
 1. **Backend Developer 1**: Backend for modules 1-3 (Users, Entities, Assignments)
-2. **Backend Developer 2**: Backend for modules 4-6 (Reports, Month Locks, Audit Logs)
+2. **Backend Developer 2**: Backend for modules 4-5 (Reports, Month Locks)
 3. **Frontend Developer**: Frontend for all modules
 
-### Strategy 3: Feature Pairs (3 teams of 2)
+### Strategy 3: Feature Pairs (2-3 teams)
 Assign full-stack feature pairs:
 
-1. **Team 1**: Audit Logs + Admin Users (foundation + user management)
-2. **Team 2**: Admin Entities + Admin Assignments (entity management)
-3. **Team 3**: Month Locks + Admin Reports (reporting & governance)
+1. **Team 1**: Admin Users + Admin Entities (user and entity management)
+2. **Team 2**: Admin Assignments + Month Locks (assignments & governance)
+3. **Team 3**: Admin Reports (reporting & analytics)
 
 ---
 
@@ -165,7 +142,6 @@ Assign full-stack feature pairs:
 Recommended order of implementation to minimize blocking:
 
 1. **Phase 1 - Foundation** (Start here)
-   - Audit Logs Module
    - Shared admin components
 
 2. **Phase 2 - Core Admin Features** (Parallel development)
@@ -188,10 +164,9 @@ Recommended order of implementation to minimize blocking:
 - **Admin Assignments**: ~50 tasks
 - **Admin Reports**: ~90 tasks
 - **Month Locks**: ~55 tasks
-- **Audit Logs**: ~65 tasks
 - **Shared Tasks**: ~8 tasks
 
-**Total**: ~413 tasks
+**Total**: ~348 tasks
 
 ---
 
@@ -219,4 +194,3 @@ Recommended order of implementation to minimize blocking:
 - All modules follow the same structure: Backend → Frontend → DTOs → Testing → Documentation
 - DTOs and types are shared across all modules
 - Testing coverage target: minimum 60% for all modules
-- All admin actions must be logged to audit logs
