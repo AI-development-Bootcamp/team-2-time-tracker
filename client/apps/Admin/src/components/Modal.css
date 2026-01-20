@@ -53,6 +53,12 @@
   border-bottom: 1px solid #e5e5e5;
 }
 
+.modal__title-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
 .modal__title {
   font-size: 1.25rem;
   font-weight: 600;
