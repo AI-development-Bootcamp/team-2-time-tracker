@@ -34,18 +34,18 @@
 ## 2. Admin Users Module
 
 ### 2.1 Backend Users Module
-- [ ] 2.1.1 Create `admin/users.routes.ts`
-- [ ] 2.1.2 Create `admin/users.controller.ts`
-- [ ] 2.1.3 Create `admin/users.service.ts`
-- [ ] 2.1.4 Create `admin/users.repo.ts`
+- [x] 2.1.1 Create `admin/users.routes.ts` (already exists as `users.routes.ts`)
+- [x] 2.1.2 Create `admin/users.controller.ts` (already exists as `users.controller.ts`)
+- [x] 2.1.3 Create `admin/users.service.ts` (already exists as `users.service.ts`)
+- [x] 2.1.4 Create `admin/users.repo.ts` (already exists as `users.repo.ts`)
 
 ### 2.2 User Management Endpoints
-- [ ] 2.2.1 Implement `GET /admin/users` (list with filters)
-- [ ] 2.2.2 Implement `POST /admin/users` (create user)
-- [ ] 2.2.3 Implement `GET /admin/users/:id` (get user)
-- [ ] 2.2.4 Implement `PUT /admin/users/:id` (update user)
-- [ ] 2.2.5 Implement `PUT /admin/users/:id/status` (activate/deactivate)
-- [ ] 2.2.6 Implement `POST /admin/users/:id/reset-password` (reset password)
+- [x] 2.2.1 Implement `GET /admin/users` (list with filters)
+- [x] 2.2.2 Implement `POST /admin/users` (create user)
+- [x] 2.2.3 Implement `GET /admin/users/:id` (get user)
+- [x] 2.2.4 Implement `PUT /admin/users/:id` (update user)
+- [x] 2.2.5 Implement `PUT /admin/users/:id/status` (activate/deactivate)
+- [x] 2.2.6 Implement `POST /admin/users/:id/reset-password` (reset password)
 
 ### 2.3 Frontend User Management
 - [ ] 2.3.1 Create `UsersPage.tsx` with data table
