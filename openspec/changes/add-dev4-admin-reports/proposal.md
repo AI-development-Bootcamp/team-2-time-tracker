@@ -6,12 +6,6 @@ Administrators need comprehensive tools to manage the system, view reports, and 
 
 ## What Changes
 
-### Admin Authentication
-- Dedicated admin login page (only ADMIN users can login)
-- JWT-based authentication using existing auth infrastructure
-- Auth guard to protect all admin routes
-- Automatic redirect to login for unauthenticated users
-
 ### Admin Dashboard
 - Overview statistics (active users, projects, today's stats, month completion rate)
 - Real-time dashboard with key metrics
