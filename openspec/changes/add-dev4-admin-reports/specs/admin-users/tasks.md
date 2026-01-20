@@ -22,23 +22,19 @@ This module handles user management functionality for administrators.
 - [x] 1.3.2 Validate email uniqueness
 - [ ] 1.3.3 Validate password strength requirements
 - [x] 1.3.4 Set `mustChangePassword: true` flag on creation (defaults to true in repo)
-- [ ] 1.3.5 Integrate audit logging on user creation (requires audit-logs module)
-- [x] 1.3.6 Implement `GET /admin/users/:id` (get user details)
-- [x] 1.3.7 Implement `PUT /admin/users/:id` (update user)
-- [x] 1.3.8 Validate email uniqueness on update
-- [ ] 1.3.9 Integrate audit logging on user update (requires audit-logs module)
+- [x] 1.3.5 Implement `GET /admin/users/:id` (get user details)
+- [x] 1.3.6 Implement `PUT /admin/users/:id` (update user)
+- [x] 1.3.7 Validate email uniqueness on update
 
 ### 1.4 User Status Management
 - [x] 1.4.1 Implement `PUT /admin/users/:id/status` endpoint
 - [x] 1.4.2 Support activate user (isActive: true)
 - [x] 1.4.3 Support deactivate user (isActive: false)
-- [ ] 1.4.4 Integrate audit logging for status changes (requires audit-logs module)
 
 ### 1.5 Password Reset
 - [x] 1.5.1 Implement `POST /admin/users/:id/reset-password` endpoint
 - [x] 1.5.2 Hash and update user password
 - [x] 1.5.3 Set `mustChangePassword` flag based on request
-- [ ] 1.5.4 Integrate audit logging for password reset - sanitize password field (requires audit-logs module)
 
 ## 2. Frontend - Admin Users
 
@@ -87,7 +83,6 @@ This module handles user management functionality for administrators.
 - [ ] 4.1.6 Write integration tests for password reset endpoint
 - [ ] 4.1.7 Test email uniqueness validation
 - [ ] 4.1.8 Test password strength validation
-- [ ] 4.1.9 Test audit log integration
 
 ### 4.2 Frontend Tests
 - [ ] 4.2.1 Write tests for UsersPage.tsx

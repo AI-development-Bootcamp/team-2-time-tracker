@@ -34,7 +34,6 @@ This module handles task-to-user assignments with single and bulk assignment cap
 - [ ] 2.3.2 Validate userId exists
 - [ ] 2.3.3 Validate taskId exists
 - [ ] 2.3.4 Handle duplicate assignments (idempotent operation or validation error)
-- [ ] 2.3.5 Create audit log on assignment creation
 
 ### 2.4 Bulk Assignments
 - [ ] 2.4.1 Implement `POST /admin/assignments/bulk` endpoint
@@ -43,14 +42,12 @@ This module handles task-to-user assignments with single and bulk assignment cap
 - [ ] 2.4.4 Generate cartesian product of all combinations using utility
 - [ ] 2.4.5 Create assignments for all combinations
 - [ ] 2.4.6 Skip duplicate assignments (idempotent)
-- [ ] 2.4.7 Create single audit log for bulk operation
-- [ ] 2.4.8 Return count of created assignments
+- [ ] 2.4.7 Return count of created assignments
 
 ### 2.5 Remove Assignment
 - [ ] 2.5.1 Implement `DELETE /admin/assignments/:id` endpoint
 - [ ] 2.5.2 Check if assignment has associated time entries
 - [ ] 2.5.3 Return validation error if time entries exist (or allow with warning)
-- [ ] 2.5.4 Create audit log on assignment removal
 
 ## 3. Frontend - Assignments Management
 
@@ -116,7 +113,6 @@ This module handles task-to-user assignments with single and bulk assignment cap
 - [ ] 5.1.7 Write integration tests for delete assignment endpoint
 - [ ] 5.1.8 Test duplicate assignment handling
 - [ ] 5.1.9 Test validation when removing assignment with time entries
-- [ ] 5.1.10 Test audit log integration
 
 ### 5.2 Frontend Tests
 - [ ] 5.2.1 Write tests for AssignmentsPage.tsx
