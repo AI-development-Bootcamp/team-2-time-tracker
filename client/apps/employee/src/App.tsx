@@ -5,7 +5,9 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Layout from './components/Layout';
 import LoginPage from './pages/LoginPage';
 import ChangePasswordPage from './pages/ChangePasswordPage';
+import HomePage from './pages/HomePage';
 import AbsencePage from './pages/AbsencePage';
+import AbsenceRangePage from './pages/AbsenceRangePage';
 
 import '@client/ui/styles/tokens.css';
 import './index.css';
@@ -31,9 +33,10 @@ function App() {
 
                         <Route element={<ProtectedRoute />}>
                             <Route element={<Layout />}>
-                                <Route path="/" element={<div className="p-4">ברוכים הבאים למערכת דיווח שעות</div>} />
+                                <Route path="/" element={<HomePage />} />
                                 <Route path="/change-password" element={<ChangePasswordPage />} />
                                 <Route path="/absences" element={<AbsencePage />} />
+                                <Route path="/absences/range" element={<AbsenceRangePage />} />
                                 {/* Add more protected routes here */}
                             </Route>
                         </Route>

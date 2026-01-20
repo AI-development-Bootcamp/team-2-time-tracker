@@ -220,10 +220,15 @@ export default function AbsenceRangePage() {
                     >
                         ×
                     </button>
-                    <div className="absence-range-page__header-content">
-                        <h1 className="absence-range-page__title">דיווח העדרות - לפי טווח ימים</h1>
-                    </div>
-                    <div className="absence-range-page__spacer"></div>
+                    <h1 className="absence-range-page__title">דיווח העדרות - לפי טווח ימים</h1>
+                    <button
+                        type="button"
+                        className="absence-range-page__back"
+                        onClick={handleClose}
+                        aria-label="חזור"
+                    >
+                        ›
+                    </button>
                 </div>
                 <div className="absence-range-page__content">
                     <form className="absence-range-form" onSubmit={handleSubmit(handleFormSubmit)} noValidate>
@@ -293,48 +298,49 @@ export default function AbsenceRangePage() {
                                             </div>
                                         ) : (
                                             /* Separate Date Fields */
-                                            <div className="absence-range-form__date-fields">
-                                                <div className="absence-range-form__date-field">
-                                                    <label className="absence-range-form__label">תאריך התחלה</label>
-                                                    <DatePicker
-                                                        mode="single"
-                                                        value={field.value?.from}
-                                                        onChange={(date) => {
-                                                            field.onChange({
-                                                                ...field.value,
-                                                                from: date,
-                                                            });
-                                                        }}
-                                                        placeholder="בחר תאריך"
-                                                        disableWeekends
-                                                    />
-                                                    {errors.dateRange?.from && (
-                                                        <span className="absence-range-form__error">
-                                                            {errors.dateRange.from.message}
-                                                        </span>
-                                                    )}
+                                            <>
+                                                <div className="absence-range-form__date-fields">
+                                                    <div className="absence-range-form__date-field-wrapper">
+                                                        <label className="absence-range-form__label">תאריך התחלה</label>
+                                                        <div className="absence-range-form__date-picker-wrapper">
+                                                            <DatePicker
+                                                                mode="single"
+                                                                value={field.value?.from}
+                                                                onChange={(date) => {
+                                                                    field.onChange({
+                                                                        ...field.value,
+                                                                        from: date,
+                                                                    });
+                                                                }}
+                                                                placeholder="בחר תאריך"
+                                                                disableWeekends
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                    <div className="absence-range-form__date-field-wrapper">
+                                                        <label className="absence-range-form__label">תאריך סיום</label>
+                                                        <div className="absence-range-form__date-picker-wrapper">
+                                                            <DatePicker
+                                                                mode="single"
+                                                                value={field.value?.to}
+                                                                onChange={(date) => {
+                                                                    field.onChange({
+                                                                        ...field.value,
+                                                                        to: date,
+                                                                    });
+                                                                }}
+                                                                placeholder="בחר תאריך"
+                                                                disableWeekends
+                                                            />
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <div className="absence-range-form__date-field">
-                                                    <label className="absence-range-form__label">תאריך סיום</label>
-                                                    <DatePicker
-                                                        mode="single"
-                                                        value={field.value?.to}
-                                                        onChange={(date) => {
-                                                            field.onChange({
-                                                                ...field.value,
-                                                                to: date,
-                                                            });
-                                                        }}
-                                                        placeholder="בחר תאריך"
-                                                        disableWeekends
-                                                    />
-                                                    {errors.dateRange?.to && (
-                                                        <span className="absence-range-form__error">
-                                                            {errors.dateRange.to.message}
-                                                        </span>
-                                                    )}
-                                                </div>
-                                            </div>
+                                                {(errors.dateRange?.from || errors.dateRange?.to) && (
+                                                    <span className="absence-range-form__error">
+                                                        {errors.dateRange?.from?.message || errors.dateRange?.to?.message}
+                                                    </span>
+                                                )}
+                                            </>
                                         )}
 
                                         {workdaysCount > 0 && (

@@ -26,6 +26,7 @@
     margin-bottom: var(--spacing-md);
     position: relative;
     background-color: #f2f2f7; /* iOS gray background */
+    direction: rtl;
 }
 
 .absence-page__header-content {
@@ -67,8 +68,6 @@
     cursor: pointer;
     border-radius: var(--radius-full);
     transition: background-color var(--transition-fast), color var(--transition-fast);
-    position: absolute;
-    left: var(--spacing-md);
 }
 
 .absence-page__spacer {
@@ -88,6 +87,8 @@
     border-radius: 10px; /* iOS rounded corners */
     margin: 0 var(--spacing-md);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); /* Subtle shadow */
+    direction: rtl;
+    text-align: right;
 }
 
 .absence-page__search-zone {

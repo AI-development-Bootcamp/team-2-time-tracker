@@ -24,25 +24,16 @@
     padding: var(--spacing-md);
     padding-bottom: var(--spacing-sm);
     margin-bottom: var(--spacing-md);
-    position: relative;
     background-color: #f2f2f7; /* iOS gray background */
 }
 
-.absence-range-page__header-content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: var(--spacing-xs);
-    margin-inline: var(--spacing-md);
-}
-
 .absence-range-page__title {
-    font-size: var(--font-size-xl);
-    font-weight: var(--font-weight-bold);
-    color: #1c1c1e; /* iOS dark text */
+    flex: 1;
+    font-size: 17px;
+    font-weight: var(--font-weight-semibold);
+    color: #000000;
     margin: 0;
-    text-align: right;
+    text-align: center;
 }
 
 .absence-range-page__close {
@@ -53,33 +44,44 @@
     height: 32px;
     border: none;
     background: transparent;
-    color: var(--color-text-secondary);
-    font-size: 28px;
+    color: #000000;
+    font-size: 24px;
     line-height: 1;
     cursor: pointer;
-    border-radius: var(--radius-full);
-    transition: background-color var(--transition-fast), color var(--transition-fast);
-    position: absolute;
-    left: var(--spacing-md);
-}
-
-.absence-range-page__spacer {
-    width: 32px;
-    height: 32px;
+    transition: opacity var(--transition-fast);
 }
 
 .absence-range-page__close:hover {
-    background-color: var(--color-gray-100);
-    color: var(--color-text-primary);
+    opacity: 0.6;
+}
+
+.absence-range-page__back {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    color: #007AFF; /* iOS blue */
+    font-size: 28px;
+    font-weight: 300;
+    line-height: 1;
+    cursor: pointer;
+    transition: opacity var(--transition-fast);
+}
+
+.absence-range-page__back:hover {
+    opacity: 0.6;
 }
 
 .absence-range-page__content {
-    padding: var(--spacing-md);
+    padding: 0;
     width: 100%;
-    background-color: #ffffff; /* White card */
-    border-radius: 10px; /* iOS rounded corners */
-    margin: 0 var(--spacing-md);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); /* Subtle shadow */
+    background-color: transparent;
+    margin: 0;
+    direction: rtl;
+    text-align: right;
 }
 
 .absence-range-page__search-zone {
@@ -101,82 +103,143 @@
 
 .absence-range-form__field {
     width: 100%;
+    direction: rtl;
+    text-align: right;
+    padding: 0 var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+}
+
+.absence-range-form__field .select__trigger {
+    background-color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    padding: 11px 16px;
+    min-height: 44px;
+}
+
+.absence-range-form__field .select__value {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    width: 100%;
 }
 
 .absence-range-form__date-range {
     display: flex;
     flex-direction: column;
     gap: var(--spacing-sm);
+    direction: rtl;
+    text-align: right;
+    padding: 0 var(--spacing-md);
+    margin-bottom: var(--spacing-md);
 }
 
 .absence-range-form__date-range-header {
-    font-size: var(--font-size-md);
-    font-weight: var(--font-weight-medium);
-    color: var(--color-text-primary);
-    margin-bottom: var(--spacing-xs);
+    font-size: 13px;
+    font-weight: var(--font-weight-normal);
+    color: #000000;
+    margin-bottom: var(--spacing-sm);
+    direction: rtl;
+    text-align: right;
 }
 
 .absence-range-form__date-fields {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-md);
+    gap: 0;
+    direction: rtl;
+    background-color: #ffffff;
+    border-radius: 10px;
+    overflow: hidden;
 }
 
-.absence-range-form__date-field {
+.absence-range-form__date-field-wrapper {
     width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 11px 16px;
+    border-bottom: 0.5px solid #c6c6c8;
+    min-height: 44px;
+}
+
+.absence-range-form__date-field-wrapper:last-child {
+    border-bottom: none;
 }
 
 .absence-range-form__label {
-    display: block;
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-medium);
-    color: var(--color-text-primary);
-    margin-bottom: var(--spacing-xs);
+    font-size: 17px;
+    font-weight: var(--font-weight-normal);
+    color: #000000;
+    margin: 0;
     text-align: right;
+}
+
+.absence-range-form__date-picker-wrapper {
+    flex: 0 0 auto;
+}
+
+/* Hide the date picker default styling and make it look like plain text */
+.absence-range-form__date-picker-wrapper .date-picker {
+    display: inline-block;
+}
+
+.absence-range-form__date-picker-wrapper .date-picker__trigger {
+    background: transparent;
+    border: none;
+    padding: 0;
+    height: auto;
+    min-height: auto;
+    font-size: 17px;
+    color: #000000;
+    text-align: left;
+    direction: ltr;
+}
+
+.absence-range-form__date-picker-wrapper .date-picker__trigger:hover {
+    background: transparent;
+}
+
+.absence-range-form__date-picker-wrapper .date-picker__trigger:focus {
+    box-shadow: none;
+    border: none;
+}
+
+.absence-range-form__date-picker-wrapper .date-picker__placeholder {
+    color: #c7c7cc;
 }
 
 .absence-range-form__range-picker-toggle {
-    margin-bottom: var(--spacing-md);
+    display: none; /* Hide the toggle button */
 }
 
 .absence-range-form__range-button {
-    background: transparent;
-    border: 1px solid var(--color-gray-300);
-    border-radius: var(--radius-md);
-    padding: var(--spacing-sm) var(--spacing-md);
-    font-size: var(--font-size-sm);
-    color: var(--color-text-primary);
-    cursor: pointer;
-    transition: all var(--transition-fast);
-    width: 100%;
-    text-align: right;
-}
-
-.absence-range-form__range-button:hover {
-    background-color: var(--color-gray-50);
-    border-color: var(--color-gray-400);
+    display: none; /* Hide the range button */
 }
 
 .absence-range-form__range-picker {
     width: 100%;
+    direction: rtl;
+    text-align: right;
 }
 
 .absence-range-form__workdays {
-    padding: var(--spacing-sm);
-    background-color: var(--color-gray-50);
-    border-radius: var(--radius-md);
+    padding: 0;
+    margin-top: var(--spacing-xs);
     text-align: right;
-    font-size: var(--font-size-sm);
-    color: var(--color-text-secondary);
+    font-size: 13px;
+    color: #007AFF; /* iOS blue */
 }
 
 .absence-range-form__workdays strong {
-    color: var(--color-text-primary);
-    font-weight: var(--font-weight-bold);
+    color: #007AFF;
+    font-weight: var(--font-weight-normal);
 }
 
 .absence-range-form__upload-section {
     width: 100%;
+    padding: 0 var(--spacing-md);
+    margin-bottom: var(--spacing-md);
 }
 
 .absence-range-form__error {
@@ -197,7 +260,8 @@
 
 .absence-range-form__actions {
     width: 100%;
-    margin-top: var(--spacing-md);
+    padding: 0 var(--spacing-md);
+    margin-top: var(--spacing-lg);
 }
 
 /* Mobile Responsive */
@@ -219,12 +283,8 @@
     }
 
     .absence-range-form__date-fields {
-        flex-direction: row;
-        gap: var(--spacing-md);
-    }
-
-    .absence-range-form__date-field {
-        flex: 1;
+        flex-direction: column;
+        gap: 0;
     }
 }
 
