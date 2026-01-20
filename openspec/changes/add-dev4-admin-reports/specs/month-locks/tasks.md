@@ -35,7 +35,6 @@ This module handles month locking/unlocking to prevent edits for payroll process
 - [ ] 2.3.3 Create or update month lock record (set unlockedAt to null)
 - [ ] 2.3.4 Set lockedByAdminId to current admin
 - [ ] 2.3.5 Set lockedAt to current timestamp
-- [ ] 2.3.6 Create audit log with action LOCK_MONTH
 
 ### 2.4 Unlock Month
 - [ ] 2.4.1 Implement `POST /admin/month-locks/unlock` endpoint
@@ -43,7 +42,6 @@ This module handles month locking/unlocking to prevent edits for payroll process
 - [ ] 2.4.3 Update month lock record (set unlockedAt to current timestamp)
 - [ ] 2.4.4 Set unlockedByAdminId to current admin
 - [ ] 2.4.5 Keep lockedByAdminId and lockedAt unchanged (preserve lock history)
-- [ ] 2.4.6 Create audit log with action UNLOCK_MONTH
 
 ### 2.5 Month Lock Validation Integration
 - [ ] 2.5.1 Create shared `validateMonthLock()` helper function (checks if unlockedAt is null)
@@ -118,7 +116,6 @@ This module handles month locking/unlocking to prevent edits for payroll process
 - [ ] 5.1.8 Test month lock prevents timer start
 - [ ] 5.1.9 Test month lock prevents absence edits
 - [ ] 5.1.10 Test admin override allows edits in locked month
-- [ ] 5.1.11 Test audit log integration for lock/unlock
 
 ### 5.2 Frontend Tests
 - [ ] 5.2.1 Write tests for MonthLocksPage.tsx

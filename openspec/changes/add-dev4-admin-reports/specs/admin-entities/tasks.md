@@ -29,12 +29,9 @@ This module handles CRUD operations for clients, projects, and tasks with date r
 - [ ] 2.2.1 Implement `GET /admin/clients` endpoint
 - [ ] 2.2.2 Implement `POST /admin/clients` endpoint
 - [ ] 2.2.3 Set default status to ACTIVE on creation
-- [ ] 2.2.4 Create audit log on creation
-- [ ] 2.2.5 Implement `GET /admin/clients/:id` endpoint
-- [ ] 2.2.6 Implement `PUT /admin/clients/:id` endpoint
-- [ ] 2.2.7 Create audit log on update
-- [ ] 2.2.8 Implement `PUT /admin/clients/:id/status` endpoint
-- [ ] 2.2.9 Create audit log on status change
+- [ ] 2.2.4 Implement `GET /admin/clients/:id` endpoint
+- [ ] 2.2.5 Implement `PUT /admin/clients/:id` endpoint
+- [ ] 2.2.6 Implement `PUT /admin/clients/:id/status` endpoint
 
 ## 3. Backend - Projects Module
 
@@ -50,14 +47,10 @@ This module handles CRUD operations for clients, projects, and tasks with date r
 - [ ] 3.2.3 Implement `POST /admin/projects` endpoint
 - [ ] 3.2.4 Set default status to ACTIVE on creation
 - [ ] 3.2.5 Set default reportType to TOTAL_HOURS on creation
-- [ ] 3.2.6 Create audit log on creation
-- [ ] 3.2.7 Implement `GET /admin/projects/:id` endpoint
-- [ ] 3.2.8 Implement `PUT /admin/projects/:id` endpoint
-- [ ] 3.2.9 Create audit log on update
-- [ ] 3.2.10 Implement `PUT /admin/projects/:id/status` endpoint
-- [ ] 3.2.11 Create audit log on status change
-- [ ] 3.2.12 Implement `PUT /admin/projects/:id/report-type` endpoint
-- [ ] 3.2.13 Create audit log on report type change
+- [ ] 3.2.6 Implement `GET /admin/projects/:id` endpoint
+- [ ] 3.2.7 Implement `PUT /admin/projects/:id` endpoint
+- [ ] 3.2.8 Implement `PUT /admin/projects/:id/status` endpoint
+- [ ] 3.2.9 Implement `PUT /admin/projects/:id/report-type` endpoint
 
 ### 3.3 Project Date Validation
 - [ ] 3.3.1 Validate endDate >= startDate on create/update
@@ -81,13 +74,10 @@ This module handles CRUD operations for clients, projects, and tasks with date r
 - [ ] 4.2.2 Add filtering by projectId query parameter
 - [ ] 4.2.3 Implement `POST /admin/tasks` endpoint
 - [ ] 4.2.4 Set default status to OPEN on creation
-- [ ] 4.2.5 Create audit log on creation
-- [ ] 4.2.6 Implement `GET /admin/tasks/:id` endpoint
-- [ ] 4.2.7 Implement `PUT /admin/tasks/:id` endpoint
-- [ ] 4.2.8 Create audit log on update
-- [ ] 4.2.9 Implement `PUT /admin/tasks/:id/status` endpoint
-- [ ] 4.2.10 Prevent closing task if it has associated time entries
-- [ ] 4.2.11 Create audit log on status change
+- [ ] 4.2.5 Implement `GET /admin/tasks/:id` endpoint
+- [ ] 4.2.6 Implement `PUT /admin/tasks/:id` endpoint
+- [ ] 4.2.7 Implement `PUT /admin/tasks/:id/status` endpoint
+- [ ] 4.2.8 Prevent closing task if it has associated time entries
 
 ### 4.3 Task Date Validation
 - [ ] 4.3.1 Validate endDate >= startDate on create/update
@@ -176,7 +166,6 @@ This module handles CRUD operations for clients, projects, and tasks with date r
 - [ ] 7.1.7 Test project date validation logic
 - [ ] 7.1.8 Test task date validation against project dates
 - [ ] 7.1.9 Test preventing task close when time entries exist
-- [ ] 7.1.10 Test audit log integration for all entities
 
 ### 7.2 Frontend Tests
 - [ ] 7.2.1 Write tests for ClientsPage.tsx
