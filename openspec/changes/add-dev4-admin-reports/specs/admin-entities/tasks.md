@@ -158,8 +158,8 @@ This module handles CRUD operations for clients, projects, and tasks with date r
 
 ### 7.1 Backend Tests
 - [x] 7.1.1 Write unit tests for clients.service.ts (APPLIED)
-- [ ] 7.1.2 Write unit tests for projects.service.ts
-- [ ] 7.1.3 Write unit tests for tasks.service.ts
+- [x] 7.1.2 Write unit tests for projects.service.ts (APPLIED)
+- [x] 7.1.3 Write unit tests for tasks.service.ts (APPLIED)
 - [x] 7.1.4 Write integration tests for clients CRUD endpoints (APPLIED)
 - [x] 7.1.5 Write integration tests for projects CRUD endpoints (APPLIED)
 - [x] 7.1.6 Write integration tests for tasks CRUD endpoints (APPLIED)
