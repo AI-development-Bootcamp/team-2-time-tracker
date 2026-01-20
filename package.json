@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "pnpm -r dev",
-    "build": "pnpm -r build",
+    "build": "pnpm -r --sequential build",
     "test": "pnpm -r test",
     "lint": "cross-env ESLINT_USE_FLAT_CONFIG=false pnpm -r lint",
     "clean": "rm -rf node_modules **/*/node_modules"
