@@ -216,6 +216,14 @@ The frontend uses a monorepo structure with shared packages:
 - `@client/api-client` - API client and hooks
 - `@client/utils` - Shared utilities
 
+## Dependency Notes
+
+### pnpm Overrides
+
+The `pnpm.overrides` in `package.json` contains:
+
+- **hono**: Pinned to `^4.11.4` to resolve compatibility issues with the @hono/zod-validator package. Newer versions introduced breaking changes in middleware typing that affect request validation.
+
 ## License
 
 MIT

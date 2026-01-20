@@ -21,7 +21,7 @@ JWT_REFRESH_SECRET: ${{ secrets.JWT_REFRESH_SECRET_TEST }}
 ### 2. Security Audit Not Enforced (MEDIUM)
 
 **Problem:** Security audit had `continue-on-error: true`
-- [pr-checks.yml:92](.github/workflows/pr-checks.yml:92)
+- [pr-checks.yml](.github/workflows/pr-checks.yml) (line 92)
 
 **Solution:** Removed the flag - now security vulnerabilities will block PRs
 

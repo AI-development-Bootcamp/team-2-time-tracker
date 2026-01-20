@@ -5,7 +5,9 @@ export default defineConfig({
         globals: true,
         environment: 'node',
         include: ['tests/integration/**/*.test.ts'],
-        retry: 2,
+        setupFiles: ['./tests/integration/setup.ts'],
+        retry: Number(process.env.VITEST_RETRIES ?? (process.env.CI ? 2 : 0)),
+        reporters: ['default', './tests/integration/flaky-reporter.ts'],
         coverage: {
             provider: 'v8',
             reporter: ['text', 'html', 'json'],

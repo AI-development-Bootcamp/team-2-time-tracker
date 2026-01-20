@@ -9,7 +9,8 @@ This repository requires mandatory CI enforcement. Follow these steps to configu
 ## GitHub Repository Settings
 
 ### Navigate to Branch Protection
-1. Go to: `https://github.com/AI-development-Bootcamp/team-2-time-tracker/settings/branches`
+
+1. Go to: [Repository Branch Settings](https://github.com/AI-development-Bootcamp/team-2-time-tracker/settings/branches)
 2. Click **"Add rule"** or edit existing rule for `main` branch
 3. Repeat for `develop` branch
 
@@ -63,7 +64,7 @@ After configuring branch protection:
    ```
 
 2. **Create PR via GitHub UI**
-   - Navigate to: https://github.com/AI-development-Bootcamp/team-2-time-tracker/pulls
+   - Navigate to: [Pull Requests](https://github.com/AI-development-Bootcamp/team-2-time-tracker/pulls)
    - Create new pull request from `test-branch-protection` to `main`
 
 3. **Verify Required Checks**
@@ -120,7 +121,7 @@ If you need to bypass CI in an **extreme emergency**:
 ## Monitoring & Metrics
 
 Track CI health using GitHub Actions insights:
-- https://github.com/AI-development-Bootcamp/team-2-time-tracker/actions
+- [GitHub Actions Dashboard](https://github.com/AI-development-Bootcamp/team-2-time-tracker/actions)
 
 **Key metrics to monitor:**
 - CI success rate (target: >95%)
@@ -150,7 +151,7 @@ Track CI health using GitHub Actions insights:
 
 ## Required GitHub Secrets
 
-Configure these in: `https://github.com/AI-development-Bootcamp/team-2-time-tracker/settings/secrets/actions`
+Configure these in: [Actions Secrets Settings](https://github.com/AI-development-Bootcamp/team-2-time-tracker/settings/secrets/actions)
 
 | Secret Name | Purpose | Where to Get |
 |-------------|---------|--------------|

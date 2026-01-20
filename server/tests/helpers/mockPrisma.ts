@@ -80,9 +80,20 @@ export const mockPrismaRefreshToken = {
     delete: vi.fn(),
 };
 
+export const mockPrismaTimeEntry = {
+    findMany: vi.fn(),
+    findUnique: vi.fn(),
+    create: vi.fn(),
+    update: vi.fn(),
+    delete: vi.fn(),
+};
+
 export const mockPrisma = {
     user: mockPrismaUser,
     refreshToken: mockPrismaRefreshToken,
+    timeEntry: mockPrismaTimeEntry,
+    $connect: vi.fn(),
+    $disconnect: vi.fn(),
     $transaction: vi.fn((callback) => callback(mockPrisma)),
 };
 
@@ -97,6 +108,9 @@ vi.mock('../../src/db', () => ({
 export function resetPrismaMocks() {
     Object.values(mockPrismaUser).forEach((mock) => mock.mockReset());
     Object.values(mockPrismaRefreshToken).forEach((mock) => mock.mockReset());
+    Object.values(mockPrismaTimeEntry).forEach((mock) => mock.mockReset());
+    mockPrisma.$connect.mockReset();
+    mockPrisma.$disconnect.mockReset();
 }
 
 /**

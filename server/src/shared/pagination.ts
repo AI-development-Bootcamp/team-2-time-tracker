@@ -18,8 +18,8 @@ export interface PaginationResult<T> {
 export const getPaginationOptions = (
     query: { page?: string; pageSize?: string }
 ): { page: number; pageSize: number; skip: number; take: number } => {
-    const page = Math.max(1, parseInt(query.page as string) || 1);
-    const pageSize = Math.max(1, Math.min(100, parseInt(query.pageSize as string) || 20));
+    const page = Math.max(1, parseInt(query.page || '1'));
+    const pageSize = Math.max(1, Math.min(100, parseInt(query.pageSize || '20')));
     const skip = (page - 1) * pageSize;
 
     return { page, pageSize, skip, take: pageSize };

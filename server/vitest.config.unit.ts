@@ -5,7 +5,7 @@ export default defineConfig({
         globals: true,
         environment: 'node',
         include: ['tests/unit/**/*.test.ts'],
-        retry: 2,
+        retry: Number(process.env.VITEST_RETRIES ?? (process.env.CI ? 2 : 0)),
         coverage: {
             provider: 'v8',
             reporter: ['text', 'html', 'json'],

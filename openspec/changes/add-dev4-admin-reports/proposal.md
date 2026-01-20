@@ -7,6 +7,7 @@ Administrators need comprehensive tools to manage the system, view reports, and 
 ## What Changes
 
 ### Admin Authentication
+
 - Dedicated admin login page (only ADMIN users can login)
 - JWT-based authentication using existing auth infrastructure
 - Auth guard to protect all admin routes
