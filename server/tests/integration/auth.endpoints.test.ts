@@ -2,11 +2,15 @@
  * @fileoverview Integration tests for auth endpoints
  */
 
-import { describe, it, expect, vi, beforeEach, beforeAll, afterAll } from 'vitest';
+import { describe, it, expect, vi, beforeEach, beforeAll } from 'vitest';
+
+// Mock Prisma and dependencies BEFORE any imports
+vi.mock('@prisma/client');
+vi.mock('pg');
+vi.mock('@prisma/adapter-pg');
+
 import express, { Express } from 'express';
 import request from 'supertest';
-import { router } from '../../src/routes';
-import { errorHandler } from '../../src/middlewares/error.middleware';
 import {
     mockPrisma,
     mockPrismaUser,
@@ -15,6 +19,8 @@ import {
     createMockUser,
     createMockRefreshToken,
 } from '../helpers/mockPrisma';
+import { router } from '../../src/routes';
+import { errorMiddleware } from '../../src/middlewares/error.middleware';
 import bcrypt from 'bcrypt';
 
 // Mock bcrypt
@@ -59,7 +65,7 @@ beforeAll(() => {
     app = express();
     app.use(express.json());
     app.use('/api', router);
-    app.use(errorHandler);
+    app.use(errorMiddleware);
 });
 
 describe('Auth Endpoints', () => {
