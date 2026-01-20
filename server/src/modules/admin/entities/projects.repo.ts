@@ -4,7 +4,7 @@
  */
 
 import { prisma } from '../../../db';
-import { EntityStatus, ReportType } from '@prisma/client';
+import { EntityStatus, ReportType, Prisma } from '@prisma/client';
 
 /**
  * Find all projects
@@ -229,14 +229,11 @@ export async function findTasksOutsideDateRange(
         return [];
     }
 
-    const whereConditions: any = {
-        projectId,
-        OR: [],
-    };
+    const orConditions: Prisma.TaskWhereInput['OR'] = [];
 
     // Check for tasks that start before project start or end after project end
     if (startDate) {
-        whereConditions.OR.push({
+        orConditions.push({
             startDate: {
                 lt: startDate,
             },
@@ -244,7 +241,7 @@ export async function findTasksOutsideDateRange(
     }
 
     if (endDate) {
-        whereConditions.OR.push({
+        orConditions.push({
             endDate: {
                 gt: endDate,
             },
@@ -252,9 +249,14 @@ export async function findTasksOutsideDateRange(
     }
 
     // If no conditions were added, return empty array
-    if (whereConditions.OR.length === 0) {
+    if (orConditions.length === 0) {
         return [];
     }
+
+    const whereConditions: Prisma.TaskWhereInput = {
+        projectId,
+        OR: orConditions,
+    };
 
     return prisma.task.findMany({
         where: whereConditions,

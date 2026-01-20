@@ -218,7 +218,6 @@ model MonthLock {
   unlockedByAdmin  User?            @relation("UnlockedByAdmin", fields: [unlockedByAdminId], references: [id])
   workdaySummaries WorkdaySummary[]
 
-  @@index([month])
   @@map("month_locks")
 }
 
@@ -245,7 +244,6 @@ model WorkdaySummary {
   lockedMonth MonthLock? @relation(fields: [lockedMonthId], references: [id])
 
   @@unique([userId, workDate])
-  @@index([userId, workDate])
   @@index([isLocked])
   @@map("workday_summaries")
 }

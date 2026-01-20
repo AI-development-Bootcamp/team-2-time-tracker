@@ -36,9 +36,9 @@ export class ForbiddenError extends AppError {
 
 export class ValidationError extends AppError {
     public readonly code?: string;
-    public readonly details?: any;
+    public readonly details?: unknown;
 
-    constructor(message: string, code?: string, details?: any) {
+    constructor(message: string, code?: string, details?: unknown) {
         super(message, 400);
         this.code = code;
         this.details = details;

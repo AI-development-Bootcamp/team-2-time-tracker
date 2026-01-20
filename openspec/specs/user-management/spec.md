@@ -1,7 +1,18 @@
 # user-management Specification
 
 ## Purpose
-TBD - created by archiving change add-dev1-setup-auth. Update Purpose after archive.
+
+This specification defines user and identity management processes, data models, and lifecycle management for the time tracking system. It is intended for developers implementing user management features, frontend teams building user interfaces, and administrators configuring user access.
+
+The document covers:
+- User data model and field definitions
+- User roles (EMPLOYEE and ADMIN) and their access patterns
+- User active status tracking and soft delete implementation
+- User profile access and modification rules
+- Frontend authentication UI components (login page, password change page)
+- Protected route wrappers and authentication state management
+- API client configuration for authentication flows
+
 ## Requirements
 ### Requirement: User Data Model
 The system SHALL store users with id (UUID), fullName, email (unique), passwordHash, role (EMPLOYEE/ADMIN), isActive (boolean), mustChangePassword (boolean), createdAt, and updatedAt fields.

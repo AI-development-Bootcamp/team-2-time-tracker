@@ -1,7 +1,20 @@
 # infrastructure Specification
 
 ## Purpose
-TBD - created by archiving change add-dev1-setup-auth. Update Purpose after archive.
+
+This specification defines the infrastructure, configuration, and deployment patterns for the time tracking system. It is intended for DevOps engineers, backend developers, and system administrators responsible for deployment and configuration.
+
+The document covers:
+- Monorepo structure and workspace organization
+- TypeScript configuration and type safety requirements
+- Database connection management and Prisma ORM setup
+- Environment variable validation and fail-fast configuration requirements
+- Health check endpoints and monitoring
+- Request logging and error handling patterns
+- Docker development environment setup
+- CI/CD pipeline requirements
+- Shared types package structure and usage
+
 ## Requirements
 ### Requirement: Monorepo Project Structure
 The system SHALL be organized as a pnpm monorepo with the following workspaces: `shared/types`, `server`, `client/packages/*`, `client/apps/employee`, `client/apps/admin`.
@@ -40,12 +53,16 @@ The system SHALL connect to PostgreSQL using Prisma ORM with a singleton client 
 The system SHALL validate all environment variables at startup using Zod schemas and fail fast if required variables are missing.
 
 #### Scenario: Missing required variable
-- **WHEN** `DATABASE_URL` environment variable is not set
+- **WHEN** `DATABASE_URL` environment variable is not set and `NODE_ENV` is not 'test'
 - **THEN** the server fails to start with a clear error message
 
 #### Scenario: Invalid variable format
 - **WHEN** `JWT_EXPIRY` is set to a non-numeric value
 - **THEN** the server fails to start with a validation error
+
+#### Scenario: DATABASE_URL optional in test
+- **WHEN** `DATABASE_URL` is not set and `NODE_ENV` is 'test'
+- **THEN** the server may use a test fallback database URL for testing purposes
 
 ### Requirement: Health Check Endpoint
 The system SHALL provide a `GET /health` endpoint that returns server status without authentication.

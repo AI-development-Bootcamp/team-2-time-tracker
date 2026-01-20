@@ -3,6 +3,7 @@
  */
 
 import { vi } from 'vitest';
+import { EntityStatus, ReportType, TaskStatus } from '@shared/types';
 
 // Mock @prisma/client before anything else
 vi.mock('@prisma/client', () => ({
@@ -179,7 +180,7 @@ export function createMockClient(overrides = {}) {
         id: 'test-client-id',
         name: 'Test Client',
         description: 'Test client description',
-        status: 'ACTIVE',
+        status: EntityStatus.ACTIVE,
         createdAt: new Date(),
         updatedAt: new Date(),
         _count: {
@@ -197,8 +198,8 @@ export function createMockProject(overrides = {}) {
         id: 'test-project-id',
         name: 'Test Project',
         clientId: 'test-client-id',
-        status: 'ACTIVE',
-        reportType: 'TOTAL_HOURS',
+        status: EntityStatus.ACTIVE,
+        reportType: ReportType.TOTAL_HOURS,
         startDate: null,
         endDate: null,
         createdAt: new Date(),
@@ -222,7 +223,7 @@ export function createMockTask(overrides = {}) {
         id: 'test-task-id',
         name: 'Test Task',
         projectId: 'test-project-id',
-        status: 'OPEN',
+        status: TaskStatus.OPEN,
         startDate: null,
         endDate: null,
         createdAt: new Date(),

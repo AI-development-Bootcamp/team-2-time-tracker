@@ -72,7 +72,7 @@ export async function createTask(data: {
 
     // Validate date range
     if (startDate && endDate && endDate < startDate) {
-        throw new ValidationError('End date must be greater than or equal to start date', 'VALIDATION_001');
+        throw new ValidationError('End date must be greater than or equal to start date', 'VALIDATION_DATE_RANGE');
     }
 
     // Validate task dates are within project dates (if both are set)
@@ -80,11 +80,11 @@ export async function createTask(data: {
         if (startDate && project.startDate && startDate < project.startDate) {
             throw new ValidationError(
                 'Task start date must be within project date range',
-                'VALIDATION_001'
+                'VALIDATION_DATE_OUT_OF_PROJECT'
             );
         }
         if (endDate && project.endDate && endDate > project.endDate) {
-            throw new ValidationError('Task end date must be within project date range', 'VALIDATION_001');
+            throw new ValidationError('Task end date must be within project date range', 'VALIDATION_DATE_OUT_OF_PROJECT');
         }
     }
 
@@ -131,18 +131,19 @@ export async function updateTask(
     // Determine which project to validate against
     const projectId = data.projectId ?? task.projectId;
 
-    // If projectId is being changed, verify new project exists
+    // If projectId is being changed, verify new project exists and reuse it
+    let project;
     if (data.projectId && data.projectId !== task.projectId) {
-        const newProject = await projectsRepo.findProjectById(data.projectId);
-        if (!newProject) {
+        project = await projectsRepo.findProjectById(data.projectId);
+        if (!project) {
             throw new NotFoundError('Project not found');
         }
-    }
-
-    // Get the project for date validation
-    const project = await projectsRepo.findProjectById(projectId);
-    if (!project) {
-        throw new NotFoundError('Project not found');
+    } else {
+        // Get the project for date validation
+        project = await projectsRepo.findProjectById(projectId);
+        if (!project) {
+            throw new NotFoundError('Project not found');
+        }
     }
 
     // Convert string dates to Date objects
@@ -156,7 +157,7 @@ export async function updateTask(
 
     // Validate date range
     if (finalStartDate && finalEndDate && finalEndDate < finalStartDate) {
-        throw new ValidationError('End date must be greater than or equal to start date', 'VALIDATION_001');
+        throw new ValidationError('End date must be greater than or equal to start date', 'VALIDATION_DATE_RANGE');
     }
 
     // Validate task dates are within project dates (if both are set)
@@ -164,11 +165,11 @@ export async function updateTask(
         if (finalStartDate && project.startDate && finalStartDate < project.startDate) {
             throw new ValidationError(
                 'Task start date must be within project date range',
-                'VALIDATION_001'
+                'VALIDATION_DATE_OUT_OF_PROJECT'
             );
         }
         if (finalEndDate && project.endDate && finalEndDate > project.endDate) {
-            throw new ValidationError('Task end date must be within project date range', 'VALIDATION_001');
+            throw new ValidationError('Task end date must be within project date range', 'VALIDATION_DATE_OUT_OF_PROJECT');
         }
     }
 
@@ -202,7 +203,7 @@ export async function updateTaskStatus(id: string, status: TaskStatus) {
         if (hasEntries) {
             throw new ValidationError(
                 'Cannot close task that has logged time entries',
-                'VALIDATION_001'
+                'VALIDATION_TASK_HAS_ENTRIES'
             );
         }
     }

@@ -12,6 +12,7 @@ import {
 import * as clientsService from '../../src/modules/admin/entities/clients.service';
 import * as clientsRepo from '../../src/modules/admin/entities/clients.repo';
 import { NotFoundError } from '../../src/shared/errors';
+import { EntityStatus } from '@shared/types';
 
 // Mock the clients repository
 vi.mock('../../src/modules/admin/entities/clients.repo');
@@ -111,7 +112,7 @@ describe('clients.service', () => {
         });
 
         it('should create client with ACTIVE status by default', async () => {
-            const mockClient = createMockClient({ status: 'ACTIVE' });
+            const mockClient = createMockClient({ status: EntityStatus.ACTIVE });
 
             vi.mocked(clientsRepo.createClient).mockResolvedValue(mockClient);
 
@@ -119,7 +120,7 @@ describe('clients.service', () => {
                 name: 'New Client',
             });
 
-            expect(result.status).toBe('ACTIVE');
+            expect(result.status).toBe(EntityStatus.ACTIVE);
         });
     });
 
@@ -206,39 +207,39 @@ describe('clients.service', () => {
 
     describe('updateClientStatus', () => {
         it('should update client status to INACTIVE', async () => {
-            const mockClient = createMockClient({ status: 'ACTIVE' });
-            const updatedClient = createMockClient({ status: 'INACTIVE' });
+            const mockClient = createMockClient({ status: EntityStatus.ACTIVE });
+            const updatedClient = createMockClient({ status: EntityStatus.INACTIVE });
 
             vi.mocked(clientsRepo.findClientById).mockResolvedValue(mockClient);
             vi.mocked(clientsRepo.updateClientStatus).mockResolvedValue(updatedClient);
 
-            const result = await clientsService.updateClientStatus('test-id', 'INACTIVE' as any);
+            const result = await clientsService.updateClientStatus('test-id', EntityStatus.INACTIVE);
 
             expect(result).toEqual(updatedClient);
-            expect(result.status).toBe('INACTIVE');
-            expect(clientsRepo.updateClientStatus).toHaveBeenCalledWith('test-id', 'INACTIVE');
+            expect(result.status).toBe(EntityStatus.INACTIVE);
+            expect(clientsRepo.updateClientStatus).toHaveBeenCalledWith('test-id', EntityStatus.INACTIVE);
         });
 
         it('should update client status to ACTIVE', async () => {
-            const mockClient = createMockClient({ status: 'INACTIVE' });
-            const updatedClient = createMockClient({ status: 'ACTIVE' });
+            const mockClient = createMockClient({ status: EntityStatus.INACTIVE });
+            const updatedClient = createMockClient({ status: EntityStatus.ACTIVE });
 
             vi.mocked(clientsRepo.findClientById).mockResolvedValue(mockClient);
             vi.mocked(clientsRepo.updateClientStatus).mockResolvedValue(updatedClient);
 
-            const result = await clientsService.updateClientStatus('test-id', 'ACTIVE' as any);
+            const result = await clientsService.updateClientStatus('test-id', EntityStatus.ACTIVE);
 
-            expect(result.status).toBe('ACTIVE');
+            expect(result.status).toBe(EntityStatus.ACTIVE);
         });
 
         it('should throw NotFoundError when client does not exist', async () => {
             vi.mocked(clientsRepo.findClientById).mockResolvedValue(null);
 
             await expect(
-                clientsService.updateClientStatus('non-existent-id', 'INACTIVE' as any)
+                clientsService.updateClientStatus('non-existent-id', EntityStatus.INACTIVE)
             ).rejects.toThrow(NotFoundError);
             await expect(
-                clientsService.updateClientStatus('non-existent-id', 'INACTIVE' as any)
+                clientsService.updateClientStatus('non-existent-id', EntityStatus.INACTIVE)
             ).rejects.toThrow('Client not found');
         });
     });

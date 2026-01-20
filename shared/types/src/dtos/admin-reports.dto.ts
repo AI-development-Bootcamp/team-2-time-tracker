@@ -1,3 +1,7 @@
+import { TimeEntrySource } from '../enums/timeEntrySource.enum';
+import { AbsenceType } from '../enums/absenceType.enum';
+import { AbsenceStatus } from '../enums/absenceStatus.enum';
+
 // ===========================
 // ADMIN DASHBOARD DTOs
 // ===========================
@@ -91,7 +95,7 @@ export interface AdminTimeEntryDto {
     breakMinutes: number;
     totalMinutes: number;
     notes: string | null;
-    source: string;
+    source: TimeEntrySource;
     createdAt: string;
     updatedAt: string;
 }
@@ -158,9 +162,9 @@ export interface AdminAbsenceDto {
     userId: string;
     startDate: string;
     endDate: string;
-    absenceType: string;
+    absenceType: AbsenceType;
     reason: string | null;
-    status: string;
+    status: AbsenceStatus;
     documentUrl: string | null;
     createdAt: string;
     updatedAt: string;
@@ -198,7 +202,7 @@ export interface AbsenceResponseDto {
 export interface AdminCreateAbsenceRequestDto {
     startDate: string;
     endDate: string;
-    absenceType: string;
+    absenceType: AbsenceType;
     reason?: string;
     documentUrl?: string;
 }
@@ -209,8 +213,8 @@ export interface AdminCreateAbsenceRequestDto {
 export interface AdminUpdateAbsenceRequestDto {
     startDate?: string;
     endDate?: string;
-    absenceType?: string;
+    absenceType?: AbsenceType;
     reason?: string;
-    status?: string;
+    status?: AbsenceStatus;
     documentUrl?: string;
 }

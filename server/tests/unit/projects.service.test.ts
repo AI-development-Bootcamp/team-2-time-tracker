@@ -14,6 +14,7 @@ import * as projectsService from '../../src/modules/admin/entities/projects.serv
 import * as projectsRepo from '../../src/modules/admin/entities/projects.repo';
 import { NotFoundError, ValidationError } from '../../src/shared/errors';
 import { prisma } from '../../src/db';
+import { EntityStatus, ReportType } from '@shared/types';
 
 // Mock the projects repository
 vi.mock('../../src/modules/admin/entities/projects.repo');
@@ -122,7 +123,7 @@ describe('projects.service', () => {
 
         it('should create project with ACTIVE status by default', async () => {
             const mockClient = createMockClient();
-            const mockProject = createMockProject({ status: 'ACTIVE' });
+            const mockProject = createMockProject({ status: EntityStatus.ACTIVE });
 
             vi.mocked(prisma.client.findUnique).mockResolvedValue(mockClient);
             vi.mocked(projectsRepo.createProject).mockResolvedValue(mockProject);
@@ -132,12 +133,12 @@ describe('projects.service', () => {
                 clientId: 'client-1',
             });
 
-            expect(result.status).toBe('ACTIVE');
+            expect(result.status).toBe(EntityStatus.ACTIVE);
         });
 
         it('should create project with TOTAL_HOURS reportType by default', async () => {
             const mockClient = createMockClient();
-            const mockProject = createMockProject({ reportType: 'TOTAL_HOURS' });
+            const mockProject = createMockProject({ reportType: ReportType.TOTAL_HOURS });
 
             vi.mocked(prisma.client.findUnique).mockResolvedValue(mockClient);
             vi.mocked(projectsRepo.createProject).mockResolvedValue(mockProject);
@@ -383,61 +384,61 @@ describe('projects.service', () => {
 
     describe('updateProjectStatus', () => {
         it('should update project status to INACTIVE', async () => {
-            const mockProject = createMockProject({ status: 'ACTIVE' });
-            const updatedProject = createMockProject({ status: 'INACTIVE' });
+            const mockProject = createMockProject({ status: EntityStatus.ACTIVE });
+            const updatedProject = createMockProject({ status: EntityStatus.INACTIVE });
 
             vi.mocked(projectsRepo.findProjectById).mockResolvedValue(mockProject);
             vi.mocked(projectsRepo.updateProjectStatus).mockResolvedValue(updatedProject);
 
-            const result = await projectsService.updateProjectStatus('test-id', 'INACTIVE' as any);
+            const result = await projectsService.updateProjectStatus('test-id', EntityStatus.INACTIVE);
 
             expect(result).toEqual(updatedProject);
-            expect(result.status).toBe('INACTIVE');
-            expect(projectsRepo.updateProjectStatus).toHaveBeenCalledWith('test-id', 'INACTIVE');
+            expect(result.status).toBe(EntityStatus.INACTIVE);
+            expect(projectsRepo.updateProjectStatus).toHaveBeenCalledWith('test-id', EntityStatus.INACTIVE);
         });
 
         it('should update project status to ACTIVE', async () => {
-            const mockProject = createMockProject({ status: 'INACTIVE' });
-            const updatedProject = createMockProject({ status: 'ACTIVE' });
+            const mockProject = createMockProject({ status: EntityStatus.INACTIVE });
+            const updatedProject = createMockProject({ status: EntityStatus.ACTIVE });
 
             vi.mocked(projectsRepo.findProjectById).mockResolvedValue(mockProject);
             vi.mocked(projectsRepo.updateProjectStatus).mockResolvedValue(updatedProject);
 
-            const result = await projectsService.updateProjectStatus('test-id', 'ACTIVE' as any);
+            const result = await projectsService.updateProjectStatus('test-id', EntityStatus.ACTIVE);
 
-            expect(result.status).toBe('ACTIVE');
+            expect(result.status).toBe(EntityStatus.ACTIVE);
         });
 
         it('should throw NotFoundError when project does not exist', async () => {
             vi.mocked(projectsRepo.findProjectById).mockResolvedValue(null);
 
             await expect(
-                projectsService.updateProjectStatus('non-existent-id', 'INACTIVE' as any)
+                projectsService.updateProjectStatus('non-existent-id', EntityStatus.INACTIVE)
             ).rejects.toThrow(NotFoundError);
             await expect(
-                projectsService.updateProjectStatus('non-existent-id', 'INACTIVE' as any)
+                projectsService.updateProjectStatus('non-existent-id', EntityStatus.INACTIVE)
             ).rejects.toThrow('Project not found');
         });
     });
 
     describe('updateProjectReportType', () => {
         it('should update project report type', async () => {
-            const mockProject = createMockProject({ reportType: 'TOTAL_HOURS' });
-            const updatedProject = createMockProject({ reportType: 'ENTRY_EXIT' });
+            const mockProject = createMockProject({ reportType: ReportType.TOTAL_HOURS });
+            const updatedProject = createMockProject({ reportType: ReportType.ENTRY_EXIT });
 
             vi.mocked(projectsRepo.findProjectById).mockResolvedValue(mockProject);
             vi.mocked(projectsRepo.updateProjectReportType).mockResolvedValue(updatedProject);
 
             const result = await projectsService.updateProjectReportType(
                 'test-id',
-                'ENTRY_EXIT' as any
+                ReportType.ENTRY_EXIT
             );
 
             expect(result).toEqual(updatedProject);
-            expect(result.reportType).toBe('ENTRY_EXIT');
+            expect(result.reportType).toBe(ReportType.ENTRY_EXIT);
             expect(projectsRepo.updateProjectReportType).toHaveBeenCalledWith(
                 'test-id',
-                'ENTRY_EXIT'
+                ReportType.ENTRY_EXIT
             );
         });
 
@@ -445,10 +446,10 @@ describe('projects.service', () => {
             vi.mocked(projectsRepo.findProjectById).mockResolvedValue(null);
 
             await expect(
-                projectsService.updateProjectReportType('non-existent-id', 'ENTRY_EXIT' as any)
+                projectsService.updateProjectReportType('non-existent-id', ReportType.ENTRY_EXIT)
             ).rejects.toThrow(NotFoundError);
             await expect(
-                projectsService.updateProjectReportType('non-existent-id', 'ENTRY_EXIT' as any)
+                projectsService.updateProjectReportType('non-existent-id', ReportType.ENTRY_EXIT)
             ).rejects.toThrow('Project not found');
         });
     });

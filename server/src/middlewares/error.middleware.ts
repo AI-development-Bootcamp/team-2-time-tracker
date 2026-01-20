@@ -10,14 +10,24 @@ export const errorMiddleware = (
 ): void => {
     if (err instanceof ValidationError) {
         logger.warn(`Validation Error: ${err.message}`);
-        res.status(err.statusCode).json({
+        const errorResponse: {
+            success: false;
+            error: {
+                code: string;
+                message: string;
+                details?: unknown;
+            };
+        } = {
             success: false,
             error: {
                 code: err.code || err.statusCode.toString(),
                 message: err.message,
-                ...(err.details && { details: err.details }),
             },
-        });
+        };
+        if (err.details !== undefined) {
+            errorResponse.error.details = err.details;
+        }
+        res.status(err.statusCode).json(errorResponse);
         return;
     }
 

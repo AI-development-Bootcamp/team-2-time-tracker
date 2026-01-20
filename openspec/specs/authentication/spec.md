@@ -1,7 +1,17 @@
 # authentication Specification
 
 ## Purpose
-TBD - created by archiving change add-dev1-setup-auth. Update Purpose after archive.
+
+This specification defines the authentication and authorization mechanisms for the time tracking system. It is intended for developers implementing authentication features, security reviewers, and frontend/backend teams integrating auth flows.
+
+The document covers:
+- User authentication flows (login, logout, password change)
+- JWT token generation, validation, and refresh mechanisms
+- Role-based access control (RBAC) for EMPLOYEE and ADMIN roles
+- Password security requirements and hashing standards
+- Rate limiting and security measures for auth endpoints
+- Token formats, expiry times, and claim structures
+
 ## Requirements
 ### Requirement: User Login
 The system SHALL authenticate users with email and password, returning a JWT access token and refresh token upon successful authentication.

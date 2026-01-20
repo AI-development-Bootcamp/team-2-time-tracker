@@ -5,14 +5,27 @@
 
 import { Request, Response, NextFunction } from 'express';
 import * as tasksService from './tasks.service';
+import { CreateTaskRequestDto } from '@shared/types';
+import { listTasksQuerySchema } from '@shared/types';
 
 /**
  * List all tasks with optional project filter
  */
 export async function listTasks(req: Request, res: Response, next: NextFunction) {
     try {
-        const { projectId } = req.query;
-        const tasks = await tasksService.listTasks(projectId as string | undefined);
+        const queryResult = listTasksQuerySchema.safeParse(req.query);
+        if (!queryResult.success) {
+            return res.status(400).json({
+                success: false,
+                error: {
+                    code: 'VALIDATION_001',
+                    message: 'Invalid query parameters',
+                    fields: queryResult.error.errors,
+                },
+            });
+        }
+        const { projectId } = queryResult.data;
+        const tasks = await tasksService.listTasks(projectId);
 
         res.json({
             success: true,
@@ -45,13 +58,8 @@ export async function getTask(req: Request, res: Response, next: NextFunction) {
  */
 export async function createTask(req: Request, res: Response, next: NextFunction) {
     try {
-        const { name, projectId, startDate, endDate } = req.body;
-        const task = await tasksService.createTask({
-            name,
-            projectId,
-            startDate,
-            endDate,
-        });
+        const input: CreateTaskRequestDto = req.body;
+        const task = await tasksService.createTask(input);
 
         res.status(201).json({
             success: true,

@@ -76,9 +76,15 @@ export async function createProject(data: {
     const startDate = data.startDate ? new Date(data.startDate) : null;
     const endDate = data.endDate ? new Date(data.endDate) : null;
 
-    // Validate date range (already validated by Zod, but double-check)
+    // Validate date range and check for NaN (invalid dates)
+    if (startDate && (isNaN(startDate.getTime()) || !startDate)) {
+        throw new ValidationError('Invalid start date', 'VALIDATION_DATE_RANGE');
+    }
+    if (endDate && (isNaN(endDate.getTime()) || !endDate)) {
+        throw new ValidationError('Invalid end date', 'VALIDATION_DATE_RANGE');
+    }
     if (startDate && endDate && endDate < startDate) {
-        throw new ValidationError('End date must be greater than or equal to start date', 'VALIDATION_001');
+        throw new ValidationError('End date must be greater than or equal to start date', 'VALIDATION_DATE_RANGE');
     }
 
     return projectsRepo.createProject({
@@ -137,13 +143,21 @@ export async function updateProject(
         data.startDate !== undefined ? (data.startDate ? new Date(data.startDate) : null) : undefined;
     const endDate = data.endDate !== undefined ? (data.endDate ? new Date(data.endDate) : null) : undefined;
 
+    // Validate dates and check for NaN (invalid dates)
+    if (startDate !== undefined && startDate !== null && (isNaN(startDate.getTime()) || !startDate)) {
+        throw new ValidationError('Invalid start date', 'VALIDATION_DATE_RANGE');
+    }
+    if (endDate !== undefined && endDate !== null && (isNaN(endDate.getTime()) || !endDate)) {
+        throw new ValidationError('Invalid end date', 'VALIDATION_DATE_RANGE');
+    }
+
     // Determine final dates (use new values if provided, otherwise keep existing)
     const finalStartDate = startDate !== undefined ? startDate : project.startDate;
     const finalEndDate = endDate !== undefined ? endDate : project.endDate;
 
     // Validate date range
     if (finalStartDate && finalEndDate && finalEndDate < finalStartDate) {
-        throw new ValidationError('End date must be greater than or equal to start date', 'VALIDATION_001');
+        throw new ValidationError('End date must be greater than or equal to start date', 'VALIDATION_DATE_RANGE');
     }
 
     // Check if date changes would invalidate any child tasks

@@ -14,6 +14,7 @@ import * as tasksService from '../../src/modules/admin/entities/tasks.service';
 import * as tasksRepo from '../../src/modules/admin/entities/tasks.repo';
 import * as projectsRepo from '../../src/modules/admin/entities/projects.repo';
 import { NotFoundError, ValidationError } from '../../src/shared/errors';
+import { TaskStatus } from '@shared/types';
 
 // Mock the tasks and projects repositories
 vi.mock('../../src/modules/admin/entities/tasks.repo');
@@ -112,7 +113,7 @@ describe('tasks.service', () => {
 
         it('should create task with OPEN status by default', async () => {
             const mockProject = createMockProject();
-            const mockTask = createMockTask({ status: 'OPEN' });
+            const mockTask = createMockTask({ status: TaskStatus.OPEN });
 
             vi.mocked(projectsRepo.findProjectById).mockResolvedValue(mockProject);
             vi.mocked(tasksRepo.createTask).mockResolvedValue(mockTask);
@@ -122,7 +123,7 @@ describe('tasks.service', () => {
                 projectId: 'project-1',
             });
 
-            expect(result.status).toBe('OPEN');
+            expect(result.status).toBe(TaskStatus.OPEN);
         });
 
         it('should create task with dates', async () => {
@@ -306,9 +307,7 @@ describe('tasks.service', () => {
             const updatedTask = createMockTask({ projectId: 'project-2' });
 
             vi.mocked(tasksRepo.findTaskById).mockResolvedValue(existingTask);
-            vi.mocked(projectsRepo.findProjectById)
-                .mockResolvedValueOnce(newProject) // First call for validation
-                .mockResolvedValueOnce(newProject); // Second call for date validation
+            vi.mocked(projectsRepo.findProjectById).mockResolvedValue(newProject);
             vi.mocked(tasksRepo.updateTask).mockResolvedValue(updatedTask);
 
             const result = await tasksService.updateTask('test-id', {
@@ -326,6 +325,7 @@ describe('tasks.service', () => {
             await expect(
                 tasksService.updateTask('test-id', { projectId: 'non-existent-project' })
             ).rejects.toThrow(NotFoundError);
+            
             await expect(
                 tasksService.updateTask('test-id', { projectId: 'non-existent-project' })
             ).rejects.toThrow('Project not found');
@@ -437,66 +437,66 @@ describe('tasks.service', () => {
 
     describe('updateTaskStatus', () => {
         it('should update task status to CLOSED', async () => {
-            const mockTask = createMockTask({ status: 'OPEN' });
-            const updatedTask = createMockTask({ status: 'CLOSED' });
+            const mockTask = createMockTask({ status: TaskStatus.OPEN });
+            const updatedTask = createMockTask({ status: TaskStatus.CLOSED });
 
             vi.mocked(tasksRepo.findTaskById).mockResolvedValue(mockTask);
             vi.mocked(tasksRepo.hasTimeEntries).mockResolvedValue(false);
             vi.mocked(tasksRepo.updateTaskStatus).mockResolvedValue(updatedTask);
 
-            const result = await tasksService.updateTaskStatus('test-id', 'CLOSED' as any);
+            const result = await tasksService.updateTaskStatus('test-id', TaskStatus.CLOSED);
 
             expect(result).toEqual(updatedTask);
-            expect(result.status).toBe('CLOSED');
-            expect(tasksRepo.updateTaskStatus).toHaveBeenCalledWith('test-id', 'CLOSED');
+            expect(result.status).toBe(TaskStatus.CLOSED);
+            expect(tasksRepo.updateTaskStatus).toHaveBeenCalledWith('test-id', TaskStatus.CLOSED);
         });
 
         it('should update task status to OPEN', async () => {
-            const mockTask = createMockTask({ status: 'CLOSED' });
-            const updatedTask = createMockTask({ status: 'OPEN' });
+            const mockTask = createMockTask({ status: TaskStatus.CLOSED });
+            const updatedTask = createMockTask({ status: TaskStatus.OPEN });
 
             vi.mocked(tasksRepo.findTaskById).mockResolvedValue(mockTask);
             vi.mocked(tasksRepo.updateTaskStatus).mockResolvedValue(updatedTask);
 
-            const result = await tasksService.updateTaskStatus('test-id', 'OPEN' as any);
+            const result = await tasksService.updateTaskStatus('test-id', TaskStatus.OPEN);
 
-            expect(result.status).toBe('OPEN');
+            expect(result.status).toBe(TaskStatus.OPEN);
         });
 
         it('should throw NotFoundError when task does not exist', async () => {
             vi.mocked(tasksRepo.findTaskById).mockResolvedValue(null);
 
             await expect(
-                tasksService.updateTaskStatus('non-existent-id', 'CLOSED' as any)
+                tasksService.updateTaskStatus('non-existent-id', TaskStatus.CLOSED)
             ).rejects.toThrow(NotFoundError);
             await expect(
-                tasksService.updateTaskStatus('non-existent-id', 'CLOSED' as any)
+                tasksService.updateTaskStatus('non-existent-id', TaskStatus.CLOSED)
             ).rejects.toThrow('Task not found');
         });
 
         it('should throw ValidationError when trying to close task with time entries', async () => {
-            const mockTask = createMockTask({ status: 'OPEN' });
+            const mockTask = createMockTask({ status: TaskStatus.OPEN });
             vi.mocked(tasksRepo.findTaskById).mockResolvedValue(mockTask);
             vi.mocked(tasksRepo.hasTimeEntries).mockResolvedValue(true);
 
             await expect(
-                tasksService.updateTaskStatus('test-id', 'CLOSED' as any)
+                tasksService.updateTaskStatus('test-id', TaskStatus.CLOSED)
             ).rejects.toThrow(ValidationError);
             await expect(
-                tasksService.updateTaskStatus('test-id', 'CLOSED' as any)
+                tasksService.updateTaskStatus('test-id', TaskStatus.CLOSED)
             ).rejects.toThrow('Cannot close task that has logged time entries');
         });
 
         it('should allow closing task that already has CLOSED status', async () => {
-            const mockTask = createMockTask({ status: 'CLOSED' });
-            const updatedTask = createMockTask({ status: 'CLOSED' });
+            const mockTask = createMockTask({ status: TaskStatus.CLOSED });
+            const updatedTask = createMockTask({ status: TaskStatus.CLOSED });
 
             vi.mocked(tasksRepo.findTaskById).mockResolvedValue(mockTask);
             vi.mocked(tasksRepo.updateTaskStatus).mockResolvedValue(updatedTask);
 
-            const result = await tasksService.updateTaskStatus('test-id', 'CLOSED' as any);
+            const result = await tasksService.updateTaskStatus('test-id', TaskStatus.CLOSED);
 
-            expect(result.status).toBe('CLOSED');
+            expect(result.status).toBe(TaskStatus.CLOSED);
             // Should not check for time entries when already closed
             expect(tasksRepo.hasTimeEntries).not.toHaveBeenCalled();
         });

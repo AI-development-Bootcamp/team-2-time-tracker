@@ -112,3 +112,7 @@ export const updateTaskSchema = z.object({
 export const updateTaskStatusSchema = z.object({
     status: z.nativeEnum(TaskStatus),
 });
+
+export const listTasksQuerySchema = z.object({
+    projectId: z.string().uuid('Project ID must be a valid UUID').optional(),
+});
