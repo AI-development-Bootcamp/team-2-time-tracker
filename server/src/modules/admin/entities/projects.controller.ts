@@ -7,12 +7,15 @@ import { Request, Response, NextFunction } from 'express';
 import * as projectsService from './projects.service';
 
 /**
- * List all projects with optional client filter
+ * List all projects with optional filters
  */
 export async function listProjects(req: Request, res: Response, next: NextFunction) {
     try {
-        const { clientId } = req.query;
-        const projects = await projectsService.listProjects(clientId as string | undefined);
+        const { clientId, userId } = req.query;
+        const projects = await projectsService.listProjects(
+            clientId as string | undefined,
+            userId as string | undefined
+        );
 
         res.json({
             success: true,
@@ -116,6 +119,23 @@ export async function updateProjectReportType(req: Request, res: Response, next:
         res.json({
             success: true,
             data: project,
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
+/**
+ * Get all users assigned to a project
+ */
+export async function getProjectUsers(req: Request, res: Response, next: NextFunction) {
+    try {
+        const id = req.params.id as string;
+        const users = await projectsService.getProjectUsers(id);
+
+        res.json({
+            success: true,
+            data: users,
         });
     } catch (error) {
         next(error);

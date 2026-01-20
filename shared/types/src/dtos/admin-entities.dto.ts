@@ -60,6 +60,15 @@ export interface UpdateClientStatusRequestDto {
 // ===========================
 
 /**
+ * Assigned user information for projects
+ */
+export interface AssignedUserDto {
+    id: string;
+    fullName: string;
+    email: string;
+}
+
+/**
  * Project DTO - Response DTO for project operations
  * This is returned by the server when fetching/creating/updating projects
  */
@@ -74,6 +83,7 @@ export interface ProjectDto {
     createdAt: string;
     updatedAt: string;
     client?: ClientDto;
+    assignedUsers?: AssignedUserDto[];
 }
 
 /**
@@ -145,6 +155,15 @@ export interface ProjectDateValidationErrorDto {
     code: 'VALIDATION_002';
     message: string;
     conflictingTasks: ConflictingTaskDto[];
+}
+
+/**
+ * Response DTO for project users endpoint
+ * Returns all users assigned to a project
+ */
+export interface ProjectUsersResponseDto {
+    success: boolean;
+    data: AssignedUserDto[];
 }
 
 // ===========================

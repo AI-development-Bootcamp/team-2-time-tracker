@@ -34,11 +34,22 @@ Administrators need comprehensive tools to manage the system, view reports, and 
   - Date validation: endDate >= startDate
   - Prevent closing tasks with existing time entries
 - Soft delete pattern (status-based, no physical deletion)
+- **Enhanced project filtering**
+  - Filter projects by user (userId query parameter)
+  - Projects response includes assigned users information
 
 ### Task Assignments
 - Assign tasks to users (single and bulk operations)
 - View all assignments
 - Remove assignments
+- **Enhanced filtering and search capabilities**
+  - Filter assignments by project (projectId query parameter)
+  - Search assignments by employee name (fullName search)
+  - Include expanded assignment details (user name, project name, client name)
+- **Project-User relationships**
+  - Get all users assigned to a project: `GET /admin/projects/:id/users`
+  - Get all projects for a user: `GET /admin/projects?userId=...`
+  - Projects response includes assigned users list
 
 ### Admin Reports
 - Dashboard overview with aggregated statistics

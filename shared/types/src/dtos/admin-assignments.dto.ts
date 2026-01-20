@@ -8,12 +8,20 @@ import { AdminUserDto } from './admin-users.dto';
 /**
  * Task Assignment DTO - Response DTO for assignment operations
  * This is returned by the server when fetching/creating assignments
+ * Includes expanded details for user, task, project, and client information
  */
 export interface TaskAssignmentDto {
     id: string;
     userId: string;
     taskId: string;
     createdAt: string;
+    userName: string;
+    userEmail: string;
+    taskName: string;
+    projectId: string;
+    projectName: string;
+    clientId: string;
+    clientName: string;
     user?: AdminUserDto;
     task?: TaskDto;
 }
@@ -60,4 +68,15 @@ export interface BulkTaskAssignmentsResponseDto {
         created: TaskAssignmentDto[];
         count: number;
     };
+}
+
+/**
+ * Query DTO for filtering assignments list
+ * All fields are optional - used as query parameters
+ */
+export interface ListAssignmentsQueryDto {
+    userId?: string;
+    taskId?: string;
+    projectId?: string;
+    userName?: string;
 }

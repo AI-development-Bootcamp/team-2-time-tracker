@@ -30,6 +30,11 @@ const router: Router = Router();
  *         schema:
  *           type: string
  *         description: Filter projects by client ID
+ *       - in: query
+ *         name: userId
+ *         schema:
+ *           type: string
+ *         description: Filter projects by user ID (returns projects where user is assigned via task assignments)
  */
 router.get('/', authenticate, requireAdmin, projectsController.listProjects);
 
@@ -111,5 +116,23 @@ router.put(
     validate(updateProjectReportTypeSchema),
     projectsController.updateProjectReportType
 );
+
+/**
+ * @swagger
+ * /admin/projects/{id}/users:
+ *   get:
+ *     summary: Get all users assigned to a project
+ *     tags: [Admin - Projects]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Project ID
+ */
+router.get('/:id/users', authenticate, requireAdmin, projectsController.getProjectUsers);
 
 export { router as projectsRouter };

@@ -9,11 +9,31 @@ import { EntityStatus, ReportType, Prisma } from '@prisma/client';
 /**
  * Find all projects
  * @param clientId - Optional client ID filter
+ * @param userId - Optional user ID filter (filters projects where user is assigned via task assignments)
  * @returns Projects list
  */
-export async function findAllProjects(clientId?: string) {
+export async function findAllProjects(clientId?: string, userId?: string) {
+    const where: Prisma.ProjectWhereInput = {};
+
+    if (clientId) {
+        where.clientId = clientId;
+    }
+
+    if (userId) {
+        // Filter projects where the user is assigned via task assignments
+        where.tasks = {
+            some: {
+                assignments: {
+                    some: {
+                        userId: userId,
+                    },
+                },
+            },
+        };
+    }
+
     return prisma.project.findMany({
-        where: clientId ? { clientId } : undefined,
+        where: Object.keys(where).length > 0 ? where : undefined,
         orderBy: { createdAt: 'desc' },
         select: {
             id: true,
@@ -29,6 +49,21 @@ export async function findAllProjects(clientId?: string) {
                 select: {
                     id: true,
                     name: true,
+                },
+            },
+            tasks: {
+                select: {
+                    assignments: {
+                        select: {
+                            user: {
+                                select: {
+                                    id: true,
+                                    fullName: true,
+                                    email: true,
+                                },
+                            },
+                        },
+                    },
                 },
             },
             _count: {
@@ -62,6 +97,21 @@ export async function findProjectById(id: string) {
                 select: {
                     id: true,
                     name: true,
+                },
+            },
+            tasks: {
+                select: {
+                    assignments: {
+                        select: {
+                            user: {
+                                select: {
+                                    id: true,
+                                    fullName: true,
+                                    email: true,
+                                },
+                            },
+                        },
+                    },
                 },
             },
             _count: {
@@ -110,6 +160,21 @@ export async function createProject(data: {
                     name: true,
                 },
             },
+            tasks: {
+                select: {
+                    assignments: {
+                        select: {
+                            user: {
+                                select: {
+                                    id: true,
+                                    fullName: true,
+                                    email: true,
+                                },
+                            },
+                        },
+                    },
+                },
+            },
         },
     });
 }
@@ -148,6 +213,21 @@ export async function updateProject(
                     name: true,
                 },
             },
+            tasks: {
+                select: {
+                    assignments: {
+                        select: {
+                            user: {
+                                select: {
+                                    id: true,
+                                    fullName: true,
+                                    email: true,
+                                },
+                            },
+                        },
+                    },
+                },
+            },
         },
     });
 }
@@ -178,6 +258,21 @@ export async function updateProjectStatus(id: string, status: EntityStatus) {
                     name: true,
                 },
             },
+            tasks: {
+                select: {
+                    assignments: {
+                        select: {
+                            user: {
+                                select: {
+                                    id: true,
+                                    fullName: true,
+                                    email: true,
+                                },
+                            },
+                        },
+                    },
+                },
+            },
         },
     });
 }
@@ -206,6 +301,21 @@ export async function updateProjectReportType(id: string, reportType: ReportType
                 select: {
                     id: true,
                     name: true,
+                },
+            },
+            tasks: {
+                select: {
+                    assignments: {
+                        select: {
+                            user: {
+                                select: {
+                                    id: true,
+                                    fullName: true,
+                                    email: true,
+                                },
+                            },
+                        },
+                    },
                 },
             },
         },
@@ -267,4 +377,31 @@ export async function findTasksOutsideDateRange(
             endDate: true,
         },
     });
+}
+
+/**
+ * Get all users assigned to a project (via task assignments)
+ * @param projectId - Project ID
+ * @returns Array of unique users assigned to the project
+ */
+export async function findProjectUsers(projectId: string) {
+    const assignments = await prisma.taskAssignment.findMany({
+        where: {
+            task: {
+                projectId: projectId,
+            },
+        },
+        select: {
+            user: {
+                select: {
+                    id: true,
+                    fullName: true,
+                    email: true,
+                },
+            },
+        },
+        distinct: ['userId'],
+    });
+
+    return assignments.map((assignment) => assignment.user);
 }
