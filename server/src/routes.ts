@@ -4,6 +4,9 @@ import { swaggerSpec } from './config/swagger';
 import { authRouter } from './modules/auth/auth.routes';
 import { usersRouter } from './modules/users/users.routes';
 import { adminAuthRouter } from './modules/admin/auth/auth.routes';
+import { clientsRouter } from './modules/admin/entities/clients.routes';
+import { projectsRouter } from './modules/admin/entities/projects.routes';
+import { tasksRouter } from './modules/admin/entities/tasks.routes';
 
 const router: Router = Router();
 
@@ -28,5 +31,8 @@ router.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 router.use('/auth', authRouter);
 router.use('/admin/auth', adminAuthRouter);
 router.use('/admin/users', usersRouter);
+router.use('/admin/clients', clientsRouter);
+router.use('/admin/projects', projectsRouter);
+router.use('/admin/tasks', tasksRouter);
 
 export { router };
