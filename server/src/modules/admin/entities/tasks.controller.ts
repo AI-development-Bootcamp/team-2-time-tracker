@@ -20,7 +20,7 @@ export async function listTasks(req: Request, res: Response, next: NextFunction)
                 error: {
                     code: 'VALIDATION_001',
                     message: 'Invalid query parameters',
-                    fields: queryResult.error.errors,
+                    fields: queryResult.error.issues,
                 },
             });
         }

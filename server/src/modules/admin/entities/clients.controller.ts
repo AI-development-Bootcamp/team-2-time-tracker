@@ -9,7 +9,7 @@ import * as clientsService from './clients.service';
 /**
  * List all clients
  */
-export async function listClients(req: Request, res: Response, next: NextFunction) {
+export async function listClients(_req: Request, res: Response, next: NextFunction) {
     try {
         const clients = await clientsService.listClients();
 
