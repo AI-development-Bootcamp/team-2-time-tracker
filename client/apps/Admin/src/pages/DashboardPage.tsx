@@ -12,7 +12,7 @@ import './DashboardPage.css';
  * @returns {React.JSX.Element} Dashboard page component
  */
 function DashboardPage(): React.JSX.Element {
-    const { user, logout } = useAuthStore();
+    
 
 
     return (
