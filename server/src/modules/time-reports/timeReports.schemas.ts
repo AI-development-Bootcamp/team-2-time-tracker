@@ -18,7 +18,6 @@ export const createTimeEntrySchema = z.object({
     taskId: z.string().uuid('Invalid task ID'),
     description: z
         .string()
-        .min(10, 'Description must be at least 10 characters')
         .max(500, 'Description must be at most 500 characters'),
 });
 
@@ -32,7 +31,6 @@ export const updateTimeEntrySchema = z.object({
     taskId: z.string().uuid('Invalid task ID').optional(),
     description: z
         .string()
-        .min(10, 'Description must be at least 10 characters')
         .max(500, 'Description must be at most 500 characters')
         .optional(),
 });

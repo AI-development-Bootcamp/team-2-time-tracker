@@ -5,7 +5,6 @@ import { TimeEntryDto, CreateTimeEntryInput, GetWorkdayResponseDto, WorkLocation
 import { TimeEntryList } from '../components/TimeEntryList';
 import { MultiProjectTimeEntryForm } from '../components/MultiProjectTimeEntryForm';
 import { FooterActions } from '../components/FooterActions';
-import { StopTimerModal } from '../components/StopTimerModal';
 import { workdayApi } from '@client/api-client';
 import './DailyReportPage.css';
 
@@ -22,9 +21,9 @@ export interface DayData {
 export const DailyReportPage: React.FC = () => {
     // State
     const [isFormOpen, setIsFormOpen] = useState(false);
-    const [isStopTimerModalOpen, setIsStopTimerModalOpen] = useState(false);
     const [editingEntry, setEditingEntry] = useState<TimeEntryDto | null>(null);
     const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().split('T')[0]);
+    const [timerTimes, setTimerTimes] = useState<{ start: string; end: string } | null>(null);
     const [daysData, setDaysData] = useState<DayData[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -37,8 +36,9 @@ export const DailyReportPage: React.FC = () => {
     } = useTimeEntryStore();
 
     const {
+        timer,
         stopTimer,
-        isLoading: timerLoading,
+        cancelTimer,
         error: timerError,
         clearError
     } = useTimerStore();
@@ -93,19 +93,35 @@ export const DailyReportPage: React.FC = () => {
         }
     }, [timerError, clearError]);
 
+    const formatTime = (date: Date): string => {
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+        return `${hours}:${minutes}`;
+    };
+
     // Handlers
     const handleStopTimer = () => {
-        setIsStopTimerModalOpen(true);
+        if (timer && timer.startedAt) {
+            const startTime = formatTime(new Date(timer.startedAt));
+            const endTime = formatTime(new Date());
+
+            setTimerTimes({ start: startTime, end: endTime });
+            setSelectedDate(timer.workDate);
+            setEditingEntry(null);
+            setIsFormOpen(true);
+        }
     };
 
     const handleManualReport = () => {
         setSelectedDate(new Date().toISOString().split('T')[0]);
         setEditingEntry(null);
+        setTimerTimes(null);
         setIsFormOpen(true);
     };
 
     const handleEditEntry = (entry: TimeEntryDto) => {
         setEditingEntry(entry);
+        setTimerTimes(null);
         setIsFormOpen(true);
     };
 
@@ -114,6 +130,7 @@ export const DailyReportPage: React.FC = () => {
         console.log('Add entry for date:', date);
         setSelectedDate(date);
         setEditingEntry(null);
+        setTimerTimes(null);
         setIsFormOpen(true);
     };
 
@@ -138,6 +155,16 @@ export const DailyReportPage: React.FC = () => {
             if (editingEntry) {
                 // Update existing entry (store automatically updates)
                 await updateTimeEntry(editingEntry.id, data);
+            } else if (timerTimes) {
+                // Stop timer flow - use timerApi.stop which allows creation while timer is running
+                await stopTimer({
+                    taskId: data.taskId,
+                    location: data.location as WorkLocation,
+                    description: data.description
+                });
+
+                // Clear timerTimes so subsequent loops (if multi-project) use standard create
+                setTimerTimes(null);
             } else {
                 // Create new entry (store automatically adds it)
                 await createTimeEntry(data);
@@ -145,29 +172,17 @@ export const DailyReportPage: React.FC = () => {
 
             // Refresh the days data to sync with store
             await fetchMultipleDays();
-
-            // Close form and clear editing state
-            setEditingEntry(null);
-            setIsFormOpen(false);
         } catch (error) {
             console.error('Failed to save time entry:', error);
-            // Error is already handled in the store
+            throw error; // Re-throw to let form handle the error
         }
     };
 
-    const handleStopTimerConfirm = async (data: { taskId: string; location: WorkLocation; description: string }) => {
-        try {
-            // Stop timer and create time entry (store automatically adds it)
-            await stopTimer(data);
-
-            // Refresh the days data to sync with store
-            await fetchMultipleDays();
-
-            // Close modal
-            setIsStopTimerModalOpen(false);
-        } catch (error) {
-            // Error is handled in the store
-            console.error('Failed to stop timer:', error);
+    const handleOpenChange = (open: boolean) => {
+        setIsFormOpen(open);
+        if (!open) {
+            setEditingEntry(null);
+            setTimerTimes(null);
         }
     };
 
@@ -201,17 +216,12 @@ export const DailyReportPage: React.FC = () => {
             <MultiProjectTimeEntryForm
                 initialData={editingEntry}
                 defaultDate={selectedDate}
+                initialStartTime={timerTimes?.start}
+                initialEndTime={timerTimes?.end}
+                isTimeLocked={!!timerTimes}
                 open={isFormOpen}
-                onOpenChange={setIsFormOpen}
+                onOpenChange={handleOpenChange}
                 onSubmit={handleFormSubmit}
-            />
-
-            {/* Stop Timer Modal */}
-            <StopTimerModal
-                isOpen={isStopTimerModalOpen}
-                isLoading={timerLoading}
-                onClose={() => setIsStopTimerModalOpen(false)}
-                onConfirm={handleStopTimerConfirm}
             />
         </div>
     );

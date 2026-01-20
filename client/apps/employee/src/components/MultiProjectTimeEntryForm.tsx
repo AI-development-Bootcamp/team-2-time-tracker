@@ -15,6 +15,9 @@ interface ProjectEntryForm {
 interface MultiProjectTimeEntryFormProps {
     initialData?: TimeEntryDto | null;
     defaultDate?: string;
+    initialStartTime?: string;
+    initialEndTime?: string;
+    isTimeLocked?: boolean;
     open: boolean;
     onOpenChange: (open: boolean) => void;
     onSubmit: (data: CreateTimeEntryInput) => Promise<void>;
@@ -23,6 +26,9 @@ interface MultiProjectTimeEntryFormProps {
 export const MultiProjectTimeEntryForm: React.FC<MultiProjectTimeEntryFormProps> = ({
     initialData,
     defaultDate,
+    initialStartTime,
+    initialEndTime,
+    isTimeLocked = false,
     open,
     onOpenChange,
     onSubmit,
@@ -81,9 +87,12 @@ export const MultiProjectTimeEntryForm: React.FC<MultiProjectTimeEntryFormProps>
                 }]);
             } else {
                 resetForm();
+                // Apply initial times if provided
+                if (initialStartTime) setStartTime(initialStartTime);
+                if (initialEndTime) setEndTime(initialEndTime);
             }
         }
-    }, [open, initialData, defaultDate]);
+    }, [open, initialData, defaultDate, initialStartTime, initialEndTime]);
 
     const fetchAllData = async () => {
         setLoading(true);
@@ -173,9 +182,9 @@ export const MultiProjectTimeEntryForm: React.FC<MultiProjectTimeEntryFormProps>
 
     const handleSubmit = async () => {
         // Validate all forms are complete
-        const incompleteForms = projectForms.filter(f => !f.projectId || !f.taskId || !f.description || f.description.length < 10);
+        const incompleteForms = projectForms.filter(f => !f.projectId || !f.taskId || !f.description);
         if (incompleteForms.length > 0) {
-            setError('נא למלא את כל השדות בכל הפרויקטים (כולל תיאור של לפחות 10 תווים)');
+            setError('נא למלא את כל השדות בכל הפרויקטים (כולל תיאור עבודה)');
             return;
         }
 
@@ -223,7 +232,7 @@ export const MultiProjectTimeEntryForm: React.FC<MultiProjectTimeEntryFormProps>
         <Dialog
             open={open}
             onOpenChange={onOpenChange}
-            title="דיווח ידני"
+            title={isTimeLocked ? "עצירת שעון ודיווח" : "דיווח ידני"}
             className="multi-project-form-dialog"
         >
             <div className="multi-project-form">
@@ -347,6 +356,8 @@ export const MultiProjectTimeEntryForm: React.FC<MultiProjectTimeEntryFormProps>
                             type="time"
                             value={startTime}
                             onChange={(e) => setStartTime(e.target.value)}
+                            disabled={isTimeLocked}
+                            style={isTimeLocked ? { backgroundColor: '#f3f4f6', cursor: 'not-allowed' } : {}}
                         />
                     </div>
                     <div className="multi-project-form__field">
@@ -355,6 +366,8 @@ export const MultiProjectTimeEntryForm: React.FC<MultiProjectTimeEntryFormProps>
                             type="time"
                             value={endTime}
                             onChange={(e) => setEndTime(e.target.value)}
+                            disabled={isTimeLocked}
+                            style={isTimeLocked ? { backgroundColor: '#f3f4f6', cursor: 'not-allowed' } : {}}
                         />
                     </div>
                 </div>
@@ -373,7 +386,7 @@ export const MultiProjectTimeEntryForm: React.FC<MultiProjectTimeEntryFormProps>
                         disabled={isSubmitting}
                         type="button"
                     >
-                        {isSubmitting ? 'שומר...' : 'סגירה'}
+                        {isSubmitting ? 'שומר...' : 'שמירה'}
                     </Button>
                 </div>
             </div>

@@ -22,7 +22,6 @@ export const stopTimerSchema = z.object({
     }),
     description: z
         .string()
-        .min(10, 'Description must be at least 10 characters')
         .max(500, 'Description must be at most 500 characters'),
 });
 
