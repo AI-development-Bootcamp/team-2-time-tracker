@@ -7,6 +7,17 @@
     overflow-y: auto;
 }
 
+/* Tab switcher section */
+.multi-project-form__tabs {
+    margin-bottom: 8px;
+}
+
+/* Absence form wrapper */
+.multi-project-form__absence-wrapper {
+    /* AbsenceForm handles its own styling */
+    margin-top: 8px;
+}
+
 .multi-project-form__date {
     padding: 8px 12px;
     background-color: #f3f4f6;

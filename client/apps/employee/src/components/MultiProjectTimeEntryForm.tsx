@@ -16,8 +16,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { selectorsApi } from '@client/api-client';
-import { ClientSelectorDto, ProjectSelectorDto, TaskSelectorDto, WorkLocation, CreateTimeEntryInput, TimeEntryDto } from '@shared/types';
-import { Dialog, Button } from '@client/ui';
+import { ClientSelectorDto, ProjectSelectorDto, TaskSelectorDto, WorkLocation, CreateTimeEntryInput, TimeEntryDto, AbsenceType, CreateAbsenceRequestDto } from '@shared/types';
+import { Dialog, Button, AbsenceForm, AbsenceFormData, TabList, useToast } from '@client/ui';
+import { useCreateAbsence, useUploadDocument } from '../api/absencesApi';
 import './MultiProjectTimeEntryForm.css';
 
 /**
@@ -68,6 +69,9 @@ export const MultiProjectTimeEntryForm: React.FC<MultiProjectTimeEntryFormProps>
     onOpenChange,
     onSubmit,
 }) => {
+    // Dialog mode: 'time-entry' or 'absence'
+    const [dialogMode, setDialogMode] = useState<'time-entry' | 'absence'>('time-entry');
+    
     const [currentDate, setCurrentDate] = useState<string>(new Date().toISOString().split('T')[0]);
     const [startTime, setStartTime] = useState('09:00');
     const [endTime, setEndTime] = useState('15:00');
@@ -84,11 +88,46 @@ export const MultiProjectTimeEntryForm: React.FC<MultiProjectTimeEntryFormProps>
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
+    // Absence-specific state
+    const [uploadProgress, setUploadProgress] = useState(0);
+    const [isUploading, setIsUploading] = useState(false);
+    const [absenceError, setAbsenceError] = useState<string | null>(null);
+
+    const toast = useToast();
+
+    // Setup absence mutations
+    const createAbsenceMutation = useCreateAbsence({
+        onSuccess: (absence) => {
+            console.log('Absence created:', absence);
+        },
+        onError: (error) => {
+            const errorMessage = typeof error === 'string' ? error : 'שגיאה בשמירת הדיווח';
+            setAbsenceError(errorMessage);
+            toast.error(errorMessage);
+        },
+    });
+
+    const uploadDocumentMutation = useUploadDocument({
+        onProgress: (progress) => {
+            setUploadProgress(progress);
+        },
+        onSuccess: (document) => {
+            console.log('Document uploaded:', document);
+        },
+        onError: (error) => {
+            const errorMessage = typeof error === 'string' ? error : 'שגיאה בהעלאת המסמך';
+            toast.error(errorMessage);
+        },
+    });
+
     const resetForm = () => {
         setProjectForms([{ id: '1', projectId: '', taskId: '', location: WorkLocation.OFFICE, description: '' }]);
         setStartTime('09:00');
         setEndTime('15:00');
         setError(null);
+        setAbsenceError(null);
+        setUploadProgress(0);
+        setIsUploading(false);
     };
 
     // Fetch all data when modal opens
@@ -250,6 +289,116 @@ export const MultiProjectTimeEntryForm: React.FC<MultiProjectTimeEntryFormProps>
         }
     };
 
+    /**
+     * Handle absence form submission
+     */
+    const handleAbsenceSubmit = async (data: AbsenceFormData, file?: File) => {
+        setIsSubmitting(true);
+        setAbsenceError(null);
+
+        try {
+            // Map form data to API DTO
+            const absenceData = mapAbsenceFormDataToDto(data);
+
+            // Create absence request
+            const createdAbsence = await createAbsenceMutation.mutateAsync(absenceData);
+
+            // If file is provided, upload it
+            let fileUploadSuccess = true;
+            if (file && createdAbsence.id) {
+                try {
+                    setIsUploading(true);
+                    await uploadDocumentMutation.mutateAsync({
+                        absenceId: createdAbsence.id,
+                        file,
+                    });
+                } catch (uploadErr) {
+                    // File upload failed, but absence was created
+                    fileUploadSuccess = false;
+                    const errorMessage = typeof uploadErr === 'string' ? uploadErr : 'שגיאה בהעלאת הקובץ';
+                    console.error('Error uploading file:', uploadErr);
+                    
+                    // Show warning that absence was saved but file upload failed
+                    toast.warning(`הדיווח נשמר, אך העלאת הקובץ נכשלה: ${errorMessage}`);
+                }
+            }
+
+            // Success - show notification and close dialog
+            if (fileUploadSuccess) {
+                toast.success('הדיווח נשמר בהצלחה!');
+            }
+
+            // Close dialog and reset form
+            setTimeout(() => {
+                onOpenChange(false);
+                resetForm();
+            }, 1500);
+        } catch (err) {
+            // Error handling is done in mutation callbacks
+            console.error('Error submitting absence:', err);
+        } finally {
+            setIsSubmitting(false);
+            setIsUploading(false);
+        }
+    };
+
+    /**
+     * Maps AbsenceFormData to CreateAbsenceRequestDto
+     */
+    const mapAbsenceFormDataToDto = (data: AbsenceFormData): CreateAbsenceRequestDto => {
+        // Determine absence type and isHalfDay
+        let type: AbsenceType = AbsenceType.VACATION;
+        let isHalfDay = false;
+
+        if (data.absenceType) {
+            if (data.absenceType === 'VACATION_HALF') {
+                type = AbsenceType.VACATION;
+                isHalfDay = true;
+            } else if (data.absenceType === 'VACATION_FULL') {
+                type = AbsenceType.VACATION;
+                isHalfDay = false;
+            } else if (data.absenceType === 'SICK') {
+                type = AbsenceType.SICK;
+                isHalfDay = false;
+            } else if (data.absenceType === 'RESERVES') {
+                type = AbsenceType.RESERVES;
+                isHalfDay = false;
+            }
+        }
+
+        // Format dates as YYYY-MM-DD (backend expects this format)
+        const formatDate = (date: Date): string => {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        };
+
+        // Handle single date mode
+        if (data.dateMode === 'single' && data.singleDate) {
+            return {
+                type,
+                startDate: formatDate(data.singleDate),
+                endDate: formatDate(data.singleDate),
+                isHalfDay,
+                note: data.note,
+            };
+        }
+
+        // Handle range mode
+        if (data.dateMode === 'range' && data.dateRange?.from && data.dateRange?.to) {
+            return {
+                type,
+                startDate: formatDate(data.dateRange.from),
+                endDate: formatDate(data.dateRange.to),
+                isHalfDay: false, // Range mode is never half day
+                note: data.note,
+            };
+        }
+
+        throw new Error('Invalid absence form data');
+    };
+
     if (loading) {
         return (
             <Dialog
@@ -263,23 +412,49 @@ export const MultiProjectTimeEntryForm: React.FC<MultiProjectTimeEntryFormProps>
         );
     }
 
+    // Tab configuration
+    const dialogTabs = [
+        { value: 'time-entry', label: 'דיווח שעות' },
+        { value: 'absence', label: 'דיווח היעדרות' },
+    ];
+
+    // Determine dialog title based on mode
+    const getDialogTitle = () => {
+        if (dialogMode === 'absence') {
+            return 'דיווח היעדרות';
+        }
+        return isTimeLocked ? "עצירת שעון ודיווח" : "דיווח ידני";
+    };
+
     return (
         <Dialog
             open={open}
             onOpenChange={onOpenChange}
-            title={isTimeLocked ? "עצירת שעון ודיווח" : "דיווח ידני"}
+            title={getDialogTitle()}
             className="multi-project-form-dialog"
         >
             <div className="multi-project-form">
-                {/* Date display */}
-                <div className="multi-project-form__date">
-                    {new Date(currentDate).toLocaleDateString('he-IL', {
-                        weekday: 'long',
-                        day: '2-digit',
-                        month: '2-digit',
-                        year: '2-digit'
-                    })}
+                {/* Tab Switcher */}
+                <div className="multi-project-form__tabs">
+                    <TabList
+                        tabs={dialogTabs}
+                        value={dialogMode}
+                        onChange={(value) => setDialogMode(value as 'time-entry' | 'absence')}
+                    />
                 </div>
+
+                {/* Time Entry Mode Content */}
+                {dialogMode === 'time-entry' && (
+                    <>
+                        {/* Date display */}
+                        <div className="multi-project-form__date">
+                            {new Date(currentDate).toLocaleDateString('he-IL', {
+                                weekday: 'long',
+                                day: '2-digit',
+                                month: '2-digit',
+                                year: '2-digit'
+                            })}
+                        </div>
 
                 {/* Project forms */}
                 <div className="multi-project-form__entries">
@@ -424,6 +599,22 @@ export const MultiProjectTimeEntryForm: React.FC<MultiProjectTimeEntryFormProps>
                         {isSubmitting ? 'שומר...' : 'שמירה'}
                     </Button>
                 </div>
+                    </>
+                )}
+
+                {/* Absence Mode Content */}
+                {dialogMode === 'absence' && (
+                    <div className="multi-project-form__absence-wrapper">
+                        <AbsenceForm
+                            onSubmit={handleAbsenceSubmit}
+                            isLoading={isSubmitting}
+                            error={absenceError || undefined}
+                            uploadProgress={uploadProgress}
+                            isUploading={isUploading}
+                            defaultValues={{ dateMode: 'single' }}
+                        />
+                    </div>
+                )}
             </div>
         </Dialog>
     );

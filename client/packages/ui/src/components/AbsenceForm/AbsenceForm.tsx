@@ -7,7 +7,6 @@ import { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { TabList } from '../Tabs/Tabs';
 import { Select, SelectOption } from '../Select/Select';
 import { DatePicker } from '../DatePicker/DatePicker';
 import { Button } from '../Button/Button';
@@ -22,11 +21,7 @@ const ABSENCE_TYPE_OPTIONS: SelectOption[] = [
     { value: 'RESERVES', label: 'מילואים', emoji: '🚨' },
 ];
 
-/** Date mode tabs */
-const DATE_MODE_TABS = [
-    { value: 'range', label: 'דיווח עבודה' },
-    { value: 'single', label: 'דיווח היעדרות' },
-];
+
 
 /** Zod schema for absence form validation */
 const absenceFormSchema = z.object({
@@ -185,14 +180,7 @@ export function AbsenceForm({
 
     return (
         <form className={classNames} onSubmit={handleSubmit(handleFormSubmit)} noValidate>
-            {/* Tab Switcher */}
-            <div className="absence-form__tabs">
-                <TabList
-                    tabs={DATE_MODE_TABS}
-                    value={dateMode}
-                    onChange={handleDateModeChange}
-                />
-            </div>
+
 
             {/* Date Range Fields (for work report - range mode) */}
             {dateMode === 'range' && (

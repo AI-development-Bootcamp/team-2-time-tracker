@@ -141,11 +141,6 @@ export async function createTimeEntry(
 
     // ENTRY_EXIT validation
     if (task.project.reportType === 'ENTRY_EXIT') {
-        // Validate duration is within 540 ± 5 minutes (535-545)
-        if (durationMinutes < 535 || durationMinutes > 545) {
-            throw new BadRequestError('ENTRY_EXIT entries must be between 535-545 minutes (540 ± 5 min tolerance)');
-        }
-
         // Check if an entry already exists for this project on this date
         const existingEntry = await prisma.timeEntry.findFirst({
             where: {
@@ -345,11 +340,6 @@ export async function updateTimeEntry(
 
     // ENTRY_EXIT validation
     if (task.project.reportType === 'ENTRY_EXIT') {
-        // Validate duration is within 540 ± 5 minutes (535-545)
-        if (newDurationMinutes < 535 || newDurationMinutes > 545) {
-            throw new BadRequestError('ENTRY_EXIT entries must be between 535-545 minutes (540 ± 5 min tolerance)');
-        }
-
         // If taskId is changing, check no other entry exists for the new project on this date
         if (updateData.taskId && updateData.taskId !== existingEntry.taskId) {
             const existingProjectEntry = await prisma.timeEntry.findFirst({
@@ -617,13 +607,6 @@ export async function batchCreateTimeEntries(
     for (const entry of entries) {
         const task = taskMap.get(entry.taskId);
         if (task.project.reportType === 'ENTRY_EXIT') {
-            const durationMinutes = calculateDuration(entry.startTime, entry.endTime);
-
-            // Validate duration
-            if (durationMinutes < 535 || durationMinutes > 545) {
-                throw new BadRequestError(`ENTRY_EXIT entry for task '${task.name}' must be between 535-545 minutes`);
-            }
-
             // Check duplicates within batch
             if (entryExitProjectsInBatch.has(task.projectId)) {
                 throw new BadRequestError(`Batch contains multiple entries for ENTRY_EXIT project '${task.project.name}'. Only one allowed per day.`);

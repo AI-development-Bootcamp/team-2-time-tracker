@@ -38,13 +38,13 @@ interface AbsenceState {
     resetForm: () => void;
 
     // Actions for creating absence
-    // These actions can be called from TanStack Query mutation hooks (see task 2.10)
+    // These actions can be called from TanStack Query mutation hooks 
     setCreateAbsenceLoading: (isLoading: boolean) => void;
     setCreateAbsenceError: (error: string | null) => void;
     setCreateAbsenceSuccess: () => void; // Reset form and clear state on success
 
     // Actions for uploading document
-    // These actions can be called from TanStack Query mutation hooks (see task 2.10)
+    // These actions can be called from TanStack Query mutation hooks
     setUploadProgress: (progress: number) => void;
     setUploading: (isUploading: boolean) => void;
     setUploadError: (error: string | null) => void;
@@ -72,7 +72,7 @@ const initialState = {
  * Zustand store for absence form state management
  * @description Manages form state for absence reporting with integration points for TanStack Query
  * 
- * Integration with TanStack Query (task 2.10):
+ * Integration with TanStack Query
  * - TanStack Query mutation hooks (useCreateAbsence, useUploadDocument) will call store setters
  * - Store manages local form state (dates, type, document, loading, errors)
  * - API calls are handled by TanStack Query hooks, which update store state via setters
@@ -81,7 +81,7 @@ const initialState = {
  * ```tsx
  * // In a component using TanStack Query hook:
  * const { formMode, setFormMode, setCreateAbsenceLoading } = useAbsenceStore();
- * const createMutation = useCreateAbsence(); // From task 2.10
+ * const createMutation = useCreateAbsence(); 
  * 
  * // TanStack Query mutation will call store setters:
  * createMutation.mutate(data, {

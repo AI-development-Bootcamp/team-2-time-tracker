@@ -26,29 +26,33 @@ const queryClient = new QueryClient({
 
 function App() {
     return (
-        <div className="mobile-simulation-root">
-            <div className="mobile-simulation-frame">
-                <ToastProvider>
-                    <BrowserRouter>
-                        <Routes>
-                            <Route path="/login" element={<LoginPage />} />
+        <QueryClientProvider client={queryClient}>
+            <div className="mobile-simulation-root">
+                <div className="mobile-simulation-frame">
+                    <ToastProvider>
+                        <BrowserRouter>
+                            <Routes>
+                                <Route path="/login" element={<LoginPage />} />
 
-                            <Route element={<ProtectedRoute />}>
-                                <Route element={<Layout />}>
-                                    <Route path="/" element={<DailyReportPage />} />
-                                    <Route path="/history" element={<TimeEntryHistoryPage />} />
-                                    <Route path="/change-password" element={<ChangePasswordPage />} />
-                                    {/* Add more protected routes here */}
+                                <Route element={<ProtectedRoute />}>
+                                    <Route element={<Layout />}>
+                                        <Route path="/" element={<DailyReportPage />} />
+                                        <Route path="/history" element={<TimeEntryHistoryPage />} />
+                                        <Route path="/change-password" element={<ChangePasswordPage />} />
+                                        <Route path="/absence" element={<AbsencePage />} />
+                                        <Route path="/absence-range" element={<AbsenceRangePage />} />
+                                        {/* Add more protected routes here */}
+                                    </Route>
                                 </Route>
-                            </Route>
 
-                            {/* Fallback route */}
-                            <Route path="*" element={<Navigate to="/" replace />} />
-                        </Routes>
-                    </BrowserRouter>
-                </ToastProvider>
+                                {/* Fallback route */}
+                                <Route path="*" element={<Navigate to="/" replace />} />
+                            </Routes>
+                        </BrowserRouter>
+                    </ToastProvider>
+                </div>
             </div>
-        </div>
+        </QueryClientProvider>
     );
 }
 

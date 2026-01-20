@@ -17,6 +17,7 @@ export interface DayData {
 /**
  * DailyReportPage Component
  * Main dashboard for daily time tracking and reporting
+ * react.fc is like saying it expects a function component
  */
 export const DailyReportPage: React.FC = () => {
     // State
@@ -53,7 +54,8 @@ export const DailyReportPage: React.FC = () => {
             const date = new Date(today);
             date.setDate(date.getDate() - i);
             const dateStr = date.toISOString().split('T')[0];
-
+            //maybe create an api call that returns all workdays for a range of dates?
+            //ask oz tmrw
             try {
                 const workday = await workdayApi.getWorkday(dateStr);
                 const entries = workday.data?.timeEntries || [];
@@ -92,6 +94,7 @@ export const DailyReportPage: React.FC = () => {
         }
     }, [timerError, clearError]);
 
+    //format time to hh:mm look
     const formatTime = (date: Date): string => {
         const hours = date.getHours().toString().padStart(2, '0');
         const minutes = date.getMinutes().toString().padStart(2, '0');
@@ -126,7 +129,6 @@ export const DailyReportPage: React.FC = () => {
 
     const handleAddEntry = (date: string) => {
         // Open the manual report form with pre-filled date
-        console.log('Add entry for date:', date);
         setSelectedDate(date);
         setEditingEntry(null);
         setTimerTimes(null);
