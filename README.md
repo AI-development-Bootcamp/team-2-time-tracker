@@ -120,6 +120,8 @@ Once the server is running, access the Swagger documentation at:
 
 ## Scripts
 
+TypeScript build info files (`*.tsbuildinfo`) are generated artifacts. Recreate them with `tsc --build` when needed.
+
 ### Server
 
 - `pnpm dev` - Start development server with hot reload
@@ -147,6 +149,7 @@ Once the server is running, access the Swagger documentation at:
 - bcrypt password hashing
 - Zod validation
 - Winston logging
+- Vitest (testing)
 
 ### Frontend
 - React 18
@@ -157,6 +160,14 @@ Once the server is running, access the Swagger documentation at:
 - TanStack Query
 - Radix UI (components)
 - react-hook-form + Zod
+- Vitest (unit tests)
+
+### CI/CD
+- GitHub Actions
+- PostgreSQL service containers
+- Automated testing (unit tests)
+- Code coverage reporting (Codecov)
+- PR checks (semantic titles, security, code quality)
 
 ## Testing
 
@@ -167,7 +178,7 @@ pnpm test              # Run all tests
 pnpm test:coverage     # Run with coverage report
 ```
 
-### Frontend Tests
+### Frontend Unit Tests
 ```bash
 cd client/apps/employee
 pnpm test
@@ -204,6 +215,14 @@ The frontend uses a monorepo structure with shared packages:
 - `@client/ui` - Reusable UI components
 - `@client/api-client` - API client and hooks
 - `@client/utils` - Shared utilities
+
+## Dependency Notes
+
+### pnpm Overrides
+
+The `pnpm.overrides` in `package.json` contains:
+
+- **hono**: Pinned to `^4.11.4` to resolve compatibility issues with the @hono/zod-validator package. Newer versions introduced breaking changes in middleware typing that affect request validation.
 
 ## License
 
