@@ -9,21 +9,59 @@ import { EntityStatus, ReportType } from '@prisma/client';
 import { prisma } from '../../../db';
 
 /**
- * @description Retrieves all projects with optional client filter.
+ * Transform nested Prisma project data to include flat assignedUsers array
+ */
+function transformProjectWithAssignedUsers(project: any) {
+    const assignedUsersMap = new Map<string, { id: string; fullName: string; email: string }>();
+
+    // Extract unique users from nested task assignments
+    if (project.tasks) {
+        for (const task of project.tasks) {
+            if (task.assignments) {
+                for (const assignment of task.assignments) {
+                    if (assignment.user) {
+                        assignedUsersMap.set(assignment.user.id, {
+                            id: assignment.user.id,
+                            fullName: assignment.user.fullName,
+                            email: assignment.user.email,
+                        });
+                    }
+                }
+            }
+        }
+    }
+
+    // Convert map to array
+    const assignedUsers = Array.from(assignedUsersMap.values());
+
+    // Remove tasks from the response (we only needed them for assignedUsers)
+    const { tasks, ...projectWithoutTasks } = project;
+
+    return {
+        ...projectWithoutTasks,
+        assignedUsers,
+    };
+}
+
+/**
+ * @description Retrieves all projects with optional filters.
  * @param {string} [clientId] - Optional client ID to filter by
- * @returns {Promise<Array>} Projects list
+ * @param {string} [userId] - Optional user ID to filter by (returns projects where user is assigned)
+ * @returns {Promise<Array>} Projects list with assignedUsers array
  * @example
  * const projects = await listProjects();
  * const clientProjects = await listProjects('client-uuid');
+ * const userProjects = await listProjects(undefined, 'user-uuid');
  */
-export async function listProjects(clientId?: string) {
-    return projectsRepo.findAllProjects(clientId);
+export async function listProjects(clientId?: string, userId?: string) {
+    const projects = await projectsRepo.findAllProjects(clientId, userId);
+    return projects.map(transformProjectWithAssignedUsers);
 }
 
 /**
  * @description Retrieves a single project by ID.
  * @param {string} id - Project's UUID
- * @returns {Promise<Object>} Project data
+ * @returns {Promise<Object>} Project data with assignedUsers array
  * @throws {NotFoundError} When project with given ID doesn't exist
  * @example
  * const project = await getProjectById('123e4567-e89b-12d3-a456-426614174000');
@@ -33,7 +71,25 @@ export async function getProjectById(id: string) {
     if (!project) {
         throw new NotFoundError('Project not found');
     }
-    return project;
+    return transformProjectWithAssignedUsers(project);
+}
+
+/**
+ * @description Retrieves all users assigned to a project (via task assignments).
+ * @param {string} projectId - Project's UUID
+ * @returns {Promise<Array>} Array of assigned users with id, fullName, and email
+ * @throws {NotFoundError} When project with given ID doesn't exist
+ * @example
+ * const users = await getProjectUsers('123e4567-e89b-12d3-a456-426614174000');
+ */
+export async function getProjectUsers(projectId: string) {
+    // Verify project exists
+    const project = await projectsRepo.findProjectById(projectId);
+    if (!project) {
+        throw new NotFoundError('Project not found');
+    }
+
+    return projectsRepo.findProjectUsers(projectId);
 }
 
 /**
@@ -87,13 +143,14 @@ export async function createProject(data: {
         throw new ValidationError('End date must be greater than or equal to start date', 'VALIDATION_DATE_RANGE');
     }
 
-    return projectsRepo.createProject({
+    const project = await projectsRepo.createProject({
         name: data.name,
         clientId: data.clientId,
         reportType: data.reportType,
         startDate,
         endDate,
     });
+    return transformProjectWithAssignedUsers(project);
 }
 
 /**
@@ -184,12 +241,13 @@ export async function updateProject(
         }
     }
 
-    return projectsRepo.updateProject(id, {
+    const updatedProject = await projectsRepo.updateProject(id, {
         name: data.name,
         clientId: data.clientId,
         startDate,
         endDate,
     });
+    return transformProjectWithAssignedUsers(updatedProject);
 }
 
 /**
@@ -207,7 +265,8 @@ export async function updateProjectStatus(id: string, status: EntityStatus) {
         throw new NotFoundError('Project not found');
     }
 
-    return projectsRepo.updateProjectStatus(id, status);
+    const updatedProject = await projectsRepo.updateProjectStatus(id, status);
+    return transformProjectWithAssignedUsers(updatedProject);
 }
 
 /**
