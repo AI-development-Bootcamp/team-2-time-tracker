@@ -124,7 +124,7 @@ export const TimeEntryList: React.FC<TimeEntryListProps> = ({
                                                     onClick={() => onEdit(entry)}
                                                     aria-label="ערוך"
                                                 >
-                                                    ערוכה
+                                                    עריכה
                                                 </button>
                                                 <div className="time-entry-item__time-range">
                                                     {entry.startTime}-{entry.endTime}
