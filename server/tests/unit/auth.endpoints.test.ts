@@ -2,48 +2,22 @@
  * @fileoverview Unit tests for auth endpoints with mocks
  */
 
-import { describe, it, expect, vi, beforeEach, beforeAll, type Mock } from 'vitest';
+import { describe, it, expect, vi, beforeEach, beforeAll } from 'vitest';
 import express, { Express } from 'express';
 import request from 'supertest';
-// Define mock delegate types for type-safe mocking
-type MockUserDelegate = {
-    findUnique: Mock;
-    findMany: Mock;
-    create: Mock;
-    update: Mock;
-    updateMany: Mock;
-    delete: Mock;
-    count: Mock;
-};
+import type {
+    MockUserDelegate,
+    MockRefreshTokenDelegate,
+    MockTimeEntryDelegate,
+    MockPrismaClient,
+    MockBcrypt,
+} from '../helpers/mockPrisma';
 
-type MockRefreshTokenDelegate = {
-    create: Mock;
-    findFirst: Mock;
-    findUnique: Mock;
-    updateMany: Mock;
-    delete: Mock;
-};
-
-type MockTimeEntryDelegate = {
-    findMany: Mock;
-    findUnique: Mock;
-    create: Mock;
-    update: Mock;
-    delete: Mock;
-};
-
-type MockPrismaClient = {
-    user: MockUserDelegate;
-    refreshToken: MockRefreshTokenDelegate;
-    timeEntry: MockTimeEntryDelegate;
-    $connect: Mock;
-    $disconnect: Mock;
-    $transaction: Mock<(callback: (prisma: MockPrismaClient) => unknown) => unknown>;
-};
-
-// Use vi.hoisted to define all mocks that vi.mock needs to reference
+// Use vi.hoisted to define all mocks that vi.mock needs to reference.
+// Factory function is inlined here because vi.hoisted runs before imports are resolved.
+// Types are shared from helpers/mockPrisma.ts to maintain consistency.
 const { mockBcrypt, mockPrismaUser, mockPrismaRefreshToken, mockPrisma } = vi.hoisted(() => {
-    const mockBcrypt = {
+    const mockBcrypt: MockBcrypt = {
         compare: vi.fn(),
         hash: vi.fn(),
     };
