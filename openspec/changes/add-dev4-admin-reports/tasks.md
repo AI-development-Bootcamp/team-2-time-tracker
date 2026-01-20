@@ -3,13 +3,13 @@
 ## 1. Database Schema
 
 ### 1.1 Prisma Models
-- [ ] 1.1.1 Add Client model to `prisma/schema.prisma`
-- [ ] 1.1.2 Add Project model with reportType field
-- [ ] 1.1.3 Add Task model
-- [ ] 1.1.4 Add TaskAssignment model
-- [ ] 1.1.5 Add MonthLock model
-- [ ] 1.1.6 Create migration for all admin-related tables
-- [ ] 1.1.7 Add necessary indexes for query optimization
+- [x] 1.1.1 Add Client model to `prisma/schema.prisma`
+- [x] 1.1.2 Add Project model with reportType field
+- [x] 1.1.3 Add Task model
+- [x] 1.1.4 Add TaskAssignment model
+- [x] 1.1.5 Add MonthLock model
+- [x] 1.1.6 Create migration for all admin-related tables
+- [x] 1.1.7 Add necessary indexes for query optimization
 
 ## 2. Admin Users Module
 
@@ -150,16 +150,16 @@
 ## 7. Shared DTOs & Types
 
 ### 7.1 Admin DTOs
-- [ ] 7.1.1 Create `admin-users.dto.ts` in `shared/types/src/dtos/`
-- [ ] 7.1.2 Create `admin-entities.dto.ts` in `shared/types/src/dtos/`
-- [ ] 7.1.3 Create `admin-assignments.dto.ts` in `shared/types/src/dtos/`
-- [ ] 7.1.4 Create `admin-reports.dto.ts` in `shared/types/src/dtos/`
-- [ ] 7.1.5 Create `month-locks.dto.ts` in `shared/types/src/dtos/`
-- [ ] 7.1.6 Export all DTOs from `shared/types/src/index.ts`
+- [x] 7.1.1 Create `admin-users.dto.ts` in `shared/types/src/dtos/`
+- [x] 7.1.2 Create `admin-entities.dto.ts` in `shared/types/src/dtos/`
+- [x] 7.1.3 Create `admin-assignments.dto.ts` in `shared/types/src/dtos/`
+- [x] 7.1.4 Create `admin-reports.dto.ts` in `shared/types/src/dtos/`
+- [x] 7.1.5 Create `month-locks.dto.ts` in `shared/types/src/dtos/`
+- [x] 7.1.6 Export all DTOs from `shared/types/src/index.ts`
 
 ### 7.2 Zod Schemas
-- [ ] 7.2.1 Create validation schemas for all admin DTOs
-- [ ] 7.2.2 Add schemas to `shared/types/src/zod/` directory
+- [x] 7.2.1 Create validation schemas for all admin DTOs
+- [x] 7.2.2 Add schemas to `shared/types/src/zod/` directory
 
 ## 8. Frontend Admin App Setup
 
