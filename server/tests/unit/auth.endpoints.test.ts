@@ -5,24 +5,16 @@
 import { describe, it, expect, vi, beforeEach, beforeAll } from 'vitest';
 import express, { Express } from 'express';
 import request from 'supertest';
-import type {
-    MockUserDelegate,
-    MockRefreshTokenDelegate,
-    MockTimeEntryDelegate,
-    MockPrismaClient,
-    MockBcrypt,
-} from '../helpers/mockPrisma';
 
 // Use vi.hoisted to define all mocks that vi.mock needs to reference.
 // Factory function is inlined here because vi.hoisted runs before imports are resolved.
-// Types are shared from helpers/mockPrisma.ts to maintain consistency.
 const { mockBcrypt, mockPrismaUser, mockPrismaRefreshToken, mockPrisma } = vi.hoisted(() => {
-    const mockBcrypt: MockBcrypt = {
+    const mockBcrypt = {
         compare: vi.fn(),
         hash: vi.fn(),
     };
 
-    const mockPrismaUser: MockUserDelegate = {
+    const mockPrismaUser = {
         findUnique: vi.fn(),
         findMany: vi.fn(),
         create: vi.fn(),
@@ -32,7 +24,7 @@ const { mockBcrypt, mockPrismaUser, mockPrismaRefreshToken, mockPrisma } = vi.ho
         count: vi.fn(),
     };
 
-    const mockPrismaRefreshToken: MockRefreshTokenDelegate = {
+    const mockPrismaRefreshToken = {
         create: vi.fn(),
         findFirst: vi.fn(),
         findUnique: vi.fn(),
@@ -40,7 +32,7 @@ const { mockBcrypt, mockPrismaUser, mockPrismaRefreshToken, mockPrisma } = vi.ho
         delete: vi.fn(),
     };
 
-    const mockPrismaTimeEntry: MockTimeEntryDelegate = {
+    const mockPrismaTimeEntry = {
         findMany: vi.fn(),
         findUnique: vi.fn(),
         create: vi.fn(),
@@ -48,13 +40,13 @@ const { mockBcrypt, mockPrismaUser, mockPrismaRefreshToken, mockPrisma } = vi.ho
         delete: vi.fn(),
     };
 
-    const mockPrisma: MockPrismaClient = {
+    const mockPrisma = {
         user: mockPrismaUser,
         refreshToken: mockPrismaRefreshToken,
         timeEntry: mockPrismaTimeEntry,
         $connect: vi.fn(),
         $disconnect: vi.fn(),
-        $transaction: vi.fn((callback: (prisma: MockPrismaClient) => unknown) => callback(mockPrisma)),
+        $transaction: vi.fn((callback: (prisma: typeof mockPrisma) => unknown) => callback(mockPrisma)),
     };
 
     return { mockBcrypt, mockPrismaUser, mockPrismaRefreshToken, mockPrisma };

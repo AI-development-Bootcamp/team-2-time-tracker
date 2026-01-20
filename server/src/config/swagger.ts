@@ -21,6 +21,9 @@ const options: swaggerJsdoc.Options = {
         tags: [
             { name: 'Auth', description: 'Authentication endpoints' },
             { name: 'Admin - Users', description: 'Admin user management endpoints' },
+            { name: 'Admin - Clients', description: 'Admin client management endpoints' },
+            { name: 'Admin - Projects', description: 'Admin project management endpoints' },
+            { name: 'Admin - Tasks', description: 'Admin task management endpoints' },
             { name: 'Health', description: 'Health check endpoints' },
         ],
         components: {
@@ -131,6 +134,238 @@ const options: swaggerJsdoc.Options = {
                         status: { type: 'string', example: 'ok' },
                         timestamp: { type: 'string', format: 'date-time' },
                         version: { type: 'string', example: '1.0.0' },
+                    },
+                },
+                // Entity Status Enum
+                EntityStatus: {
+                    type: 'string',
+                    enum: ['ACTIVE', 'INACTIVE'],
+                    description: 'Status for clients and projects',
+                },
+                // Task Status Enum
+                TaskStatus: {
+                    type: 'string',
+                    enum: ['OPEN', 'CLOSED'],
+                    description: 'Status for tasks',
+                },
+                // Report Type Enum
+                ReportType: {
+                    type: 'string',
+                    enum: ['TOTAL_HOURS', 'ENTRY_EXIT'],
+                    description: 'Project report type',
+                },
+                // Client Schemas
+                ClientDto: {
+                    type: 'object',
+                    properties: {
+                        id: { type: 'string', format: 'uuid', example: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890' },
+                        name: { type: 'string', example: 'Acme Corporation' },
+                        status: { $ref: '#/components/schemas/EntityStatus' },
+                        createdAt: { type: 'string', format: 'date-time', example: '2026-01-20T10:00:00.000Z' },
+                        updatedAt: { type: 'string', format: 'date-time', example: '2026-01-20T10:00:00.000Z' },
+                    },
+                },
+                CreateClientRequest: {
+                    type: 'object',
+                    required: ['name'],
+                    properties: {
+                        name: { type: 'string', minLength: 1, maxLength: 255, example: 'Acme Corporation' },
+                    },
+                },
+                UpdateClientRequest: {
+                    type: 'object',
+                    required: ['name'],
+                    properties: {
+                        name: { type: 'string', minLength: 1, maxLength: 255, example: 'Acme Corporation' },
+                    },
+                },
+                UpdateClientStatusRequest: {
+                    type: 'object',
+                    required: ['status'],
+                    properties: {
+                        status: { $ref: '#/components/schemas/EntityStatus' },
+                    },
+                },
+                ClientResponse: {
+                    type: 'object',
+                    properties: {
+                        success: { type: 'boolean', example: true },
+                        data: { $ref: '#/components/schemas/ClientDto' },
+                    },
+                },
+                ListClientsResponse: {
+                    type: 'object',
+                    properties: {
+                        success: { type: 'boolean', example: true },
+                        data: {
+                            type: 'array',
+                            items: { $ref: '#/components/schemas/ClientDto' },
+                        },
+                    },
+                },
+                // Project Schemas
+                ProjectDto: {
+                    type: 'object',
+                    properties: {
+                        id: { type: 'string', format: 'uuid', example: 'b2c3d4e5-f6a7-8901-bcde-f12345678901' },
+                        name: { type: 'string', example: 'Website Redesign' },
+                        clientId: { type: 'string', format: 'uuid', example: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890' },
+                        reportType: { $ref: '#/components/schemas/ReportType' },
+                        status: { $ref: '#/components/schemas/EntityStatus' },
+                        startDate: { type: 'string', format: 'date', nullable: true, example: '2026-01-01' },
+                        endDate: { type: 'string', format: 'date', nullable: true, example: '2026-12-31' },
+                        createdAt: { type: 'string', format: 'date-time', example: '2026-01-20T10:00:00.000Z' },
+                        updatedAt: { type: 'string', format: 'date-time', example: '2026-01-20T10:00:00.000Z' },
+                        client: { $ref: '#/components/schemas/ClientDto' },
+                    },
+                },
+                CreateProjectRequest: {
+                    type: 'object',
+                    required: ['name', 'clientId'],
+                    properties: {
+                        name: { type: 'string', minLength: 1, maxLength: 255, example: 'Website Redesign' },
+                        clientId: { type: 'string', format: 'uuid', example: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890' },
+                        reportType: { $ref: '#/components/schemas/ReportType', example: 'TOTAL_HOURS' },
+                        startDate: { type: 'string', format: 'date', nullable: true, example: '2026-01-01', description: 'Project start date (YYYY-MM-DD). Optional.' },
+                        endDate: { type: 'string', format: 'date', nullable: true, example: '2026-12-31', description: 'Project end date (YYYY-MM-DD). Must be >= startDate if both provided. Optional.' },
+                    },
+                },
+                UpdateProjectRequest: {
+                    type: 'object',
+                    properties: {
+                        name: { type: 'string', minLength: 1, maxLength: 255, example: 'Website Redesign' },
+                        clientId: { type: 'string', format: 'uuid', example: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890' },
+                        reportType: { $ref: '#/components/schemas/ReportType' },
+                        startDate: { type: 'string', format: 'date', nullable: true, example: '2026-01-01', description: 'Project start date (YYYY-MM-DD). Optional.' },
+                        endDate: { type: 'string', format: 'date', nullable: true, example: '2026-12-31', description: 'Project end date (YYYY-MM-DD). Must be >= startDate if both provided. Optional.' },
+                    },
+                },
+                UpdateProjectStatusRequest: {
+                    type: 'object',
+                    required: ['status'],
+                    properties: {
+                        status: { $ref: '#/components/schemas/EntityStatus' },
+                    },
+                },
+                UpdateProjectReportTypeRequest: {
+                    type: 'object',
+                    required: ['reportType'],
+                    properties: {
+                        reportType: { $ref: '#/components/schemas/ReportType' },
+                    },
+                },
+                ProjectResponse: {
+                    type: 'object',
+                    properties: {
+                        success: { type: 'boolean', example: true },
+                        data: { $ref: '#/components/schemas/ProjectDto' },
+                    },
+                },
+                ListProjectsResponse: {
+                    type: 'object',
+                    properties: {
+                        success: { type: 'boolean', example: true },
+                        data: {
+                            type: 'array',
+                            items: { $ref: '#/components/schemas/ProjectDto' },
+                        },
+                    },
+                },
+                ConflictingTaskDto: {
+                    type: 'object',
+                    properties: {
+                        id: { type: 'string', format: 'uuid', example: 'c3d4e5f6-a7b8-9012-cdef-123456789012' },
+                        name: { type: 'string', example: 'Task Outside Range' },
+                        startDate: { type: 'string', format: 'date', nullable: true, example: '2025-12-01' },
+                        endDate: { type: 'string', format: 'date', nullable: true, example: '2025-12-31' },
+                    },
+                },
+                ProjectDateValidationError: {
+                    type: 'object',
+                    properties: {
+                        success: { type: 'boolean', example: false },
+                        error: {
+                            type: 'object',
+                            properties: {
+                                code: { type: 'string', example: 'VALIDATION_002' },
+                                message: { type: 'string', example: 'Project date range update would invalidate child tasks' },
+                                conflictingTasks: {
+                                    type: 'array',
+                                    items: { $ref: '#/components/schemas/ConflictingTaskDto' },
+                                },
+                            },
+                        },
+                    },
+                },
+                // Task Schemas
+                TaskDto: {
+                    type: 'object',
+                    properties: {
+                        id: { type: 'string', format: 'uuid', example: 'c3d4e5f6-a7b8-9012-cdef-123456789012' },
+                        name: { type: 'string', example: 'Design Homepage' },
+                        projectId: { type: 'string', format: 'uuid', example: 'b2c3d4e5-f6a7-8901-bcde-f12345678901' },
+                        status: { $ref: '#/components/schemas/TaskStatus' },
+                        startDate: { type: 'string', format: 'date', nullable: true, example: '2026-02-01' },
+                        endDate: { type: 'string', format: 'date', nullable: true, example: '2026-02-15' },
+                        createdAt: { type: 'string', format: 'date-time', example: '2026-01-20T10:00:00.000Z' },
+                        updatedAt: { type: 'string', format: 'date-time', example: '2026-01-20T10:00:00.000Z' },
+                        project: { $ref: '#/components/schemas/ProjectDto' },
+                    },
+                },
+                CreateTaskRequest: {
+                    type: 'object',
+                    required: ['name', 'projectId'],
+                    properties: {
+                        name: { type: 'string', minLength: 1, maxLength: 255, example: 'Design Homepage' },
+                        projectId: { type: 'string', format: 'uuid', example: 'b2c3d4e5-f6a7-8901-bcde-f12345678901' },
+                        startDate: { type: 'string', format: 'date', nullable: true, example: '2026-02-01', description: 'Task start date (YYYY-MM-DD). Must be within parent project date range if project dates are set. Optional.' },
+                        endDate: { type: 'string', format: 'date', nullable: true, example: '2026-02-15', description: 'Task end date (YYYY-MM-DD). Must be >= startDate and within parent project date range if project dates are set. Optional.' },
+                    },
+                },
+                UpdateTaskRequest: {
+                    type: 'object',
+                    properties: {
+                        name: { type: 'string', minLength: 1, maxLength: 255, example: 'Design Homepage' },
+                        projectId: { type: 'string', format: 'uuid', example: 'b2c3d4e5-f6a7-8901-bcde-f12345678901' },
+                        startDate: { type: 'string', format: 'date', nullable: true, example: '2026-02-01', description: 'Task start date (YYYY-MM-DD). Must be within parent project date range if project dates are set. Optional.' },
+                        endDate: { type: 'string', format: 'date', nullable: true, example: '2026-02-15', description: 'Task end date (YYYY-MM-DD). Must be >= startDate and within parent project date range if project dates are set. Optional.' },
+                    },
+                },
+                UpdateTaskStatusRequest: {
+                    type: 'object',
+                    required: ['status'],
+                    properties: {
+                        status: { $ref: '#/components/schemas/TaskStatus' },
+                    },
+                },
+                TaskResponse: {
+                    type: 'object',
+                    properties: {
+                        success: { type: 'boolean', example: true },
+                        data: { $ref: '#/components/schemas/TaskDto' },
+                    },
+                },
+                ListTasksResponse: {
+                    type: 'object',
+                    properties: {
+                        success: { type: 'boolean', example: true },
+                        data: {
+                            type: 'array',
+                            items: { $ref: '#/components/schemas/TaskDto' },
+                        },
+                    },
+                },
+                ValidationError: {
+                    type: 'object',
+                    properties: {
+                        success: { type: 'boolean', example: false },
+                        error: {
+                            type: 'object',
+                            properties: {
+                                code: { type: 'string', example: 'VALIDATION_001', description: 'Error code for validation failures' },
+                                message: { type: 'string', example: 'Invalid date range: endDate must be >= startDate' },
+                            },
+                        },
                     },
                 },
             },

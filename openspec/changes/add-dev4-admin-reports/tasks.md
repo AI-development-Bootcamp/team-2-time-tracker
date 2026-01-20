@@ -22,13 +22,13 @@
 ## 1. Database Schema
 
 ### 1.1 Prisma Models
-- [ ] 1.1.1 Add Client model to `prisma/schema.prisma`
-- [ ] 1.1.2 Add Project model with reportType field
-- [ ] 1.1.3 Add Task model
-- [ ] 1.1.4 Add TaskAssignment model
-- [ ] 1.1.5 Add MonthLock model
-- [ ] 1.1.6 Create migration for all admin-related tables
-- [ ] 1.1.7 Add necessary indexes for query optimization
+- [x] 1.1.1 Add Client model to `prisma/schema.prisma`
+- [x] 1.1.2 Add Project model with reportType field
+- [x] 1.1.3 Add Task model
+- [x] 1.1.4 Add TaskAssignment model
+- [x] 1.1.5 Add MonthLock model
+- [x] 1.1.6 Create migration for all admin-related tables
+- [x] 1.1.7 Add necessary indexes for query optimization
 
 ## 2. Admin Users Module
 
@@ -80,12 +80,24 @@
 - [ ] 3.4.4 Implement status update endpoints for all entities
 - [ ] 3.4.5 Implement project reportType update endpoint
 
-### 3.5 Frontend Entity Management
-- [ ] 3.5.1 Create `ClientsPage.tsx` with CRUD table
-- [ ] 3.5.2 Create `ProjectsPage.tsx` with CRUD table
-- [ ] 3.5.3 Create `TasksPage.tsx` with CRUD table
-- [ ] 3.5.4 Create `EntityFormDrawer.tsx` reusable component
-- [ ] 3.5.5 Implement soft delete (status change) UI
+### 3.5 Enhanced Projects Filtering & Relationships
+- [x] 3.5.1 Add `userId` query parameter filter to `GET /admin/projects`
+- [x] 3.5.2 Update `projects.repo.ts` to support filtering by userId (via task assignments)
+- [x] 3.5.3 Update `ProjectDto` to include `assignedUsers` array with user details (id, fullName, email)
+- [x] 3.5.4 Update `projects.repo.ts` to include assigned users in project queries
+- [x] 3.5.5 Implement `GET /admin/projects/:id/users` endpoint to get all users assigned to a project
+- [x] 3.5.6 Create `ProjectUsersResponseDto` for project users endpoint
+- [x] 3.5.7 Update `ListProjectsResponseDto` to include user count or user list per project
+
+### 3.6 Frontend Entity Management
+- [ ] 3.6.1 Create `ClientsPage.tsx` with CRUD table
+- [ ] 3.6.2 Create `ProjectsPage.tsx` with CRUD table
+- [ ] 3.6.3 Add user filter dropdown to ProjectsPage
+- [ ] 3.6.4 Display assigned users in projects table
+- [ ] 3.6.5 Create `ProjectUsersModal.tsx` component to show users assigned to a project
+- [ ] 3.6.6 Create `TasksPage.tsx` with CRUD table
+- [ ] 3.6.7 Create `EntityFormDrawer.tsx` reusable component
+- [ ] 3.6.8 Implement soft delete (status change) UI
 
 ## 4. Admin Assignments Module
 
@@ -97,14 +109,33 @@
 
 ### 4.2 Assignment Endpoints
 - [ ] 4.2.1 Implement `GET /admin/assignments` (list with filters)
-- [ ] 4.2.2 Implement `POST /admin/assignments` (create single)
-- [ ] 4.2.3 Implement `POST /admin/assignments/bulk` (bulk create)
-- [ ] 4.2.4 Implement `DELETE /admin/assignments/:id` (remove)
+- [ ] 4.2.2 Add `userId` query parameter filter (UUID)
+- [ ] 4.2.3 Add `taskId` query parameter filter (UUID)
+- [ ] 4.2.4 Add `projectId` query parameter filter (get all assignments for a project)
+- [ ] 4.2.5 Add `userName` or `query` query parameter for searching by employee name (fullName)
+- [ ] 4.2.6 Update `assignments.repo.ts` to support projectId filtering (via task.projectId)
+- [ ] 4.2.7 Update `assignments.repo.ts` to support userName search (via user.fullName LIKE)
+- [ ] 4.2.8 Update `AssignmentDto` to include expanded details:
+  - `userName` (user.fullName)
+  - `userEmail` (user.email)
+  - `taskName` (task.name)
+  - `projectId` (task.projectId)
+  - `projectName` (task.project.name)
+  - `clientId` (task.project.clientId)
+  - `clientName` (task.project.client.name)
+- [ ] 4.2.9 Update `assignments.repo.ts` to include user, task, project, and client relations in queries
+- [ ] 4.2.10 Implement `POST /admin/assignments` (create single)
+- [ ] 4.2.11 Implement `POST /admin/assignments/bulk` (bulk create)
+- [ ] 4.2.12 Implement `DELETE /admin/assignments/:id` (remove)
 
 ### 4.3 Frontend Assignments
 - [ ] 4.3.1 Create `AssignmentsPage.tsx`
-- [ ] 4.3.2 Create `BulkAssignmentForm.tsx` component
-- [ ] 4.3.3 Implement cartesian product logic for bulk assignments
+- [ ] 4.3.2 Display expanded assignment details (user name, project name, client name) in table
+- [ ] 4.3.3 Add project filter dropdown to assignments page
+- [ ] 4.3.4 Add employee name search input field
+- [ ] 4.3.5 Implement search by employee name functionality
+- [ ] 4.3.6 Create `BulkAssignmentForm.tsx` component
+- [ ] 4.3.7 Implement cartesian product logic for bulk assignments
 
 ## 5. Admin Reports Module
 
@@ -169,16 +200,38 @@
 ## 7. Shared DTOs & Types
 
 ### 7.1 Admin DTOs
-- [ ] 7.1.1 Create `admin-users.dto.ts` in `shared/types/src/dtos/`
-- [ ] 7.1.2 Create `admin-entities.dto.ts` in `shared/types/src/dtos/`
-- [ ] 7.1.3 Create `admin-assignments.dto.ts` in `shared/types/src/dtos/`
-- [ ] 7.1.4 Create `admin-reports.dto.ts` in `shared/types/src/dtos/`
-- [ ] 7.1.5 Create `month-locks.dto.ts` in `shared/types/src/dtos/`
-- [ ] 7.1.6 Export all DTOs from `shared/types/src/index.ts`
+- [x] 7.1.1 Create `admin-users.dto.ts` in `shared/types/src/dtos/`
+- [x] 7.1.2 Create `admin-entities.dto.ts` in `shared/types/src/dtos/`
+- [x] 7.1.7 Update `ProjectDto` to include `assignedUsers` array:
+  ```typescript
+  assignedUsers: Array<{
+    id: string;
+    fullName: string;
+    email: string;
+  }>
+  ```
+- [x] 7.1.8 Create `ProjectUsersResponseDto` for `GET /admin/projects/:id/users`
+- [x] 7.1.9 Update `AssignmentDto` to include expanded fields:
+  - `userName: string`
+  - `userEmail: string`
+  - `taskName: string`
+  - `projectId: string`
+  - `projectName: string`
+  - `clientId: string`
+  - `clientName: string`
+- [x] 7.1.10 Create `ListAssignmentsQueryDto` with filters:
+  - `userId?: string`
+  - `taskId?: string`
+  - `projectId?: string`
+  - `userName?: string` (search by employee name)
+- [x] 7.1.3 Create `admin-assignments.dto.ts` in `shared/types/src/dtos/`
+- [x] 7.1.4 Create `admin-reports.dto.ts` in `shared/types/src/dtos/`
+- [x] 7.1.5 Create `month-locks.dto.ts` in `shared/types/src/dtos/`
+- [x] 7.1.6 Export all DTOs from `shared/types/src/index.ts`
 
 ### 7.2 Zod Schemas
-- [ ] 7.2.1 Create validation schemas for all admin DTOs
-- [ ] 7.2.2 Add schemas to `shared/types/src/zod/` directory
+- [x] 7.2.1 Create validation schemas for all admin DTOs
+- [x] 7.2.2 Add schemas to `shared/types/src/zod/` directory
 
 ## 8. Frontend Admin App Setup
 
@@ -201,7 +254,12 @@
 - [ ] 9.1.2 Write integration tests for admin endpoints
 - [ ] 9.1.3 Test CSV export functionality
 - [ ] 9.1.4 Test month lock validation
-- [ ] 9.1.5 Achieve minimum 60% coverage for admin modules
+- [ ] 9.1.5 Test project filtering by userId
+- [ ] 9.1.6 Test assignment filtering by projectId
+- [ ] 9.1.7 Test assignment search by employee name
+- [ ] 9.1.8 Test project users endpoint (`GET /admin/projects/:id/users`)
+- [ ] 9.1.9 Test expanded assignment DTO includes all required fields
+- [ ] 9.1.10 Achieve minimum 60% coverage for admin modules
 
 ### 9.2 Frontend Tests
 - [ ] 9.2.1 Write tests for admin pages
@@ -212,8 +270,15 @@
 
 ### 10.1 API Documentation
 - [ ] 10.1.1 Document all admin endpoints in Swagger
-- [ ] 10.1.2 Add examples for all admin DTOs
-- [ ] 10.1.3 Document CSV export format
+- [ ] 10.1.2 Document new query parameters:
+  - `userId` filter for `GET /admin/projects`
+  - `projectId` filter for `GET /admin/assignments`
+  - `userName` search for `GET /admin/assignments`
+- [ ] 10.1.3 Document `GET /admin/projects/:id/users` endpoint
+- [ ] 10.1.4 Document updated `ProjectDto` with `assignedUsers` field
+- [ ] 10.1.5 Document updated `AssignmentDto` with expanded fields
+- [ ] 10.1.6 Add examples for all admin DTOs
+- [ ] 10.1.7 Document CSV export format
 
 ### 10.2 Code Documentation
 - [ ] 10.2.1 Add JSDoc comments to admin services
