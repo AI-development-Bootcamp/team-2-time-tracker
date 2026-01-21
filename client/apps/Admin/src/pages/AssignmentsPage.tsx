@@ -5,6 +5,7 @@
 
 import { useState, useMemo, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { Search } from 'lucide-react';
 import {
     useReactTable,
     getCoreRowModel,
@@ -18,6 +19,7 @@ import { DashboardHeader } from '../components/DashboardHeader';
 import { EditClientModal } from '../components/EditClientModal';
 import { EditProjectModal } from '../components/EditProjectModal';
 import { EditTaskModal } from '../components/EditTaskModal';
+import { AddEmployeeToTaskModal } from '../components/AddEmployeeToTaskModal';
 import './AssignmentsPage.css';
 
 /**
@@ -28,6 +30,7 @@ function AssignmentsPage(): React.JSX.Element {
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [activeMenuId, setActiveMenuId] = useState<string | null>(null);
     const [editModalState, setEditModalState] = useState<{ type: 'client' | 'project' | 'task', id: string } | null>(null);
+    const [addingEmployeeToTaskId, setAddingEmployeeToTaskId] = useState<string | null>(null);
     const queryClient = useQueryClient();
 
     // Close menu when clicking outside
@@ -149,6 +152,18 @@ function AssignmentsPage(): React.JSX.Element {
                                 )}
                             </span>
                         ))}
+                        {isEditing && (
+                            <button
+                                className="assignment-badge assignment-badge--add"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    setAddingEmployeeToTaskId(info.row.original.taskId);
+                                }}
+                                title="הוסף עובד"
+                            >
+                                +
+                            </button>
+                        )}
                     </div>
                 );
             },
@@ -253,14 +268,41 @@ function AssignmentsPage(): React.JSX.Element {
     // Or just one? The mock implies rows are tasks. Deleting the row probably removes all assignments or unassigns them.
     // Given the API only deletes single assignment ID, we might need to loop delete or add a bulk delete endpoint.
     // For now, let's implement loop delete for the task's assignments.
+    // Handle delete: Deletes ALL assignments for this task
     const handleDeleteTaskAssignments = async (taskId: string) => {
         if (confirm('האם אתה בטוח שברצונך למחוק את כל השיוכים למשימה זו?')) {
             const group = groupedAssignments.find(g => g.taskId === taskId);
             if (group) {
-                // Delete all assignments for this task
-                // In a real app, this should be a bulk API call to ensure atomicity
-                for (const assignment of group.assignments) {
-                    deleteMutation.mutate(assignment.id);
+                // Show loading state if needed, or rely on optimistic updates (omitted for safety here)
+
+                // Execute all deletes in parallel
+                const results = await Promise.allSettled(
+                    group.assignments.map(a => deleteAssignment(a.id))
+                );
+
+                const successes = results.filter(r => r.status === 'fulfilled').length;
+                const failures = results.filter(r => r.status === 'rejected');
+
+                // Invalidate assignments to refresh UI (once)
+                queryClient.invalidateQueries({ queryKey: ['assignments'] });
+
+                if (failures.length > 0) {
+                    // Extract error messages
+                    const errorMessages = failures.map((f: any) => {
+                        return f.reason?.response?.data?.error?.message || 'שגיאה לא ידועה';
+                    });
+
+                    // Check specifically for time entries error
+                    const hasTimeEntriesError = errorMessages.some(msg => msg.includes('time entries'));
+
+                    if (hasTimeEntriesError) {
+                        alert(`נמחקו ${successes} הקצאות.\n${failures.length} הקצאות נכשלו כי קיימים דיווחי שעות עבורן (לא ניתן למחוק).`);
+                    } else {
+                        alert(`הפעולה הושלמה חלקית. ${successes} נמחקו, ${failures.length} נכשלו.`);
+                    }
+                } else {
+                    // All good - cleaner UX (optional: toast)
+                    // console.log(`Deleted all ${successes} assignments for task ${taskId}`);
                 }
             }
         }
@@ -280,17 +322,23 @@ function AssignmentsPage(): React.JSX.Element {
             <div className="assignments-page">
                 {/* Filters */}
                 {/* Search */}
+                {/* Search */}
                 <div className="assignments-page__search-container">
-                    <input
-                        type="text"
-                        placeholder="חיפוש לפי שם עובד"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="assignments-page__search-input"
-                    />
-                    <button className="assignments-page__create-btn" onClick={() => {/* TODO: Implement create modal */ }}>
-                        יצירה +
-                    </button>
+                    <div className="assignments-page__actions-group">
+                        <button className="assignments-page__create-btn" onClick={() => {/* TODO: Implement create modal */ }}>
+                            יצירה +
+                        </button>
+                        <div className="assignments-page__search-wrapper">
+                            <Search className="assignments-page__search-icon" size={18} />
+                            <input
+                                type="text"
+                                placeholder="חיפוש לפי שם עובד"
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                className="assignments-page__search-input"
+                            />
+                        </div>
+                    </div>
                 </div>
 
                 {/* Loading state */}
@@ -367,6 +415,16 @@ function AssignmentsPage(): React.JSX.Element {
                 <EditTaskModal
                     taskId={editModalState.id}
                     onClose={() => setEditModalState(null)}
+                />
+            )}
+            {addingEmployeeToTaskId && (
+                <AddEmployeeToTaskModal
+                    taskId={addingEmployeeToTaskId}
+                    taskName={groupedAssignments.find(g => g.taskId === addingEmployeeToTaskId)?.taskName}
+                    projectName={groupedAssignments.find(g => g.taskId === addingEmployeeToTaskId)?.projectName}
+                    clientName={groupedAssignments.find(g => g.taskId === addingEmployeeToTaskId)?.clientName}
+                    existingUserIds={groupedAssignments.find(g => g.taskId === addingEmployeeToTaskId)?.assignments.map(a => a.userId) || []}
+                    onClose={() => setAddingEmployeeToTaskId(null)}
                 />
             )}
         </AdminLayout>

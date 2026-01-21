@@ -37,7 +37,7 @@ export async function getClient(id: string): Promise<ClientDto> {
  * @returns {Promise<ClientDto>} Updated client
  */
 export async function updateClient(id: string, data: UpdateClientRequestDto): Promise<ClientDto> {
-    const response = await httpClient.patch<ClientResponseDto>(`/admin/clients/${id}`, data);
+    const response = await httpClient.put<ClientResponseDto>(`/admin/clients/${id}`, data);
     return response.data.data;
 }
 
@@ -62,7 +62,7 @@ export async function getProject(id: string): Promise<ProjectDto> {
  * @returns {Promise<ProjectDto>} Updated project
  */
 export async function updateProject(id: string, data: UpdateProjectRequestDto): Promise<ProjectDto> {
-    const response = await httpClient.patch<ProjectResponseDto>(`/admin/projects/${id}`, data);
+    const response = await httpClient.put<ProjectResponseDto>(`/admin/projects/${id}`, data);
     return response.data.data;
 }
 
@@ -87,6 +87,6 @@ export async function getTask(id: string): Promise<TaskDto> {
  * @returns {Promise<TaskDto>} Updated task
  */
 export async function updateTask(id: string, data: UpdateTaskRequestDto): Promise<TaskDto> {
-    const response = await httpClient.patch<TaskResponseDto>(`/admin/tasks/${id}`, data);
+    const response = await httpClient.put<TaskResponseDto>(`/admin/tasks/${id}`, data);
     return response.data.data;
 }
