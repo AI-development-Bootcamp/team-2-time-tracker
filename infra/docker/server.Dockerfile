@@ -35,6 +35,7 @@ COPY --from=builder /app/server/dist ./server/dist
 COPY --from=builder /app/server/node_modules ./server/node_modules
 COPY --from=builder /app/shared/types/dist ./shared/types/dist
 COPY --from=builder /app/server/prisma ./server/prisma
+COPY --from=builder /app/server/prisma.config.ts ./server/prisma.config.ts
 COPY --from=builder /app/server/package.json ./server/package.json
 COPY --from=builder /app/package.json ./package.json
 
