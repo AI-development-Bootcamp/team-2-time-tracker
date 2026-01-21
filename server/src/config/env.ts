@@ -21,6 +21,14 @@ const envSchema = z.object({
   JWT_SECRET: z.string().min(1, 'JWT_SECRET is required'),
   JWT_EXPIRES_IN: z.string().default('2h'),
   CORS_ORIGIN: z.string().default('*'),
+  DEFAULT_SEED_PASSWORD: z.string().min(1, 'DEFAULT_SEED_PASSWORD is required'),
+  DATABASE_PASSWORD: z.string().min(1, 'DATABASE_PASSWORD is required'),
+  // IDrive e2 storage configuration
+  IDRIVE_ACCESS_KEY: z.string().optional(),
+  IDRIVE_SECRET_KEY: z.string().optional(),
+  IDRIVE_BUCKET: z.string().optional(),
+  IDRIVE_ENDPOINT: z.string().optional(),
+  IDRIVE_REGION: z.string().default('us-east-1'),
 });
 
 const parsedEnv = envSchema.safeParse(process.env);

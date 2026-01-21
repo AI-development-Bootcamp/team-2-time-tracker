@@ -43,7 +43,7 @@ interface LoginResponse {
 
 **Example:**
 ```typescript
-const result = await authService.login('user@example.com', 'Password123!', true);
+const result = await authService.login('user@example.com', '[DEFAULT_SEED_PASSWORD]', true);
 console.log(result.token);  // JWT token
 ```
 
@@ -86,7 +86,7 @@ Changes a user's password and revokes all their refresh tokens.
 
 **Example:**
 ```typescript
-await authService.changePassword('user-uuid', 'OldPass123!', 'NewPass456!');
+await authService.changePassword('user-uuid', '[DEFAULT_SEED_PASSWORD]', 'NewPass456!');
 ```
 
 **Throws:**
@@ -175,7 +175,7 @@ Hashes a password using bcrypt with 12 rounds.
 
 **Example:**
 ```typescript
-const hash = await authService.hashPassword('Password123!');
+const hash = await authService.hashPassword('[DEFAULT_SEED_PASSWORD]');
 ```
 
 ## Middleware

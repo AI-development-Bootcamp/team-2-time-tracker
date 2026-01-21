@@ -8,6 +8,15 @@ import {
     createMockClient,
 } from '../helpers/mockPrisma';
 
+// Mock jwt config to avoid env.ts validation during import
+vi.mock('../../src/config/jwt', () => ({
+    jwtConfig: {
+        secret: 'test-secret',
+        expiresIn: '2h',
+        expiresInSeconds: 7200,
+    },
+}));
+
 // Import after mocks
 import * as clientsService from '../../src/modules/admin/entities/clients.service';
 import * as clientsRepo from '../../src/modules/admin/entities/clients.repo';

@@ -3,48 +3,12 @@
  */
 
 import { vi } from 'vitest';
-import { EntityStatus, ReportType, TaskStatus } from '@shared/types';
+import { EntityStatus, ReportType, UserRole } from '@shared/types';
 
-// Mock @prisma/client before anything else
-vi.mock('@prisma/client', () => ({
-    PrismaClient: vi.fn(() => ({
-        user: { findUnique: vi.fn(), findMany: vi.fn(), create: vi.fn(), update: vi.fn(), updateMany: vi.fn(), delete: vi.fn(), count: vi.fn() },
-        refreshToken: { create: vi.fn(), findFirst: vi.fn(), findUnique: vi.fn(), updateMany: vi.fn(), delete: vi.fn() },
-        client: { findMany: vi.fn(), findUnique: vi.fn(), create: vi.fn(), update: vi.fn(), delete: vi.fn(), count: vi.fn() },
-        project: { findMany: vi.fn(), findUnique: vi.fn(), create: vi.fn(), update: vi.fn(), delete: vi.fn(), count: vi.fn() },
-        task: { findMany: vi.fn(), findUnique: vi.fn(), create: vi.fn(), update: vi.fn(), delete: vi.fn(), count: vi.fn() },
-        timeEntry: { findMany: vi.fn(), findUnique: vi.fn(), create: vi.fn(), update: vi.fn(), delete: vi.fn(), count: vi.fn() },
-        $connect: vi.fn(),
-        $disconnect: vi.fn(),
-        $transaction: vi.fn((callback) => callback({})),
-    })),
-    EntityStatus: {
-        ACTIVE: 'ACTIVE',
-        INACTIVE: 'INACTIVE',
-    },
-    TaskStatus: {
-        OPEN: 'OPEN',
-        CLOSED: 'CLOSED',
-    },
-    ReportType: {
-        TOTAL_HOURS: 'TOTAL_HOURS',
-        ENTRY_EXIT: 'ENTRY_EXIT',
-    },
-}));
-
-// Mock pg Pool
-vi.mock('pg', () => ({
-    Pool: vi.fn(() => ({
-        connect: vi.fn(),
-        end: vi.fn(),
-        query: vi.fn(),
-    })),
-}));
-
-// Mock @prisma/adapter-pg
-vi.mock('@prisma/adapter-pg', () => ({
-    PrismaPg: vi.fn(),
-}));
+export enum TaskStatus {
+    OPEN = 'OPEN',
+    CLOSED = 'CLOSED',
+}
 
 export const mockPrismaUser = {
     findUnique: vi.fn(),
@@ -64,9 +28,43 @@ export const mockPrismaRefreshToken = {
     delete: vi.fn(),
 };
 
-export const mockPrismaClient = {
-    findMany: vi.fn(),
+export const mockPrismaAbsenceRequest = {
+    create: vi.fn(),
     findUnique: vi.fn(),
+    findFirst: vi.fn(),
+    findMany: vi.fn(),
+    update: vi.fn(),
+    delete: vi.fn(),
+    count: vi.fn(),
+};
+
+export const mockPrismaAbsenceDay = {
+    createMany: vi.fn(),
+    findMany: vi.fn(),
+    deleteMany: vi.fn(),
+};
+
+export const mockPrismaAbsenceDocument = {
+    create: vi.fn(),
+    findFirst: vi.fn(),
+    findMany: vi.fn(),
+    count: vi.fn(),
+    delete: vi.fn(),
+};
+
+export const mockPrismaMonthLock = {
+    findFirst: vi.fn(),
+};
+
+export const mockPrismaWorkdaySummary = {
+    findUnique: vi.fn(),
+    create: vi.fn(),
+    update: vi.fn(),
+};
+
+export const mockPrismaClient = {
+    findUnique: vi.fn(),
+    findMany: vi.fn(),
     create: vi.fn(),
     update: vi.fn(),
     delete: vi.fn(),
@@ -74,8 +72,8 @@ export const mockPrismaClient = {
 };
 
 export const mockPrismaProject = {
-    findMany: vi.fn(),
     findUnique: vi.fn(),
+    findMany: vi.fn(),
     create: vi.fn(),
     update: vi.fn(),
     delete: vi.fn(),
@@ -83,17 +81,8 @@ export const mockPrismaProject = {
 };
 
 export const mockPrismaTask = {
-    findMany: vi.fn(),
     findUnique: vi.fn(),
-    create: vi.fn(),
-    update: vi.fn(),
-    delete: vi.fn(),
-    count: vi.fn(),
-};
-
-export const mockPrismaTimeEntry = {
     findMany: vi.fn(),
-    findUnique: vi.fn(),
     create: vi.fn(),
     update: vi.fn(),
     delete: vi.fn(),
@@ -103,28 +92,20 @@ export const mockPrismaTimeEntry = {
 export const mockPrisma = {
     user: mockPrismaUser,
     refreshToken: mockPrismaRefreshToken,
+    absenceRequest: mockPrismaAbsenceRequest,
+    absenceDay: mockPrismaAbsenceDay,
+    absenceDocument: mockPrismaAbsenceDocument,
+    monthLock: mockPrismaMonthLock,
+    workdaySummary: mockPrismaWorkdaySummary,
     client: mockPrismaClient,
     project: mockPrismaProject,
     task: mockPrismaTask,
-    timeEntry: mockPrismaTimeEntry,
     $transaction: vi.fn((callback) => callback(mockPrisma)),
-    $connect: vi.fn(),
-    $disconnect: vi.fn(),
 };
 
 // Mock the prisma module
 vi.mock('../../src/db', () => ({
-    prisma: {
-        user: mockPrismaUser,
-        refreshToken: mockPrismaRefreshToken,
-        client: mockPrismaClient,
-        project: mockPrismaProject,
-        task: mockPrismaTask,
-        timeEntry: mockPrismaTimeEntry,
-        $transaction: vi.fn((callback) => callback(mockPrisma)),
-        $connect: vi.fn(),
-        $disconnect: vi.fn(),
-    },
+    prisma: mockPrisma,
 }));
 
 /**
@@ -133,10 +114,15 @@ vi.mock('../../src/db', () => ({
 export function resetPrismaMocks() {
     Object.values(mockPrismaUser).forEach((mock) => mock.mockReset());
     Object.values(mockPrismaRefreshToken).forEach((mock) => mock.mockReset());
+    Object.values(mockPrismaAbsenceRequest).forEach((mock) => mock.mockReset());
+    Object.values(mockPrismaAbsenceDay).forEach((mock) => mock.mockReset());
+    Object.values(mockPrismaAbsenceDocument).forEach((mock) => mock.mockReset());
+    Object.values(mockPrismaMonthLock).forEach((mock) => mock.mockReset());
+    Object.values(mockPrismaWorkdaySummary).forEach((mock) => mock.mockReset());
     Object.values(mockPrismaClient).forEach((mock) => mock.mockReset());
     Object.values(mockPrismaProject).forEach((mock) => mock.mockReset());
     Object.values(mockPrismaTask).forEach((mock) => mock.mockReset());
-    Object.values(mockPrismaTimeEntry).forEach((mock) => mock.mockReset());
+    mockPrisma.$transaction.mockReset();
 }
 
 /**
@@ -146,9 +132,8 @@ export function createMockUser(overrides = {}) {
     return {
         id: 'test-user-id',
         email: 'test@example.com',
-        password: '$2b$12$hashedpassword',
         fullName: 'Test User',
-        role: 'EMPLOYEE',
+        role: UserRole.EMPLOYEE,
         isActive: true,
         mustChangePassword: false,
         createdAt: new Date(),
@@ -173,6 +158,61 @@ export function createMockRefreshToken(overrides = {}) {
 }
 
 /**
+ * Create a mock absence request object
+ */
+export function createMockAbsenceRequest(overrides = {}) {
+    const startDate = new Date('2026-01-15');
+    const endDate = new Date('2026-01-15');
+    
+    return {
+        id: '123e4567-e89b-12d3-a456-426614174000',
+        userId: 'test-user-id',
+        type: 'VACATION',
+        startDate,
+        endDate,
+        isHalfDay: false,
+        status: 'SUBMITTED',
+        note: null,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        absenceDays: [],
+        documents: [],
+        ...overrides,
+    };
+}
+
+/**
+ * Create a mock absence day object
+ */
+export function createMockAbsenceDay(overrides = {}) {
+    return {
+        id: '223e4567-e89b-12d3-a456-426614174000',
+        absenceRequestId: '123e4567-e89b-12d3-a456-426614174000',
+        userId: 'test-user-id',
+        workDate: new Date('2026-01-15'),
+        minutes: 540,
+        ...overrides,
+    };
+}
+
+/**
+ * Create a mock absence document object
+ */
+export function createMockAbsenceDocument(overrides = {}) {
+    return {
+        id: '323e4567-e89b-12d3-a456-426614174000',
+        absenceRequestId: '123e4567-e89b-12d3-a456-426614174000',
+        fileUrl: 'https://storage.example.com/absences/test-user-id/123e4567-e89b-12d3-a456-426614174000/file.pdf',
+        fileName: 'document.pdf',
+        mimeType: 'application/pdf',
+        fileSize: 1024,
+        uploadedByUserId: 'test-user-id',
+        uploadedAt: new Date(),
+        ...overrides,
+    };
+}
+
+/**
  * Create a mock client object
  */
 export function createMockClient(overrides = {}) {
@@ -183,36 +223,39 @@ export function createMockClient(overrides = {}) {
         status: EntityStatus.ACTIVE,
         createdAt: new Date(),
         updatedAt: new Date(),
-        _count: {
-            projects: 0,
-        },
         ...overrides,
     };
 }
 
 /**
- * Create a mock project object
+ * Create a mock project object matching findAllProjects return type
  */
-export function createMockProject(overrides = {}) {
+export function createMockProject(overrides: Record<string, unknown> = {}) {
+    // Extract nested overrides
+    const { client: clientOverrides, tasks: tasksOverrides, _count: countOverrides, ...rest } = overrides;
+    
     return {
         id: 'test-project-id',
-        name: 'Test Project',
         clientId: 'test-client-id',
+        name: 'Test Project',
+        description: null as string | null,
         status: EntityStatus.ACTIVE,
         reportType: ReportType.TOTAL_HOURS,
-        startDate: null,
-        endDate: null,
+        startDate: new Date('2026-01-01') as Date | null,
+        endDate: new Date('2026-12-31') as Date | null,
         createdAt: new Date(),
         updatedAt: new Date(),
         client: {
             id: 'test-client-id',
             name: 'Test Client',
+            ...(clientOverrides as Record<string, unknown> ?? {}),
         },
-        assignedUsers: [],
+        tasks: (tasksOverrides as Array<{ assignments: Array<{ user: { id: string; fullName: string; email: string } }> }>) ?? [],
         _count: {
             tasks: 0,
+            ...(countOverrides as Record<string, unknown> ?? {}),
         },
-        ...overrides,
+        ...rest,
     };
 }
 
@@ -222,28 +265,13 @@ export function createMockProject(overrides = {}) {
 export function createMockTask(overrides = {}) {
     return {
         id: 'test-task-id',
-        name: 'Test Task',
         projectId: 'test-project-id',
+        name: 'Test Task',
         status: TaskStatus.OPEN,
-        startDate: null,
+        startDate: new Date('2026-01-01'),
         endDate: null,
         createdAt: new Date(),
         updatedAt: new Date(),
-        project: {
-            id: 'test-project-id',
-            name: 'Test Project',
-            clientId: 'test-client-id',
-            startDate: null,
-            endDate: null,
-            client: {
-                id: 'test-client-id',
-                name: 'Test Client',
-            },
-        },
-        _count: {
-            assignments: 0,
-            timeEntries: 0,
-        },
         ...overrides,
     };
 }

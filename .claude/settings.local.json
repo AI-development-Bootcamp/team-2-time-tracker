@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm vitest run:*)",
+      "Bash(cd /Users/maiilany/Documents/AI\\\\ Bootcamp/hours/team-2-time-tracker/server && grep:*)",
+      "Bash(cd /Users/maiilany/Documents/AI\\\\ Bootcamp/hours/team-2-time-tracker/server && ls:*)",
+      "Bash(xargs:*)",
+      "Bash(cd /Users/maiilany/Documents/AI\\\\ Bootcamp/hours/team-2-time-tracker/server && npm run test:unit:*)",
+      "Bash(cd:*)",
+      "Bash(npm run type-check:*)",
+      "Bash(cd /Users/maiilany/Documents/AI\\\\ Bootcamp/hours/team-2-time-tracker/server && npx tsc:*)"
+    ]
+  }
+}

@@ -1,5 +1,9 @@
 packages:
-  - 'server'
-  - 'shared/*'
-  - 'client/packages/*'
-  - 'client/apps/*'
+  - server
+  - shared/*
+  - client/packages/*
+  - client/apps/*
+
+onlyBuiltDependencies:
+  - '@prisma/engines'
+  - prisma

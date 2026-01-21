@@ -44,6 +44,7 @@ export async function getProject(req: Request, res: Response, next: NextFunction
  */
 export async function createProject(req: Request, res: Response, next: NextFunction) {
     try {
+        console.log('createProject called with body:', JSON.stringify(req.body, null, 2));
         const { name, clientId, description, reportType, startDate, endDate } = req.body;
         const project = await projectsService.createProject({
             name,
@@ -59,6 +60,7 @@ export async function createProject(req: Request, res: Response, next: NextFunct
             data: project,
         });
     } catch (error) {
+        console.error('createProject error:', error);
         next(error);
     }
 }

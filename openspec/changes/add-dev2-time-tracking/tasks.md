@@ -1,180 +1,192 @@
-# Tasks: Developer 2 - Time Tracking Core (Timer, Entries, Workday)
+# Tasks: Developer 2 - Time Tracking Core
 
-## 1. Database Schema
+> Tasks organized by OpenSpec capability
 
-### 1.1 Prisma Models
-- [ ] 1.1.1 Add Timer model to `prisma/schema.prisma`
-- [ ] 1.1.2 Add TimeEntry model with soft delete fields
-- [ ] 1.1.3 Add WorkdaySummary model
-- [ ] 1.1.4 Create migration for timer, time_entries, workday_summaries tables
-- [ ] 1.1.5 Add necessary indexes for query optimization
+## 1. Database Schema (Shared)
 
-## 2. Timer Implementation
+- [x] 1.1 Add Timer model to `prisma/schema.prisma`
+- [x] 1.2 Add TimeEntry model with soft delete fields
+- [x] 1.3 Add WorkdaySummary model
+- [x] 1.4 Create migration for timer, time_entries, workday_summaries tables
+- [x] 1.5 Add necessary indexes for query optimization
 
-### 2.1 Backend Timer Module
-- [ ] 2.1.1 Create `timer.routes.ts`
-- [ ] 2.1.2 Create `timer.controller.ts`
-- [ ] 2.1.3 Create `timer.service.ts`
-- [ ] 2.1.4 Create `timer.repo.ts`
+---
 
-### 2.2 Timer Endpoints
-- [ ] 2.2.1 Implement `POST /timer/start` (start timer for today)
-- [ ] 2.2.2 Implement `POST /timer/stop` (stop timer, create entry)
-- [ ] 2.2.3 Implement `GET /timer/status` (get current timer status)
-- [ ] 2.2.4 Implement `DELETE /timer/cancel` (cancel without saving)
+## 2. Timer Capability (specs/timer)
 
-### 2.3 Timer Business Logic
-- [ ] 2.3.1 Validate only one timer running per user
-- [ ] 2.3.2 Calculate elapsed time server-side based on startedAt and current server time
-- [ ] 2.3.3 Convert timer to time entry on stop
-- [ ] 2.3.4 Prevent timer start if month is locked
-- [ ] 2.3.5 Validate workDate is today (not past or future)
-- [ ] 2.3.6 Ensure elapsed time calculation uses server-side computation (frontend displays server-calculated value)
+### Backend
+- [x] 2.1 Create `timer.routes.ts`
+- [x] 2.2 Create `timer.controller.ts`
+- [x] 2.3 Create `timer.service.ts`
+- [x] 2.4 Create `timer.repo.ts`
 
-### 2.4 Frontend Timer Implementation
-- [ ] 2.4.1 Create `TimerCard.tsx` component
-- [ ] 2.4.2 Create timer Zustand store (`timer.store.ts`)
-- [ ] 2.4.3 Implement real-time counter display (updates every second)
-- [ ] 2.4.4 Create fixed timer banner component (visible on all pages, following Figma design)
-- [ ] 2.4.5 Implement pulsing/animated active indicator
-- [ ] 2.4.6 Add quick stop button in banner
-- [ ] 2.4.7 Handle timer persistence across page navigation
-- [ ] 2.4.8 Ensure banner follows Figma design specifications for positioning and styling
+### Endpoints
+- [x] 2.5 Implement `POST /timer/start` (start timer for today)
+- [x] 2.6 Implement `POST /timer/stop` (stop timer, create entry)
+- [x] 2.7 Implement `GET /timer/status` (get current timer status)
+- [x] 2.8 Implement `DELETE /timer/cancel` (cancel without saving)
 
-## 3. Time Entries Implementation
+### Business Logic
+- [x] 2.9 Validate only one timer running per user
+- [x] 2.10 Calculate elapsed time server-side based on startedAt and current server time
+- [x] 2.11 Convert timer to time entry on stop
+- [x] 2.12 Prevent timer start if month is locked
+- [x] 2.13 Validate workDate is today (not past or future)
+- [x] 2.14 Ensure elapsed time calculation uses server-side computation
 
-### 3.1 Backend Time Entries Module
-- [ ] 3.1.1 Create `timeReports.routes.ts`
-- [ ] 3.1.2 Create `timeReports.controller.ts`
-- [ ] 3.1.3 Create `timeReports.service.ts`
-- [ ] 3.1.4 Create `timeReports.repo.ts`
+### Frontend
+- [x] 2.15 Create `TimerCard.tsx` component
+- [x] 2.16 Create timer Zustand store (`timer.store.ts`)
+- [x] 2.17 Implement real-time counter display (updates every second)
+- [x] 2.18 Create fixed timer banner component (visible on all pages)
+- [x] 2.19 Implement pulsing/animated active indicator
+- [x] 2.20 Add quick stop button in banner
+- [x] 2.21 Handle timer persistence across page navigation
+- [x] 2.22 Ensure banner follows Figma design specifications
 
-### 3.2 Time Entry Endpoints
-- [ ] 3.2.1 Implement `POST /time-entries` (create entry)
-- [ ] 3.2.2 Implement `GET /time-entries/:id` (get single entry)
-- [ ] 3.2.3 Implement `PUT /time-entries/:id` (update entry)
-- [ ] 3.2.4 Implement `DELETE /time-entries/:id` (soft delete)
-- [ ] 3.2.5 Implement `GET /time-entries/history` (paginated history)
-- [ ] 3.2.6 Implement `POST /time-entries/batch` (batch create)
+### DTOs & Testing
+- [x] 2.23 Create `timer.dto.ts` in @shared/types
+- [x] 2.24 Create Zod schemas for timer operations
+- [x] 2.25 Write unit tests for timer.service.ts
+- [x] 2.26 Write integration tests for timer endpoints
+- [x] 2.27 Write tests for TimerCard component
+- [x] 2.28 Document timer endpoints in Swagger
 
-### 3.3 Time Entry Business Logic
-- [ ] 3.3.1 Validate timer is not running before manual entry
-- [ ] 3.3.2 Validate end_time > start_time
-- [ ] 3.3.3 Validate description length (10-500 chars)
-- [ ] 3.3.4 Validate task is assigned to user
-- [ ] 3.3.5 Validate month is not locked
-- [ ] 3.3.6 Calculate duration_minutes automatically
-- [ ] 3.3.7 Recalculate workday summary on entry CRUD
-- [ ] 3.3.8 Validate future dates are blocked
-- [ ] 3.3.9 Implement ReportType-specific validation (ENTRY_EXIT single entry per project per day)
-- [ ] 3.3.10 Validate ENTRY_EXIT entries are within 535-545 minutes (540 ± 5 minutes tolerance)
-- [ ] 3.3.11 Implement batch entry same-date validation
-- [ ] 3.3.12 Implement batch entry time overlap detection (reject overlaps for same task, allow for different tasks)
-- [ ] 3.3.13 Validate workDate is immutable on update
-- [ ] 3.3.14 Allow taskId change on update (with assignment validation)
+---
 
-### 3.4 Frontend Time Entry Components
-- [ ] 3.4.1 Create `TimeEntryForm.tsx` (modal for add/edit)
-- [ ] 3.4.2 Create `TimeEntryList.tsx` component
-- [ ] 3.4.3 Create time entry history page
-- [ ] 3.4.4 Implement inline editing in list
-- [ ] 3.4.5 Add delete confirmation dialog
+## 3. Time Entries Capability (specs/time-entries)
 
-## 4. Workday Implementation
+### Backend
+- [x] 3.1 Create `timeReports.routes.ts`
+- [x] 3.2 Create `timeReports.controller.ts`
+- [x] 3.3 Create `timeReports.service.ts`
+- [x] 3.4 Create `timeReports.repo.ts`
+- [x] 3.5 Register routes in main application
 
-### 4.1 Backend Workday Module
-- [ ] 4.1.1 Create `workday.service.ts`
-- [ ] 4.1.2 Integrate workday with time-reports routes
+### Endpoints
+- [x] 3.6 Implement `POST /time-entries` (create entry)
+- [x] 3.7 Implement `GET /time-entries/:id` (get single entry)
+- [x] 3.8 Implement `PUT /time-entries/:id` (update entry)
+- [x] 3.9 Implement `DELETE /time-entries/:id` (soft delete)
+- [x] 3.10 Implement `GET /time-entries/history` (paginated history)
+- [x] 3.11 Implement `POST /time-entries/batch` (batch create)
 
-### 4.2 Workday Endpoints
-- [ ] 4.2.1 Implement `GET /workday/:date` (daily summary)
-- [ ] 4.2.2 Implement `POST /workday/:date/submit` (submit day)
-- [ ] 4.2.3 Implement `POST /workday/:date/cancel` (cancel submission)
-- [ ] 4.2.4 Implement `GET /workday/calendar/:month` (monthly view)
+### Business Logic
+- [x] 3.12 Validate timer is not running before manual entry
+- [x] 3.13 Validate end_time > start_time
+- [x] 3.14 Validate description length (10-500 chars)
+- [x] 3.15 Validate task is assigned to user
+- [x] 3.16 Validate month is not locked
+- [x] 3.17 Calculate duration_minutes automatically
+- [x] 3.18 Recalculate workday summary on entry CRUD
+- [x] 3.19 Validate future dates are blocked
+- [x] 3.20 Implement ReportType-specific validation (ENTRY_EXIT single entry per project per day)
+- [x] 3.21 Validate ENTRY_EXIT entries are within 535-545 minutes (540 ± 5 tolerance)
+- [x] 3.22 Implement batch entry same-date validation
+- [x] 3.23 Implement batch entry time overlap detection (reject for same task, allow for different)
+- [x] 3.24 Validate workDate is immutable on update
+- [x] 3.25 Allow taskId change on update (with assignment validation)
 
-### 4.3 Workday Business Logic
-- [ ] 4.3.1 Calculate workday summary (work + absence minutes)
-- [ ] 4.3.2 Validate total equals 540 before submit
-- [ ] 4.3.3 Validate month not locked
-- [ ] 4.3.4 Validate day not already submitted
-- [ ] 4.3.5 Update workday status (FULL/MISSING/EXCEPTION) on retrieval and entry/absence changes
-- [ ] 4.3.6 Implement automatic workday creation on first entry/absence
-- [ ] 4.3.7 Implement immediate lock propagation when month is locked
-- [ ] 4.3.8 Handle workday retrieval for dates with no entries (return calculated default values, create on-the-fly)
-- [ ] 4.3.9 Validate timer is stopped before allowing workday submission
+### Frontend
+- [x] 3.26 Create `TimeEntryForm.tsx` (modal for add/edit)
+- [x] 3.27 Create `TimeEntryList.tsx` component
+- [x] 3.28 Create time entry history page
+- [ ] 3.29 Implement inline editing in list
+- [x] 3.30 Add delete confirmation dialog
 
-### 4.4 Frontend Workday Components
-- [ ] 4.4.1 Create `WorkdayProgress.tsx` component
-- [ ] 4.4.2 Implement progress bar with color coding (red/green/orange, following Figma design)
-- [ ] 4.4.3 Create daily summary card
-- [ ] 4.4.4 Create monthly calendar view component (show all days, mark weekends appropriately)
-- [ ] 4.4.5 Create workday store (`workday.store.ts`)
+### DTOs & Testing
+- [x] 3.31 Create `timeReports.dto.ts` in @shared/types
+- [x] 3.32 Create Zod schemas for time entry operations
+- [x] 3.33 Write unit tests for timeReports.service.ts
+- [x] 3.34 Write integration tests for time-entries endpoints
+- [ ] 3.35 Write tests for TimeEntryForm component (blocked by 3.26)
+- [x] 3.36 Document time-entries endpoints in Swagger
 
-## 5. Selectors Implementation
+---
 
-### 5.1 Backend Selectors Module
-- [ ] 5.1.1 Create `selectors.routes.ts`
-- [ ] 5.1.2 Create `selectors.controller.ts`
-- [ ] 5.1.3 Create `selectors.service.ts`
-- [ ] 5.1.4 Create `selectors.repo.ts`
+## 4. Workday Capability (specs/workday)
 
-### 5.2 Selector Endpoints
-- [ ] 5.2.1 Implement `GET /selectors/clients` (with frequency sort)
-- [ ] 5.2.2 Implement `GET /selectors/projects` (filter by client)
-- [ ] 5.2.3 Implement `GET /selectors/tasks` (filter by project)
-- [ ] 5.2.4 Implement `GET /my/assignments` (user's task assignments)
-- [ ] 5.2.5 Implement `GET /my/statistics/:month` (user monthly stats)
+### Backend
+- [x] 4.1 Create `workday.service.ts`
+- [x] 4.2 Integrate workday with time-reports routes
 
-### 5.3 Selector Business Logic
-- [ ] 5.3.1 Filter selectors by user's task assignments
-- [ ] 5.3.2 Sort by usage frequency (count user's time entries)
-- [ ] 5.3.3 Track reportType for task display
+### Endpoints
+- [x] 4.3 Implement `GET /workday/:date` (daily summary)
+- [x] 4.4 Implement `POST /workday/:date/submit` (submit day)
+- [x] 4.5 Implement `POST /workday/:date/cancel` (cancel submission)
+- [x] 4.6 Implement `GET /workday/calendar/:month` (monthly view)
 
-### 5.4 Frontend Selector Components
-- [ ] 5.4.1 Create `FrequentSelectors.tsx` (cascading dropdowns)
-- [ ] 5.4.2 Implement auto-select when single option (trigger after data fetch)
-- [ ] 5.4.3 Implement cascade behavior (client -> project -> task)
-- [ ] 5.4.4 Add frequency sorting toggle
-- [ ] 5.4.5 Ensure auto-select is undoable by user
-- [ ] 5.4.6 Implement cascade auto-select (parent selection triggers child check)
+### Business Logic
+- [x] 4.7 Calculate workday summary (work + absence minutes)
+- [x] 4.8 Validate total equals 540 before submit
+- [x] 4.9 Validate month not locked
+- [x] 4.10 Validate day not already submitted
+- [x] 4.11 Update workday status (FULL/MISSING/EXCEPTION) on retrieval and entry/absence changes
+- [x] 4.12 Implement automatic workday creation on first entry/absence
+- [x] 4.13 Implement immediate lock propagation when month is locked
+- [x] 4.14 Handle workday retrieval for dates with no entries (create on-the-fly)
+- [x] 4.15 Validate timer is stopped before allowing workday submission
 
-## 6. Dashboard Page
+### Frontend
+- [x] 4.16 Create `WorkdayProgress.tsx` component
+- [x] 4.17 Implement progress bar with color coding (red/green/orange)
+- [x] 4.18 Create daily summary card
+- [x] 4.19 Create monthly calendar view component (show all days, mark weekends)
+- [x] 4.20 Create workday store (`workday.store.ts`)
 
-### 6.1 Employee Dashboard
-- [ ] 6.1.1 Create `DailyReportPage.tsx`
-- [ ] 6.1.2 Integrate TimerCard component
-- [ ] 6.1.3 Integrate WorkdayProgress component
-- [ ] 6.1.4 Integrate TimeEntryForm (modal)
-- [ ] 6.1.5 Integrate TimeEntryList for today's entries
-- [ ] 6.1.6 Integrate FrequentSelectors in form
+### Testing & Documentation
+- [x] 4.21 Write unit tests for workday.service.ts
+- [x] 4.22 Write tests for WorkdayProgress component
+- [x] 4.23 Document workday endpoints in Swagger
 
-## 7. Shared DTOs
+---
 
-### 7.1 Add DTOs to @shared/types
-- [ ] 7.1.1 Create `timer.dto.ts`
-- [ ] 7.1.2 Create `timeReports.dto.ts`
-- [ ] 7.1.3 Create Zod schemas for timer operations
-- [ ] 7.1.4 Create Zod schemas for time entry operations
+## 5. Selectors Capability (specs/selectors)
 
-## 8. Testing
+### Backend
+- [x] 5.1 Create `selectors.routes.ts`
+- [x] 5.2 Create `selectors.controller.ts`
+- [x] 5.3 Create `selectors.service.ts`
+- [x] 5.4 Create `selectors.repo.ts`
 
-### 8.1 Backend Tests
-- [ ] 8.1.1 Write unit tests for timer.service.ts
-- [ ] 8.1.2 Write unit tests for timeReports.service.ts
-- [ ] 8.1.3 Write unit tests for workday.service.ts
-- [ ] 8.1.4 Write integration tests for timer endpoints
-- [ ] 8.1.5 Write integration tests for time-entries endpoints
-- [ ] 8.1.6 Achieve minimum 60% coverage
+### Endpoints
+- [x] 5.5 Implement `GET /selectors/clients` (with frequency sort)
+- [x] 5.6 Implement `GET /selectors/projects` (filter by client)
+- [x] 5.7 Implement `GET /selectors/tasks` (filter by project)
+- [x] 5.8 Implement `GET /my/assignments` (user's task assignments)
+- [x] 5.9 Implement `GET /my/statistics/:month` (user monthly stats)
 
-### 8.2 Frontend Tests
-- [ ] 8.2.1 Write tests for TimerCard component
-- [ ] 8.2.2 Write tests for TimeEntryForm component
-- [ ] 8.2.3 Write tests for WorkdayProgress component
+### Business Logic
+- [x] 5.10 Filter selectors by user's task assignments
+- [x] 5.11 Sort by usage frequency (count user's time entries)
+- [x] 5.12 Track reportType for task display
 
-## 9. Documentation
+### Frontend
+- [x] 5.13 Create `FrequentSelectors.tsx` (cascading dropdowns)
+- [x] 5.14 Implement auto-select when single option (trigger after data fetch)
+- [x] 5.15 Implement cascade behavior (client -> project -> task)
+- [x] 5.16 Add frequency sorting toggle
+- [x] 5.17 Ensure auto-select is undoable by user
+- [x] 5.18 Implement cascade auto-select (parent selection triggers child check)
 
-### 9.1 API Documentation
-- [ ] 9.1.1 Document timer endpoints in Swagger
-- [ ] 9.1.2 Document time-entries endpoints in Swagger
-- [ ] 9.1.3 Document workday endpoints in Swagger
-- [ ] 9.1.4 Document selectors endpoints in Swagger
+### Documentation
+- [x] 5.19 Document selectors endpoints in Swagger
+
+---
+
+## 6. Dashboard Integration (Cross-Cutting)
+
+- [x] 6.1 Create `DailyReportPage.tsx`
+- [x] 6.2 Integrate TimerCard component
+- [x] 6.3 Integrate WorkdayProgress component
+- [x] 6.4 Integrate TimeEntryForm (modal)
+- [x] 6.5 Integrate TimeEntryList for today's entries
+- [x] 6.6 Integrate FrequentSelectors in form
+
+---
+
+## 7. Testing Coverage
+
+- [ ] 7.1 Achieve minimum 60% backend test coverage
+- [ ] 7.2 Verify all critical user flows have integration tests
+- [ ] 7.3 Ensure all frontend components have unit tests

@@ -34,6 +34,16 @@ enum WorkLocation {
   HOME
 }
 
+enum TimeEntrySource {
+  MANUAL
+  TIMER
+}
+
+enum ReportType {
+  TOTAL_HOURS
+  ENTRY_EXIT
+}
+
 enum AbsenceType {
   VACATION
   SICK
@@ -46,67 +56,39 @@ enum AbsenceStatus {
   SUBMITTED
 }
 
-enum TimeEntrySource {
-  MANUAL
-  TIMER
-}
-
-enum ReportType {
-  TOTAL_HOURS
-  ENTRY_EXIT
-}
-
-enum AuditEntity {
-  USER
-  CLIENT
-  PROJECT
-  TASK
-  TASK_ASSIGNMENT
-  TIME_ENTRY
-  ABSENCE
-  MONTH_LOCK
-}
-
-enum AuditAction {
-  CREATE
-  UPDATE
-  STATUS_CHANGE
-  RESET_PASSWORD
-  LOCK_MONTH
-  UNLOCK_MONTH
+enum WorkdayStatus {
+  MISSING
+  FULL
+  EXCEPTION
 }
 
 // =========================
-// Users & Authentication
+// User & Auth Models
 // =========================
 
 model User {
-  id                 String   @id @default(uuid())
-  email              String   @unique
+  id                 String            @id @default(uuid())
+  email              String            @unique
   password           String
-  fullName           String   @map("full_name")
-  role               UserRole @default(EMPLOYEE)
-  isActive           Boolean  @default(true) @map("is_active")
-  mustChangePassword Boolean  @default(true) @map("must_change_password")
-  createdAt          DateTime @default(now()) @map("created_at")
-  updatedAt          DateTime @updatedAt @map("updated_at")
-
+  fullName           String            @map("full_name")
+  role               UserRole          @default(EMPLOYEE)
+  isActive           Boolean           @default(true) @map("is_active")
+  mustChangePassword Boolean           @default(true) @map("must_change_password")
+  createdAt          DateTime          @default(now()) @map("created_at")
+  updatedAt          DateTime          @updatedAt @map("updated_at")
   refreshTokens      RefreshToken[]
-  taskAssignments    TaskAssignment[]
+  assignments        TaskAssignment[]
   timers             Timer[]
   timeEntries        TimeEntry[]
+  deletedTimeEntries TimeEntry[]       @relation("DeletedTimeEntries")
   workdaySummaries   WorkdaySummary[]
+  lockedMonths       MonthLock[]       @relation("LockedByAdmin")
+  unlockedMonths     MonthLock[]       @relation("UnlockedByAdmin")
+  assignedTasks      TaskAssignment[]  @relation("AssignedByAdmin")
   absenceRequests    AbsenceRequest[]
   absenceDays        AbsenceDay[]
   uploadedDocuments  AbsenceDocument[] @relation("UploadedDocuments")
-  deletedTimeEntries TimeEntry[]       @relation("DeletedBy")
-  assignedTasks      TaskAssignment[]  @relation("AssignedByAdmin")
-  lockedMonths       MonthLock[]       @relation("LockedByAdmin")
-  unlockedMonths     MonthLock[]       @relation("UnlockedByAdmin")
-  auditLogs          AuditLog[]
 
-  @@index([isActive])
-  @@index([role])
   @@map("users")
 }
 
@@ -125,7 +107,7 @@ model RefreshToken {
 }
 
 // =========================
-// Clients / Projects / Tasks
+// Client / Project / Task Models
 // =========================
 
 model Client {
@@ -183,20 +165,15 @@ model Task {
   @@map("tasks")
 }
 
-// =========================
-// Task Assignments
-// =========================
-
 model TaskAssignment {
   id                String   @id @default(uuid())
   userId            String   @map("user_id")
+  user              User     @relation(fields: [userId], references: [id])
   taskId            String   @map("task_id")
+  task              Task     @relation(fields: [taskId], references: [id])
   assignedByAdminId String   @map("assigned_by_admin_id")
+  assignedByAdmin   User     @relation("AssignedByAdmin", fields: [assignedByAdminId], references: [id])
   createdAt         DateTime @default(now()) @map("created_at")
-
-  user            User @relation(fields: [userId], references: [id])
-  task            Task @relation(fields: [taskId], references: [id])
-  assignedByAdmin User @relation("AssignedByAdmin", fields: [assignedByAdminId], references: [id])
 
   @@unique([userId, taskId])
   @@index([userId])
@@ -205,127 +182,23 @@ model TaskAssignment {
 }
 
 // =========================
-// Month Locks
-// =========================
-
-model MonthLock {
-  id                String    @id @default(uuid())
-  month             DateTime  @unique @db.Date
-  lockedAt          DateTime  @map("locked_at")
-  lockedByAdminId   String    @map("locked_by_admin_id")
-  unlockedAt        DateTime? @map("unlocked_at")
-  unlockedByAdminId String?   @map("unlocked_by_admin_id")
-
-  lockedByAdmin    User             @relation("LockedByAdmin", fields: [lockedByAdminId], references: [id])
-  unlockedByAdmin  User?            @relation("UnlockedByAdmin", fields: [unlockedByAdminId], references: [id])
-  workdaySummaries WorkdaySummary[]
-
-  @@map("month_locks")
-}
-
-// =========================
-// Workday Summaries
-// =========================
-
-model WorkdaySummary {
-  id                 String    @id @default(uuid())
-  userId             String    @map("user_id")
-  workDate           DateTime  @map("work_date") @db.Date
-  targetMinutes      Int       @default(540) @map("target_minutes")
-  workMinutes        Int       @default(0) @map("work_minutes")
-  absenceMinutes     Int       @default(0) @map("absence_minutes")
-  status             String    @default("MISSING")
-  isLocked           Boolean   @default(false) @map("is_locked")
-  lockedMonthId      String?   @map("locked_month_id")
-  isSubmitted        Boolean   @default(false) @map("is_submitted")
-  submittedAt        DateTime? @map("submitted_at")
-  requiresExactTotal Boolean   @default(false) @map("requires_exact_total")
-  updatedAt          DateTime  @updatedAt @map("updated_at")
-
-  user        User       @relation(fields: [userId], references: [id])
-  lockedMonth MonthLock? @relation(fields: [lockedMonthId], references: [id])
-
-  @@unique([userId, workDate])
-  @@index([isLocked])
-  @@map("workday_summaries")
-}
-
-// =========================
-// Timers
-// =========================
-
-model Timer {
-  id              String    @id @default(uuid())
-  userId          String    @map("user_id")
-  workDate        DateTime  @map("work_date") @db.Date
-  startedAt       DateTime  @map("started_at")
-  stoppedAt       DateTime? @map("stopped_at")
-  durationMinutes Int?      @map("duration_minutes")
-  isRunning       Boolean   @default(true) @map("is_running")
-  createdAt       DateTime  @default(now()) @map("created_at")
-  updatedAt       DateTime  @updatedAt @map("updated_at")
-
-  user        User        @relation(fields: [userId], references: [id])
-  timeEntries TimeEntry[]
-
-  @@index([userId, workDate])
-  @@index([userId, isRunning])
-  @@map("timers")
-}
-
-// =========================
-// Time Entries
-// =========================
-
-model TimeEntry {
-  id              String          @id @default(uuid())
-  userId          String          @map("user_id")
-  workDate        DateTime        @map("work_date") @db.Date
-  location        WorkLocation
-  startTime       DateTime        @map("start_time") @db.Time
-  endTime         DateTime        @map("end_time") @db.Time
-  durationMinutes Int             @map("duration_minutes")
-  taskId          String          @map("task_id")
-  description     String
-  source          TimeEntrySource @default(MANUAL)
-  timerId         String?         @map("timer_id")
-  isDeleted       Boolean         @default(false) @map("is_deleted")
-  deletedAt       DateTime?       @map("deleted_at")
-  deletedByUserId String?         @map("deleted_by_user_id")
-  createdAt       DateTime        @default(now()) @map("created_at")
-  updatedAt       DateTime        @updatedAt @map("updated_at")
-
-  user          User   @relation(fields: [userId], references: [id])
-  task          Task   @relation(fields: [taskId], references: [id])
-  timer         Timer? @relation(fields: [timerId], references: [id])
-  deletedByUser User?  @relation("DeletedBy", fields: [deletedByUserId], references: [id])
-
-  @@index([userId, workDate])
-  @@index([taskId])
-  @@index([userId, taskId])
-  @@index([userId, workDate, isDeleted])
-  @@map("time_entries")
-}
-
-// =========================
-// Absence Requests & Days
+// Absence Models
 // =========================
 
 model AbsenceRequest {
-  id        String        @id @default(uuid())
-  userId    String        @map("user_id")
-  type      AbsenceType
-  startDate DateTime      @map("start_date") @db.Date
-  endDate   DateTime      @map("end_date") @db.Date
-  isHalfDay Boolean       @default(false) @map("is_half_day")
-  status    AbsenceStatus @default(SUBMITTED)
-  note      String?
-  createdAt DateTime      @default(now()) @map("created_at")
-  updatedAt DateTime      @updatedAt @map("updated_at")
-
-  user        User              @relation(fields: [userId], references: [id])
-  absenceDays AbsenceDay[]
-  documents   AbsenceDocument[]
+  id            String            @id @default(uuid())
+  userId        String            @map("user_id")
+  user          User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type          AbsenceType
+  startDate     DateTime          @map("start_date") @db.Date
+  endDate       DateTime          @map("end_date") @db.Date
+  isHalfDay     Boolean           @default(false) @map("is_half_day")
+  status        AbsenceStatus     @default(SUBMITTED)
+  note          String?           @db.Text
+  createdAt     DateTime          @default(now()) @map("created_at")
+  updatedAt     DateTime          @updatedAt @map("updated_at")
+  absenceDays   AbsenceDay[]
+  documents     AbsenceDocument[]
 
   @@index([userId, startDate, endDate])
   @@index([status])
@@ -334,15 +207,14 @@ model AbsenceRequest {
 }
 
 model AbsenceDay {
-  id               String   @id @default(uuid())
-  absenceRequestId String   @map("absence_request_id")
-  userId           String   @map("user_id")
-  workDate         DateTime @map("work_date") @db.Date
+  id               String         @id @default(uuid())
+  absenceRequestId String         @map("absence_request_id")
+  absenceRequest   AbsenceRequest @relation(fields: [absenceRequestId], references: [id], onDelete: Cascade)
+  userId           String         @map("user_id")
+  user             User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workDate         DateTime       @map("work_date") @db.Date
   minutes          Int
-  createdAt        DateTime @default(now()) @map("created_at")
-
-  absenceRequest AbsenceRequest @relation(fields: [absenceRequestId], references: [id], onDelete: Cascade)
-  user           User           @relation(fields: [userId], references: [id])
+  createdAt        DateTime       @default(now()) @map("created_at")
 
   @@unique([userId, workDate, absenceRequestId])
   @@index([userId, workDate])
@@ -350,44 +222,118 @@ model AbsenceDay {
   @@map("absence_days")
 }
 
-// =========================
-// Absence Documents
-// =========================
-
 model AbsenceDocument {
-  id               String   @id @default(uuid())
-  absenceRequestId String   @map("absence_request_id")
-  fileUrl          String   @map("file_url")
-  fileName         String?  @map("file_name")
-  mimeType         String?  @map("mime_type")
-  fileSize         Int?     @map("file_size")
-  uploadedByUserId String   @map("uploaded_by_user_id")
-  uploadedAt       DateTime @default(now()) @map("uploaded_at")
-
-  absenceRequest AbsenceRequest @relation(fields: [absenceRequestId], references: [id], onDelete: Cascade)
-  uploadedBy     User           @relation("UploadedDocuments", fields: [uploadedByUserId], references: [id])
+  id               String         @id @default(uuid())
+  absenceRequestId String         @map("absence_request_id")
+  absenceRequest   AbsenceRequest @relation(fields: [absenceRequestId], references: [id], onDelete: Cascade)
+  fileUrl          String         @map("file_url")
+  fileName         String?        @map("file_name")
+  mimeType         String?        @map("mime_type")
+  fileSize         Int?           @map("file_size")
+  uploadedByUserId String         @map("uploaded_by_user_id")
+  uploadedBy       User           @relation("UploadedDocuments", fields: [uploadedByUserId], references: [id])
+  uploadedAt       DateTime       @default(now()) @map("uploaded_at")
 
   @@index([absenceRequestId])
   @@map("absence_documents")
 }
 
 // =========================
-// Audit Logs
+// Month Lock Model
 // =========================
 
-model AuditLog {
-  id        String      @id @default(uuid())
-  adminId   String      @map("admin_id")
-  entity    AuditEntity
-  entityId  String      @map("entity_id")
-  action    AuditAction
-  oldValue  Json?       @map("old_value")
-  newValue  Json?       @map("new_value")
-  createdAt DateTime    @default(now()) @map("created_at")
+model MonthLock {
+  id                String           @id @default(uuid())
+  month             DateTime         @unique @db.Date
+  lockedAt          DateTime         @map("locked_at")
+  lockedByAdminId   String           @map("locked_by_admin_id")
+  lockedByAdmin     User             @relation("LockedByAdmin", fields: [lockedByAdminId], references: [id])
+  unlockedAt        DateTime?        @map("unlocked_at")
+  unlockedByAdminId String?          @map("unlocked_by_admin_id")
+  unlockedByAdmin   User?            @relation("UnlockedByAdmin", fields: [unlockedByAdminId], references: [id])
+  workdaySummaries  WorkdaySummary[]
 
-  admin User @relation(fields: [adminId], references: [id])
+  @@index([month])
+  @@map("month_locks")
+}
 
-  @@index([entity, entityId])
-  @@index([adminId, createdAt])
-  @@map("audit_logs")
+// =========================
+// Timer Model
+// =========================
+
+model Timer {
+  id              String      @id @default(uuid())
+  userId          String      @map("user_id")
+  user            User        @relation(fields: [userId], references: [id])
+  workDate        DateTime    @map("work_date") @db.Date
+  startedAt       DateTime    @map("started_at")
+  stoppedAt       DateTime?   @map("stopped_at")
+  durationMinutes Int?        @map("duration_minutes")
+  isRunning       Boolean     @default(true) @map("is_running")
+  createdAt       DateTime    @default(now()) @map("created_at")
+  updatedAt       DateTime    @updatedAt @map("updated_at")
+  timeEntries     TimeEntry[]
+
+  @@index([userId, workDate])
+  @@index([userId, isRunning])
+  @@map("timers")
+}
+
+// =========================
+// Time Entry Model
+// =========================
+
+model TimeEntry {
+  id              String          @id @default(uuid())
+  userId          String          @map("user_id")
+  user            User            @relation(fields: [userId], references: [id])
+  workDate        DateTime        @map("work_date") @db.Date
+  location        WorkLocation
+  startTime       DateTime        @map("start_time") @db.Time()
+  endTime         DateTime        @map("end_time") @db.Time()
+  durationMinutes Int             @map("duration_minutes")
+  taskId          String          @map("task_id")
+  task            Task            @relation(fields: [taskId], references: [id])
+  description     String
+  source          TimeEntrySource @default(MANUAL)
+  timerId         String?         @map("timer_id")
+  timer           Timer?          @relation(fields: [timerId], references: [id])
+  isDeleted       Boolean         @default(false) @map("is_deleted")
+  deletedAt       DateTime?       @map("deleted_at")
+  deletedByUserId String?         @map("deleted_by_user_id")
+  deletedByUser   User?           @relation("DeletedTimeEntries", fields: [deletedByUserId], references: [id])
+  createdAt       DateTime        @default(now()) @map("created_at")
+  updatedAt       DateTime        @updatedAt @map("updated_at")
+
+  @@index([userId, workDate])
+  @@index([taskId])
+  @@index([userId, taskId])
+  @@map("time_entries")
+}
+
+// =========================
+// Workday Summary Model
+// =========================
+
+model WorkdaySummary {
+  id                 String         @id @default(uuid())
+  userId             String         @map("user_id")
+  user               User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workDate           DateTime       @map("work_date") @db.Date
+  targetMinutes      Int            @default(540) @map("target_minutes")
+  workMinutes        Int            @default(0) @map("work_minutes")
+  absenceMinutes     Int            @default(0) @map("absence_minutes")
+  status             WorkdayStatus  @default(MISSING)
+  isLocked           Boolean        @default(false) @map("is_locked")
+  lockedMonthId      String?        @map("locked_month_id")
+  lockedMonth        MonthLock?     @relation(fields: [lockedMonthId], references: [id])
+  isSubmitted        Boolean        @default(false) @map("is_submitted")
+  submittedAt        DateTime?      @map("submitted_at")
+  requiresExactTotal Boolean        @default(false) @map("requires_exact_total")
+  updatedAt          DateTime       @updatedAt @map("updated_at")
+
+  @@unique([userId, workDate])
+  @@index([userId, workDate])
+  @@index([isLocked])
+  @@map("workday_summaries")
 }

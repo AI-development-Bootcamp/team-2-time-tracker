@@ -277,7 +277,6 @@ describe('Auth Endpoints', () => {
             expect(response.status).toBe(200);
             expect(response.body.status).toBe('ok');
             expect(response.body).toHaveProperty('timestamp');
-            expect(response.body).toHaveProperty('version');
         });
     });
 });

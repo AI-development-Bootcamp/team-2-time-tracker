@@ -126,7 +126,7 @@
 ```json
 {
   "email": "user@example.com",
-  "password": "SecurePassword123!",
+  "password": "[DEFAULT_SEED_PASSWORD]",
   "rememberMe": true
 }
 ```
@@ -181,9 +181,9 @@
 **Usage:** Client -> Server
 ```json
 {
-  "currentPassword": "OldPassword1!",
-  "newPassword": "NewPassword1!",
-  "confirmPassword": "NewPassword1!"
+  "currentPassword": "[DEFAULT_SEED_PASSWORD]",
+  "newPassword": "[DEFAULT_SEED_PASSWORD]",
+  "confirmPassword": "[DEFAULT_SEED_PASSWORD]"
 }
 ```
 
@@ -734,7 +734,7 @@
 {
   "fullName": "New Employee",
   "email": "new@example.com",
-  "password": "InitialPassword1!",
+  "password": "[DEFAULT_SEED_PASSWORD]",
   "role": "EMPLOYEE"
 }
 ```
@@ -760,7 +760,7 @@
 **Usage:** Client -> Server
 ```json
 {
-  "newPassword": "ResetPassword123!",
+  "newPassword": "[DEFAULT_SEED_PASSWORD]",
   "requireChangeOnLogin": true
 }
 ```
