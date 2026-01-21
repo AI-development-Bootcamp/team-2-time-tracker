@@ -48,10 +48,11 @@ export async function getProject(req: Request, res: Response, next: NextFunction
  */
 export async function createProject(req: Request, res: Response, next: NextFunction) {
     try {
-        const { name, clientId, reportType, startDate, endDate } = req.body;
+        const { name, clientId, description, reportType, startDate, endDate } = req.body;
         const project = await projectsService.createProject({
             name,
             clientId,
+            description,
             reportType,
             startDate,
             endDate,
@@ -72,10 +73,11 @@ export async function createProject(req: Request, res: Response, next: NextFunct
 export async function updateProject(req: Request, res: Response, next: NextFunction) {
     try {
         const id = req.params.id as string;
-        const { name, clientId, startDate, endDate } = req.body;
+        const { name, clientId, description, startDate, endDate } = req.body;
         const project = await projectsService.updateProject(id, {
             name,
             clientId,
+            description,
             startDate,
             endDate,
         });
