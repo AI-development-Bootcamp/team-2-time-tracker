@@ -19,7 +19,6 @@ export async function findAllTasks(projectId?: string) {
             id: true,
             name: true,
             projectId: true,
-            description: true,
             status: true,
             startDate: true,
             endDate: true,
@@ -62,7 +61,6 @@ export async function findTaskById(id: string) {
             id: true,
             name: true,
             projectId: true,
-            description: true,
             status: true,
             startDate: true,
             endDate: true,
@@ -101,7 +99,6 @@ export async function findTaskById(id: string) {
 export async function createTask(data: {
     name: string;
     projectId: string;
-    description?: string | null;
     startDate?: Date | null;
     endDate?: Date | null;
 }) {
@@ -109,7 +106,6 @@ export async function createTask(data: {
         data: {
             name: data.name,
             projectId: data.projectId,
-            description: data.description,
             status: TaskStatus.OPEN,
             startDate: data.startDate,
             endDate: data.endDate,
@@ -118,7 +114,6 @@ export async function createTask(data: {
             id: true,
             name: true,
             projectId: true,
-            description: true,
             status: true,
             startDate: true,
             endDate: true,
@@ -152,7 +147,6 @@ export async function updateTask(
     data: {
         name?: string;
         projectId?: string;
-        description?: string | null;
         startDate?: Date | null;
         endDate?: Date | null;
     }
@@ -164,7 +158,6 @@ export async function updateTask(
             id: true,
             name: true,
             projectId: true,
-            description: true,
             status: true,
             startDate: true,
             endDate: true,
@@ -201,7 +194,6 @@ export async function updateTaskStatus(id: string, status: TaskStatus) {
             id: true,
             name: true,
             projectId: true,
-            description: true,
             status: true,
             startDate: true,
             endDate: true,
