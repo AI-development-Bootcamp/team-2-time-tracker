@@ -20,6 +20,7 @@ import { EditClientModal } from '../components/EditClientModal';
 import { EditProjectModal } from '../components/EditProjectModal';
 import { EditTaskModal } from '../components/EditTaskModal';
 import { AddEmployeeToTaskModal } from '../components/AddEmployeeToTaskModal';
+import { DeleteConfirmationModal } from '../components/DeleteConfirmationModal';
 import './AssignmentsPage.css';
 
 /**
@@ -94,6 +95,8 @@ function AssignmentsPage(): React.JSX.Element {
     }, [assignments]);
 
     const [editingAssignmentsTaskId, setEditingAssignmentsTaskId] = useState<string | null>(null);
+    const [deleteConfirmationTaskId, setDeleteConfirmationTaskId] = useState<string | null>(null);
+    const [isDeleting, setIsDeleting] = useState(false);
 
     // Icons
     const EditIcon = () => (
@@ -264,17 +267,21 @@ function AssignmentsPage(): React.JSX.Element {
         getCoreRowModel: getCoreRowModel(),
     });
 
-    // Handle delete: Deletes ALL assignments for this task (for this view logic)
-    // Or just one? The mock implies rows are tasks. Deleting the row probably removes all assignments or unassigns them.
-    // Given the API only deletes single assignment ID, we might need to loop delete or add a bulk delete endpoint.
-    // For now, let's implement loop delete for the task's assignments.
-    // Handle delete: Deletes ALL assignments for this task
-    const handleDeleteTaskAssignments = async (taskId: string) => {
-        if (confirm('האם אתה בטוח שברצונך למחוק את כל השיוכים למשימה זו?')) {
-            const group = groupedAssignments.find(g => g.taskId === taskId);
-            if (group) {
-                // Show loading state if needed, or rely on optimistic updates (omitted for safety here)
+    // Handle delete click - open modal
+    const handleDeleteTaskAssignments = (taskId: string) => {
+        setDeleteConfirmationTaskId(taskId);
+    };
 
+    // Confirm delete execution
+    const confirmDeleteTaskAssignments = async () => {
+        if (!deleteConfirmationTaskId) return;
+
+        const taskId = deleteConfirmationTaskId;
+        const group = groupedAssignments.find(g => g.taskId === taskId);
+
+        if (group) {
+            setIsDeleting(true);
+            try {
                 // Execute all deletes in parallel
                 const results = await Promise.allSettled(
                     group.assignments.map(a => deleteAssignment(a.id))
@@ -284,7 +291,7 @@ function AssignmentsPage(): React.JSX.Element {
                 const failures = results.filter(r => r.status === 'rejected');
 
                 // Invalidate assignments to refresh UI (once)
-                queryClient.invalidateQueries({ queryKey: ['assignments'] });
+                await queryClient.invalidateQueries({ queryKey: ['assignments'] });
 
                 if (failures.length > 0) {
                     // Extract error messages
@@ -300,11 +307,13 @@ function AssignmentsPage(): React.JSX.Element {
                     } else {
                         alert(`הפעולה הושלמה חלקית. ${successes} נמחקו, ${failures.length} נכשלו.`);
                     }
-                } else {
-                    // All good - cleaner UX (optional: toast)
-                    // console.log(`Deleted all ${successes} assignments for task ${taskId}`);
                 }
+            } finally {
+                setIsDeleting(false);
+                setDeleteConfirmationTaskId(null);
             }
+        } else {
+            setDeleteConfirmationTaskId(null);
         }
     };
 
@@ -425,6 +434,16 @@ function AssignmentsPage(): React.JSX.Element {
                     clientName={groupedAssignments.find(g => g.taskId === addingEmployeeToTaskId)?.clientName}
                     existingUserIds={groupedAssignments.find(g => g.taskId === addingEmployeeToTaskId)?.assignments.map(a => a.userId) || []}
                     onClose={() => setAddingEmployeeToTaskId(null)}
+                />
+            )}
+
+            {deleteConfirmationTaskId && (
+                <DeleteConfirmationModal
+                    title="מחיקת משימה"
+                    description="האם אתה בטוח שברצונך למחוק משימה זו?"
+                    onConfirm={confirmDeleteTaskAssignments}
+                    onClose={() => setDeleteConfirmationTaskId(null)}
+                    isLoading={isDeleting}
                 />
             )}
         </AdminLayout>
