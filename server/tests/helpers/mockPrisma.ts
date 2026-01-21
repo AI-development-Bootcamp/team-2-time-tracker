@@ -229,21 +229,34 @@ export function createMockClient(overrides = {}) {
 }
 
 /**
- * Create a mock project object
+ * Create a mock project object matching findAllProjects return type
  */
-export function createMockProject(overrides = {}) {
+export function createMockProject(overrides: Record<string, unknown> = {}) {
+    // Extract nested overrides
+    const { client: clientOverrides, tasks: tasksOverrides, _count: countOverrides, ...rest } = overrides;
+    
     return {
         id: 'test-project-id',
         clientId: 'test-client-id',
         name: 'Test Project',
+        description: null as string | null,
         status: EntityStatus.ACTIVE,
         reportType: ReportType.TOTAL_HOURS,
-        startDate: new Date('2026-01-01'),
-        endDate: new Date('2026-12-31'),
+        startDate: new Date('2026-01-01') as Date | null,
+        endDate: new Date('2026-12-31') as Date | null,
         createdAt: new Date(),
         updatedAt: new Date(),
-        assignedUsers: [],
-        ...overrides,
+        client: {
+            id: 'test-client-id',
+            name: 'Test Client',
+            ...(clientOverrides as Record<string, unknown> ?? {}),
+        },
+        tasks: (tasksOverrides as Array<{ assignments: Array<{ user: { id: string; fullName: string; email: string } }> }>) ?? [],
+        _count: {
+            tasks: 0,
+            ...(countOverrides as Record<string, unknown> ?? {}),
+        },
+        ...rest,
     };
 }
 
