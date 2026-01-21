@@ -18,7 +18,6 @@ import workdayIcon from '../assets/icons/workday.png';
 import dayoffIcon from '../assets/icons/dayoff.png';
 import halfWorkdayIcon from '../assets/icons/half_workday.png';
 import editIcon from '../assets/icons/edit-2.png';
-import arrowIcon from '../assets/icons/arrow_forward_ios.png';
 
 /**
  * Data structure representing a single day's entries and status.
@@ -100,14 +99,14 @@ export const TimeEntryList: React.FC<TimeEntryListProps> = ({
         return false;
     };
 
-    const getDayStatus = (dayData: DayData): { badge: string; color: string; icon: 'check' | 'warning' | 'x' | 'none'; isDayOff: boolean; isHalfDay: boolean } => {
+    const getDayStatus = (dayData: DayData): { badge: string; color: string; icon: 'check' | 'warning' | 'x' | 'alert' | 'none'; isDayOff: boolean; isHalfDay: boolean } => {
         const totalMinutes = dayData.entries.reduce((sum, e) => sum + e.durationMinutes, 0);
         const totalHours = Math.floor(totalMinutes / 60);
         const hoursText = `${totalHours} ש'`;
 
         // Check for weekend
         if (isWeekend(dayData.date)) {
-            return { badge: "סופ\"ש", color: 'gray', icon: 'none', isDayOff: true, isHalfDay: false };
+            return { badge: "סופ\"ש", color: 'gray', icon: 'x', isDayOff: true, isHalfDay: false };
         }
 
         // Check for absence
@@ -119,7 +118,7 @@ export const TimeEntryList: React.FC<TimeEntryListProps> = ({
 
         // If no entries at all
         if (totalMinutes === 0) {
-            return { badge: 'חסר', color: 'red', icon: 'x', isDayOff: false, isHalfDay: false };
+            return { badge: 'חסר', color: 'red', icon: 'alert', isDayOff: false, isHalfDay: false };
         }
 
         const isSubmitted = dayData.workday?.data?.isSubmitted;
@@ -148,14 +147,15 @@ export const TimeEntryList: React.FC<TimeEntryListProps> = ({
     }
 
     // Render status icon
-    const renderStatusIcon = (icon: 'check' | 'warning' | 'x' | 'none', color: string) => {
+    const renderStatusIcon = (icon: 'check' | 'warning' | 'x' | 'alert' | 'none', color: string) => {
         if (icon === 'none') return null;
 
         if (icon === 'check') {
             return (
                 <span className={`time-entry-group__status-icon time-entry-group__status-icon--${color}`}>
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
-                        <path d="M20 6L9 17l-5-5" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                        <circle cx="12" cy="12" r="10" fill="currentColor" />
+                        <path d="M8 12l3 3 5-5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                 </span>
             );
@@ -164,9 +164,9 @@ export const TimeEntryList: React.FC<TimeEntryListProps> = ({
         if (icon === 'warning') {
             return (
                 <span className={`time-entry-group__status-icon time-entry-group__status-icon--${color}`}>
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
-                        <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" />
-                        <path d="M12 8v4M12 16h.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                        <circle cx="12" cy="12" r="10" fill="currentColor" />
+                        <path d="M12 8v4M12 16h.01" stroke="white" strokeWidth="2" strokeLinecap="round" />
                     </svg>
                 </span>
             );
@@ -175,9 +175,21 @@ export const TimeEntryList: React.FC<TimeEntryListProps> = ({
         if (icon === 'x') {
             return (
                 <span className={`time-entry-group__status-icon time-entry-group__status-icon--${color}`}>
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                         <circle cx="12" cy="12" r="10" fill="currentColor" />
                         <path d="M15 9l-6 6M9 9l6 6" stroke="white" strokeWidth="2" strokeLinecap="round" />
+                    </svg>
+                </span>
+            );
+        }
+
+        if (icon === 'alert') {
+            return (
+                <span className={`time-entry-group__status-icon time-entry-group__status-icon--${color}`}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                        <circle cx="12" cy="12" r="10" fill="currentColor" />
+                        <path d="M12 8v5" stroke="white" strokeWidth="2" strokeLinecap="round" />
+                        <circle cx="12" cy="16" r="1" fill="white" />
                     </svg>
                 </span>
             );
@@ -213,14 +225,16 @@ export const TimeEntryList: React.FC<TimeEntryListProps> = ({
                                 </span>
                                 <span className="time-entry-group__date">{formatDate(dayData.date)}</span>
                             </div>
-                            {/* Left side in RTL - Badge and chevron */}
+                            {/* Left side in RTL - Badge and Chevron */}
                             <div className="time-entry-group__header-left">
                                 <span className={`time-entry-group__badge time-entry-group__badge--${status.color}`}>
-                                    {status.badge}
                                     {renderStatusIcon(status.icon, status.color)}
+                                    {status.badge}
                                 </span>
                                 <span className={`time-entry-group__chevron ${isExpanded ? 'time-entry-group__chevron--expanded' : ''}`}>
-                                    <img src={arrowIcon} alt="" width="16" height="16" />
+                                    <svg width="12" height="7" viewBox="0 0 12 7" fill="none">
+                                        <path d="M1 1L6 6L11 1" stroke="#848891" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                    </svg>
                                 </span>
                             </div>
                         </button>
@@ -231,24 +245,24 @@ export const TimeEntryList: React.FC<TimeEntryListProps> = ({
                                 {dayData.entries.map((entry) => (
                                     <div key={entry.id} className="time-entry-item">
                                         <div className="time-entry-item__row">
+                                            <div className="time-entry-item__time-range">
+                                                {entry.startTime}-{entry.endTime}
+                                            </div>
                                             <button
                                                 className="time-entry-item__edit"
                                                 onClick={() => onEdit(entry)}
                                                 aria-label="ערוך"
                                             >
-                                                <img src={editIcon} alt="" width="16" height="16" />
+                                                <img src={editIcon} alt="" width="14" height="14" />
                                                 עריכה
                                             </button>
-                                            <div className="time-entry-item__time-range">
-                                                {entry.startTime}-{entry.endTime}
-                                            </div>
                                         </div>
                                         <div className="time-entry-item__row">
-                                            <div className="time-entry-item__duration">
-                                                {formatDuration(entry.durationMinutes)}
-                                            </div>
                                             <div className="time-entry-item__task-name">
                                                 {entry.task?.project?.name || entry.task.name}
+                                            </div>
+                                            <div className="time-entry-item__duration">
+                                                {formatDuration(entry.durationMinutes)}
                                             </div>
                                         </div>
                                     </div>

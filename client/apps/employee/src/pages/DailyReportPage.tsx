@@ -277,8 +277,8 @@ export const DailyReportPage: React.FC = () => {
                         onClick={handlePrevMonth}
                         aria-label="חודש קודם"
                     >
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                            <path d="M9 18l6-6-6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        <svg width="7" height="12" viewBox="0 0 7 12" fill="none">
+                            <path d="M1 1L6 6L1 11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                         </svg>
                     </button>
                     <span className="daily-report-page__month-name">{currentMonthName}</span>
@@ -287,8 +287,8 @@ export const DailyReportPage: React.FC = () => {
                         onClick={handleNextMonth}
                         aria-label="חודש הבא"
                     >
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                            <path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        <svg width="7" height="12" viewBox="0 0 7 12" fill="none">
+                            <path d="M6 1L1 6L6 11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                         </svg>
                     </button>
                 </div>
