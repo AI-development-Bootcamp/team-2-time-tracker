@@ -12,6 +12,7 @@ import { createUserSchema, type CreateUserFormData } from '../schemas/user.schem
 import { usersApi } from '../api/usersApi';
 import { translateError } from '../utils/errorMessages';
 import { ModalIcon } from './ModalIcon';
+import { FormActionButton } from './FormActionButton';
 import './Modal.css';
 import './CreateUserModal.css';
 
@@ -32,6 +33,7 @@ export const CreateUserModal: React.FC<CreateUserModalProps> = ({ onClose, onSuc
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm<CreateUserFormData>({
     resolver: zodResolver(createUserSchema),
@@ -43,6 +45,13 @@ export const CreateUserModal: React.FC<CreateUserModalProps> = ({ onClose, onSuc
       role: UserRole.EMPLOYEE,
     },
   });
+
+  const firstName = watch('firstName');
+  const lastName = watch('lastName');
+  const email = watch('email');
+  const password = watch('password');
+
+  const isFormValid = firstName?.trim() && lastName?.trim() && email?.trim() && password?.trim();
 
   /**
    * @description Handles form submission
@@ -189,22 +198,14 @@ export const CreateUserModal: React.FC<CreateUserModalProps> = ({ onClose, onSuc
               )}
             </div>
 
-            <div className="user-form__actions">
-              <button
-                type="button"
-                className="user-form__button user-form__button--secondary"
-                onClick={onClose}
-                disabled={isSubmitting}
-              >
-                ביטול
-              </button>
-              <button
-                type="submit"
-                className="user-form__button user-form__button--primary"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? 'יוצר משתמש...' : 'צור משתמש'}
-              </button>
+            <div className="user-form__actions user-form__actions--single">
+              <FormActionButton
+                label="צור משתמש חדש"
+                loadingLabel="יוצר משתמש..."
+                icon={Plus}
+                disabled={isSubmitting || !isFormValid}
+                isLoading={isSubmitting}
+              />
             </div>
           </form>
         </div>

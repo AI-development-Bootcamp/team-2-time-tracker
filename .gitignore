@@ -38,10 +38,35 @@ Screenshots/
 *.swp
 *.swo
 
-
-# Logs
-nul
+# Security & generated
+debug_output.txt
 *.log
+*.pem
+*.key
+*.crt
+env
+
+# Typescript
+*.tsbuildinfo
+
+# Assets/Misc
 logs/
+tmp/
+temp/
+server/logs/
 
 
+# Testing/Development pages (not part of official requirements)
+client/apps/employee/src/pages/HomePage.tsx
+client/apps/employee/src/pages/HomePage.css
+
+# Cleanup Candidates
+server/capture_seed_error.js
+client/apps/employee/build_log*.txt
+
+# Screenshots
+Screenshots/
+.claude/settings.local.json
+.claude/settings.json
+nul
+.claude/settings.local.json

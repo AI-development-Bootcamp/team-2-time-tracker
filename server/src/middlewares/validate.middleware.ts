@@ -7,7 +7,10 @@ export const validate =
         (req: Request, _res: Response, next: NextFunction): void => {
             try {
                 const data = schema.parse(req[source]);
-                req[source] = data;
+                // Only reassign for body (query and params are read-only in Express)
+                if (source === 'body') {
+                    req[source] = data;
+                }
                 next();
             } catch (error) {
                 if (error instanceof ZodError) {

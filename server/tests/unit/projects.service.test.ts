@@ -9,6 +9,15 @@ import {
     createMockClient,
 } from '../helpers/mockPrisma';
 
+// Mock jwt config to avoid env.ts validation during import
+vi.mock('../../src/config/jwt', () => ({
+    jwtConfig: {
+        secret: 'test-secret',
+        expiresIn: '2h',
+        expiresInSeconds: 7200,
+    },
+}));
+
 // Import after mocks
 import * as projectsService from '../../src/modules/admin/entities/projects.service';
 import * as projectsRepo from '../../src/modules/admin/entities/projects.repo';
@@ -33,30 +42,20 @@ describe('projects.service', () => {
         vi.clearAllMocks();
     });
 
-    describe.skip('listProjects', () => {
+    describe('listProjects', () => {
         it('should return all projects', async () => {
             const mockProjects = [
-                createMockProject({ id: '1', name: 'Project 1' }),
-                createMockProject({ id: '2', name: 'Project 2' }),
+                createMockProject({ name: 'Project 1' }),
+                createMockProject({ name: 'Project 2' }),
             ];
-
             vi.mocked(projectsRepo.findAllProjects).mockResolvedValue(mockProjects);
 
             const result = await projectsService.listProjects();
 
             expect(result).toHaveLength(2);
-            expect(result).toEqual(mockProjects);
-            expect(projectsRepo.findAllProjects).toHaveBeenCalledOnce();
-        });
-
-        it('should return projects filtered by clientId', async () => {
-            const mockProjects = [createMockProject({ clientId: 'client-1' })];
-            vi.mocked(projectsRepo.findAllProjects).mockResolvedValue(mockProjects);
-
-            const result = await projectsService.listProjects('client-1');
-
-            expect(result).toEqual(mockProjects);
-            expect(projectsRepo.findAllProjects).toHaveBeenCalledWith('client-1');
+            expect(result[0].name).toBe('Project 1');
+            expect(result[1].name).toBe('Project 2');
+            expect(projectsRepo.findAllProjects).toHaveBeenCalled();
         });
 
         it('should return empty array when no projects exist', async () => {
@@ -64,8 +63,35 @@ describe('projects.service', () => {
 
             const result = await projectsService.listProjects();
 
-            expect(result).toHaveLength(0);
             expect(result).toEqual([]);
+            expect(projectsRepo.findAllProjects).toHaveBeenCalled();
+        });
+
+        it('should transform projects with assigned users', async () => {
+            const mockProjects = [
+                createMockProject({
+                    name: 'Project 1',
+                    tasks: [
+                        {
+                            assignments: [
+                                {
+                                    user: {
+                                        id: 'user-1',
+                                        fullName: 'John Doe',
+                                        email: 'john@example.com',
+                                    },
+                                },
+                            ],
+                        },
+                    ],
+                }),
+            ];
+            vi.mocked(projectsRepo.findAllProjects).mockResolvedValue(mockProjects);
+
+            const result = await projectsService.listProjects();
+
+            expect(result[0]).toHaveProperty('assignedUsers');
+            expect(result[0]).not.toHaveProperty('tasks');
         });
     });
 
@@ -76,7 +102,11 @@ describe('projects.service', () => {
 
             const result = await projectsService.getProjectById('test-id');
 
-            expect(result).toEqual(mockProject);
+            // Service transforms: removes 'tasks' and adds 'assignedUsers'
+            expect(result.id).toBe(mockProject.id);
+            expect(result.name).toBe(mockProject.name);
+            expect(result).toHaveProperty('assignedUsers');
+            expect(result).not.toHaveProperty('tasks');
             expect(projectsRepo.findProjectById).toHaveBeenCalledWith('test-id');
         });
 
@@ -108,13 +138,18 @@ describe('projects.service', () => {
                 clientId: 'client-1',
             });
 
-            expect(result).toEqual(mockProject);
+            // Service transforms: removes 'tasks' and adds 'assignedUsers'
+            expect(result.name).toBe('New Project');
+            expect(result.clientId).toBe('client-1');
+            expect(result).toHaveProperty('assignedUsers');
+            expect(result).not.toHaveProperty('tasks');
             expect(prisma.client.findUnique).toHaveBeenCalledWith({
                 where: { id: 'client-1' },
             });
             expect(projectsRepo.createProject).toHaveBeenCalledWith({
                 name: 'New Project',
                 clientId: 'client-1',
+                description: undefined,
                 reportType: undefined,
                 startDate: null,
                 endDate: null,
@@ -232,10 +267,14 @@ describe('projects.service', () => {
                 name: 'Updated Name',
             });
 
-            expect(result).toEqual(updatedProject);
+            // Service transforms: removes 'tasks' and adds 'assignedUsers'
+            expect(result.name).toBe('Updated Name');
+            expect(result).toHaveProperty('assignedUsers');
+            expect(result).not.toHaveProperty('tasks');
             expect(projectsRepo.updateProject).toHaveBeenCalledWith('test-id', {
                 name: 'Updated Name',
                 clientId: undefined,
+                description: undefined,
                 startDate: undefined,
                 endDate: undefined,
             });
@@ -355,7 +394,11 @@ describe('projects.service', () => {
                 endDate: '2024-06-30',
             });
 
-            expect(result).toEqual(updatedProject);
+            // Service transforms: removes 'tasks' and adds 'assignedUsers'
+            expect(result.startDate).toEqual(new Date('2024-06-01'));
+            expect(result.endDate).toEqual(new Date('2024-06-30'));
+            expect(result).toHaveProperty('assignedUsers');
+            expect(result).not.toHaveProperty('tasks');
         });
 
         it('should allow setting dates to null', async () => {
@@ -392,8 +435,10 @@ describe('projects.service', () => {
 
             const result = await projectsService.updateProjectStatus('test-id', EntityStatus.INACTIVE);
 
-            expect(result).toEqual(updatedProject);
+            // Service transforms: removes 'tasks' and adds 'assignedUsers'
             expect(result.status).toBe(EntityStatus.INACTIVE);
+            expect(result).toHaveProperty('assignedUsers');
+            expect(result).not.toHaveProperty('tasks');
             expect(projectsRepo.updateProjectStatus).toHaveBeenCalledWith('test-id', EntityStatus.INACTIVE);
         });
 

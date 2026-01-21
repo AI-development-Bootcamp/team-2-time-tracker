@@ -3,8 +3,8 @@
  * @module pages/LoginPage
  */
 
-import { useState, FormEvent, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, FormEvent, useEffect, useRef } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from '../stores/authStore';
 import loginBackground from '../assets/images/login-background.png';
 import './LoginPage.css';
@@ -15,18 +15,38 @@ import './LoginPage.css';
  */
 function LoginPage(): React.JSX.Element {
     const navigate = useNavigate();
-    const { login, isLoading, error, clearError, isAuthenticated } = useAuthStore();
+    const location = useLocation();
+    const { login, isLoading, error, clearError, isAuthenticated, checkAuth } = useAuthStore();
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [rememberMe, setRememberMe] = useState(false);
 
+    const hasRedirectedRef = useRef(false);
+    const hasCheckedAuthRef = useRef(false);
+
+    // Verify auth state on mount to handle expired tokens from persisted state
+    useEffect(() => {
+        if (!hasCheckedAuthRef.current) {
+            hasCheckedAuthRef.current = true;
+            checkAuth();
+        }
+    }, [checkAuth]);
+
     // Redirect to dashboard if already authenticated
     useEffect(() => {
-        if (isAuthenticated) {
-            navigate('/', { replace: true });
+        // Only redirect if authenticated and we haven't already redirected
+        // This prevents redirect loops when checkAuth() clears auth state
+        // Also wait for auth check to complete (not loading) before redirecting
+        if (isAuthenticated && !hasRedirectedRef.current && !isLoading && hasCheckedAuthRef.current) {
+            hasRedirectedRef.current = true;
+            const from = location.state?.from?.pathname || '/';
+            navigate(from, { replace: true });
+        } else if (!isAuthenticated) {
+            // Reset redirect flag when not authenticated (e.g., after logout or failed checkAuth)
+            hasRedirectedRef.current = false;
         }
-    }, [isAuthenticated, navigate]);
+    }, [isAuthenticated, isLoading, navigate, location.state?.from?.pathname]);
 
     /**
      * @description Handles form submission for login

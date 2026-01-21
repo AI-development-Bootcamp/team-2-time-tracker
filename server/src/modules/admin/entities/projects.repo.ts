@@ -8,37 +8,16 @@ import { EntityStatus, ReportType, Prisma } from '@prisma/client';
 
 /**
  * Find all projects
- * @param clientId - Optional client ID filter
- * @param userId - Optional user ID filter (filters projects where user is assigned via task assignments)
- * @returns Projects list
+ * @returns Projects list with client info and task assignments
  */
-export async function findAllProjects(clientId?: string, userId?: string) {
-    const where: Prisma.ProjectWhereInput = {};
-
-    if (clientId) {
-        where.clientId = clientId;
-    }
-
-    if (userId) {
-        // Filter projects where the user is assigned via task assignments
-        where.tasks = {
-            some: {
-                assignments: {
-                    some: {
-                        userId: userId,
-                    },
-                },
-            },
-        };
-    }
-
+export async function findAllProjects() {
     return prisma.project.findMany({
-        where: Object.keys(where).length > 0 ? where : undefined,
         orderBy: { createdAt: 'desc' },
         select: {
             id: true,
             name: true,
             clientId: true,
+            description: true,
             status: true,
             reportType: true,
             startDate: true,
@@ -87,6 +66,7 @@ export async function findProjectById(id: string) {
             id: true,
             name: true,
             clientId: true,
+            description: true,
             status: true,
             reportType: true,
             startDate: true,
@@ -131,6 +111,7 @@ export async function findProjectById(id: string) {
 export async function createProject(data: {
     name: string;
     clientId: string;
+    description?: string | null;
     reportType?: ReportType;
     startDate?: Date | null;
     endDate?: Date | null;
@@ -139,6 +120,7 @@ export async function createProject(data: {
         data: {
             name: data.name,
             clientId: data.clientId,
+            description: data.description,
             status: EntityStatus.ACTIVE,
             reportType: data.reportType ?? ReportType.TOTAL_HOURS,
             startDate: data.startDate,
@@ -148,6 +130,7 @@ export async function createProject(data: {
             id: true,
             name: true,
             clientId: true,
+            description: true,
             status: true,
             reportType: true,
             startDate: true,
@@ -190,6 +173,7 @@ export async function updateProject(
     data: {
         name?: string;
         clientId?: string;
+        description?: string | null;
         startDate?: Date | null;
         endDate?: Date | null;
     }
@@ -201,6 +185,7 @@ export async function updateProject(
             id: true,
             name: true,
             clientId: true,
+            description: true,
             status: true,
             reportType: true,
             startDate: true,
@@ -246,6 +231,7 @@ export async function updateProjectStatus(id: string, status: EntityStatus) {
             id: true,
             name: true,
             clientId: true,
+            description: true,
             status: true,
             reportType: true,
             startDate: true,
@@ -291,6 +277,7 @@ export async function updateProjectReportType(id: string, reportType: ReportType
             id: true,
             name: true,
             clientId: true,
+            description: true,
             status: true,
             reportType: true,
             startDate: true,

@@ -101,7 +101,7 @@ Creates a new user account.
 ```typescript
 const user = await usersService.createUser({
   email: 'new@example.com',
-  password: 'InitialPass123!',
+  password: '[DEFAULT_SEED_PASSWORD]',
   fullName: 'New Employee',
   role: 'EMPLOYEE',
 });
@@ -176,7 +176,7 @@ Resets a user's password (admin action).
 
 **Example:**
 ```typescript
-await usersService.resetUserPassword('user-uuid', 'TempPass123!', true);
+await usersService.resetUserPassword('user-uuid', '[DEFAULT_SEED_PASSWORD]', true);
 ```
 
 **Throws:**

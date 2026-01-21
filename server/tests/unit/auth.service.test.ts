@@ -50,6 +50,8 @@ vi.mock('../../src/config/jwt', () => ({
 import * as authService from '../../src/modules/auth/auth.service';
 import { UnauthorizedError, BadRequestError } from '../../src/shared/errors';
 
+const TEST_PASSWORD = process.env.DEFAULT_SEED_PASSWORD || "1";
+
 describe('auth.service', () => {
     beforeEach(() => {
         resetPrismaMocks();
@@ -63,8 +65,7 @@ describe('auth.service', () => {
             (bcrypt.compare as any).mockResolvedValue(true);
             mockPrismaRefreshToken.create.mockResolvedValue(createMockRefreshToken());
 
-            const result = await authService.login('test@example.com', 'password123');
-
+            const result = await authService.login('test@example.com', TEST_PASSWORD);
             expect(result).toHaveProperty('token');
             expect(result).toHaveProperty('refreshToken');
             expect(result).toHaveProperty('user');
@@ -76,7 +77,7 @@ describe('auth.service', () => {
             mockPrismaUser.findUnique.mockResolvedValue(null);
 
             await expect(
-                authService.login('nonexistent@example.com', 'password123')
+                authService.login('nonexistent@example.com', TEST_PASSWORD)
             ).rejects.toThrow(UnauthorizedError);
         });
 
@@ -85,7 +86,7 @@ describe('auth.service', () => {
             mockPrismaUser.findUnique.mockResolvedValue(mockUser);
 
             await expect(
-                authService.login('test@example.com', 'password123')
+                authService.login('test@example.com', TEST_PASSWORD)
             ).rejects.toThrow(UnauthorizedError);
         });
 
@@ -223,10 +224,10 @@ describe('auth.service', () => {
         it('should return hashed password', async () => {
             (bcrypt.hash as any).mockResolvedValue('hashed-password');
 
-            const result = await authService.hashPassword('password123');
+            const result = await authService.hashPassword(TEST_PASSWORD);
 
             expect(result).toBe('hashed-password');
-            expect(bcrypt.hash).toHaveBeenCalledWith('password123', 12);
+            expect(bcrypt.hash).toHaveBeenCalledWith(TEST_PASSWORD, 12);
         });
     });
 });

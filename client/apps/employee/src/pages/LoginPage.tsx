@@ -1,45 +1,73 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { LoginForm } from '@client/ui';
 import { useAuthStore } from '../app/stores/auth.store';
+import logoImage from '../assets/logo.png';
+import welcomeImage from '../assets/Welcome_app.png';
+import backgroundImage from '../assets/employee-bg.png';
+import './LoginPage.css';
 
 export default function LoginPage() {
     const navigate = useNavigate();
     const location = useLocation();
-    const { login, isAuthenticated, isLoading, error } = useAuthStore();
+    const { login, isAuthenticated, isLoading, error, checkAuth } = useAuthStore();
+    const hasRedirectedRef = useRef(false);
+    const hasCheckedAuthRef = useRef(false);
+
+    // Verify auth state on mount to handle expired tokens from persisted state
+    useEffect(() => {
+        if (!hasCheckedAuthRef.current) {
+            hasCheckedAuthRef.current = true;
+            checkAuth();
+        }
+    }, [checkAuth]);
 
     useEffect(() => {
-        if (isAuthenticated) {
+        // Only redirect if authenticated and we haven't already redirected
+        // This prevents redirect loops when checkAuth() clears auth state
+        // Also wait for auth check to complete (not loading) before redirecting
+        if (isAuthenticated && !hasRedirectedRef.current && !isLoading) {
+            hasRedirectedRef.current = true;
             const from = location.state?.from?.pathname || '/';
             navigate(from, { replace: true });
+        } else if (!isAuthenticated) {
+            // Reset redirect flag when not authenticated (e.g., after logout or failed checkAuth)
+            hasRedirectedRef.current = false;
         }
-    }, [isAuthenticated, navigate, location]);
+    }, [isAuthenticated, isLoading, navigate, location.state?.from?.pathname]);
 
     const handleSubmit = async (data: { email: string; password: string; rememberMe?: boolean }) => {
         try {
+            console.log('[LoginPage] Submitting login...');
             await login(data);
+            console.log('[LoginPage] Login successful, auth state:', { isAuthenticated, isLoading });
             // Navigation handled by effect
         } catch (err) {
+            console.error('[LoginPage] Login failed:', err);
             // Error set in store
         }
     };
 
     return (
-        <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12 sm:px-6 lg:px-8">
-            <div className="w-full max-w-md space-y-8">
-                <div className="text-center">
-                    <h2 className="mt-6 text-3xl font-bold tracking-tight text-gray-900">
-                        כניסה למערכת
-                    </h2>
-                </div>
+        <div className="login-page" style={{ backgroundImage: `url(${backgroundImage})` }}>
+            <div className="login-card">
+                <img src={logoImage} alt="abra" className="login-logo" />
 
-                <div className="bg-white p-8 shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl">
-                    <LoginForm
-                        onSubmit={handleSubmit}
-                        isLoading={isLoading}
-                        error={error || undefined}
-                    />
-                </div>
+                <img src={welcomeImage} alt="Welcome" className="login-welcome-image" />
+
+                <h1 className="login-title">ברוכים הבאים!</h1>
+
+                <p className="login-description">
+                    ברוכים הבאים למערכת דיווחי השעות שלנו 🎉
+                    <br />
+                    שנוצרה במיוחד עבורכם!
+                </p>
+
+                <LoginForm
+                    onSubmit={handleSubmit}
+                    isLoading={isLoading}
+                    error={error || undefined}
+                />
             </div>
         </div>
     );

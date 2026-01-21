@@ -17,7 +17,22 @@ vi.mock('../../src/modules/admin/assignments/assignments.service', () => ({
 
 // Mock auth repo
 vi.mock('../../src/modules/auth/auth.repo', () => ({
-    findUserById: vi.fn().mockResolvedValue({ id: 'admin-id', isActive: true }),
+    findUserById: vi.fn((id) => {
+        if (id === 'admin-id') {
+            return Promise.resolve({
+                id: 'admin-id',
+                role: 'ADMIN',
+                isActive: true,
+            });
+        } else if (id === 'user-id') {
+            return Promise.resolve({
+                id: 'user-id',
+                role: 'EMPLOYEE',
+                isActive: true,
+            });
+        }
+        return Promise.resolve(null);
+    }),
 }));
 
 // Mock auth middleware dependencies
@@ -40,6 +55,22 @@ vi.mock('jsonwebtoken', () => ({
             throw new Error('Invalid token');
         }),
     },
+    verify: vi.fn((token) => {
+        if (token === 'valid-token') {
+            return {
+                userId: 'admin-id',
+                email: 'admin@example.com',
+                role: 'ADMIN',
+            };
+        } else if (token === 'user-token') {
+            return {
+                userId: 'user-id',
+                email: 'user@example.com',
+                role: 'EMPLOYEE',
+            };
+        }
+        throw new Error('Invalid token');
+    }),
 }));
 
 import * as assignmentsService from '../../src/modules/admin/assignments/assignments.service';

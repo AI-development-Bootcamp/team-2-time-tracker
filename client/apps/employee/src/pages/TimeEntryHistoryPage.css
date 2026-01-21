@@ -1,0 +1,36 @@
+.time-entry-history-page {
+    padding: var(--space-6);
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.time-entry-history-page__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-6);
+}
+
+.time-entry-history-page__title {
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    color: var(--color-text);
+}
+
+.time-entry-history-page__action {
+    display: flex;
+    gap: var(--space-3);
+}
+
+.time-entry-history-page__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+.time-entry-history-page__pagination {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-2);
+    margin-top: var(--space-6);
+}

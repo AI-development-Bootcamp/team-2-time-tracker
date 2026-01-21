@@ -118,6 +118,7 @@ export async function updateTask(
     data: {
         name?: string;
         projectId?: string;
+        description?: string | null;
         startDate?: string | null;
         endDate?: string | null;
     }

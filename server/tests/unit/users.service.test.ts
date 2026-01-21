@@ -19,6 +19,15 @@ vi.mock('bcrypt', () => ({
     },
 }));
 
+// Mock jwt config to avoid env.ts validation during import
+vi.mock('../../src/config/jwt', () => ({
+    jwtConfig: {
+        secret: 'test-secret',
+        expiresIn: '2h',
+        expiresInSeconds: 7200,
+    },
+}));
+
 // Import after mocks
 import * as usersService from '../../src/modules/users/users.service';
 import * as usersRepo from '../../src/modules/users/users.repo';

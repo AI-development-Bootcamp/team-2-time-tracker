@@ -4,13 +4,24 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { Request, Response, NextFunction } from 'express';
+
+// Mock jwt config to avoid env.ts validation during import
+vi.mock('../../src/config/jwt', () => ({
+    jwtConfig: {
+        secret: 'test-secret',
+        expiresIn: '2h',
+        expiresInSeconds: 7200,
+    },
+}));
+
+// Mock the users service
+vi.mock('../../src/modules/users/users.service');
+
+// Import after mocks
 import * as usersController from '../../src/modules/users/users.controller';
 import * as usersService from '../../src/modules/users/users.service';
 import { createMockUser } from '../helpers/mockPrisma';
 import { NotFoundError, BadRequestError } from '../../src/shared/errors';
-
-// Mock the users service
-vi.mock('../../src/modules/users/users.service');
 
 describe('users.controller', () => {
     let mockRequest: Partial<Request>;

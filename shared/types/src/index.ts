@@ -14,15 +14,20 @@ export * from './constants/workday.constants';
 
 // DTOs
 export * from './dtos/auth.dto';
-export * from './dtos/users.dto';
-export * from './dtos/admin-users.dto';
+export * from './dtos/timer.dto';
+export * from './dtos/selectors.dto';
+export * from './dtos/pagination.dto';
+export * from './dtos/timeReports.dto';
+export * from './dtos/absences.dto';
 export * from './dtos/admin-entities.dto';
+export * from './dtos/admin-users.dto';
 export * from './dtos/admin-assignments.dto';
-export * from './dtos/admin-reports.dto';
-export * from './dtos/month-locks.dto';
 
 // Schemas
 export * from './zod/auth.schema';
+export * from './zod/timer.schema';
+export * from './zod/timeReports.schema';
+export * from './zod/absences.schema';
 export * from './zod/admin-entities.schema';
 export * from './zod/admin-assignments.schema';
 export * from './zod/admin-reports.schema';

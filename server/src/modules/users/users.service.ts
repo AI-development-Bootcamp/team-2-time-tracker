@@ -74,7 +74,7 @@ export async function getUserById(id: string) {
  * @example
  * const user = await createUser({
  *   email: 'new@example.com',
- *   password: 'TempPass123!',
+ *   password: process.env.DEFAULT_SEED_PASSWORD!,
  *   fullName: 'New Employee',
  *   role: 'EMPLOYEE'
  * });
@@ -162,7 +162,7 @@ export async function updateUserStatus(id: string, isActive: boolean) {
  * @returns {Promise<void>}
  * @throws {NotFoundError} When user doesn't exist
  * @example
- * await resetUserPassword('user-uuid', 'TempPass123!', true);
+ * await resetUserPassword('user-uuid', process.env.DEFAULT_SEED_PASSWORD!, true);
  */
 export async function resetUserPassword(
     id: string,

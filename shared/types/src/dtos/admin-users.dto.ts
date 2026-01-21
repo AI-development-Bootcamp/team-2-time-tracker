@@ -1,4 +1,5 @@
 import { UserRole } from '../enums/roles.enum';
+import { PaginationDto } from './pagination.dto';
 
 /**
  * Admin User DTO - Response DTO for admin operations
@@ -22,18 +23,6 @@ export interface AdminUserDto {
 export interface AdminUserResponseDto {
     success: boolean;
     data: AdminUserDto;
-}
-
-/**
- * Pagination metadata
- */
-export interface PaginationDto {
-    page: number;
-    pageSize: number;
-    total: number;
-    totalPages: number;
-    hasNext: boolean;
-    hasPrev: boolean;
 }
 
 /**

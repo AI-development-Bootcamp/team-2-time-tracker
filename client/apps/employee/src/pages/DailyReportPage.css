@@ -1,0 +1,109 @@
+.daily-report-page {
+    height: 100%;
+    background: #F2F2F7;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Header */
+.daily-report-page__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    background: #F2F2F7;
+    direction: rtl;
+}
+
+.daily-report-page__title {
+    font-family: 'Assistant', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: #141E3E;
+    margin: 0;
+}
+
+.daily-report-page__month-nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.daily-report-page__nav-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    color: rgb(107, 114, 128);
+    cursor: pointer;
+    border-radius: 6px;
+    transition: background-color 0.2s;
+}
+
+.daily-report-page__nav-btn:hover {
+    background: rgb(242, 242, 247);
+}
+
+.daily-report-page__month-name {
+    font-family: 'Assistant', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: rgb(16, 23, 46);
+    min-width: 80px;
+    text-align: center;
+}
+
+.daily-report-page__content {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 16px;
+    padding-bottom: 80px;
+}
+
+/* Smooth scrolling */
+.daily-report-page__content {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+}
+
+/* Custom scrollbar styling */
+.daily-report-page__content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.daily-report-page__content::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.daily-report-page__content::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+}
+
+.daily-report-page__content::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.daily-report-page__loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    font-family: 'Assistant', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 18px;
+    color: rgb(107, 114, 128);
+}
+
+/* Remove old styles that are no longer needed */
+.daily-report-page__date-nav,
+.daily-report-page__summary,
+.daily-report-page__timer,
+.daily-report-page__actions {
+    display: none;
+}

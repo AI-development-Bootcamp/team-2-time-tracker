@@ -13,6 +13,7 @@ export default defineConfig({
                 'src/app.ts',
                 'src/config/**',
                 'src/**/*.d.ts',
+                'src/db/seed.ts',
             ],
             thresholds: {
                 branches: 60,

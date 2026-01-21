@@ -1,0 +1,165 @@
+/**
+ * FrequentSelectors Component Styles
+ * Cascading dropdown selectors for Client -> Project -> Task
+ * Follows BEM naming convention with RTL support
+ */
+
+.frequent-selectors {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    width: 100%;
+    margin-block-end: 1rem;
+}
+
+/* Header with title and sort toggle */
+.frequent-selectors__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.frequent-selectors__title {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text-primary, #1a1a1a);
+}
+
+/* Sort toggle button */
+.frequent-selectors__sort-toggle {
+    padding: 0.5rem 0.875rem;
+    background-color: var(--color-background-secondary, #f5f5f5);
+    border: 1px solid var(--color-border, #e0e0e0);
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-text-primary, #1a1a1a);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.frequent-selectors__sort-toggle:hover:not(:disabled) {
+    background-color: var(--color-background-hover, #ebebeb);
+    border-color: var(--color-border-hover, #d0d0d0);
+}
+
+.frequent-selectors__sort-toggle:active:not(:disabled) {
+    transform: scale(0.98);
+}
+
+.frequent-selectors__sort-toggle:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Dropdowns container */
+.frequent-selectors__dropdowns {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* Individual field container */
+.frequent-selectors__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+/* Field label */
+.frequent-selectors__label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-text-secondary, #666);
+    text-align: start;
+}
+
+/* Dropdown select element */
+.frequent-selectors__dropdown {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    font-family: inherit;
+    color: var(--color-text-primary, #1a1a1a);
+    background-color: var(--color-background, #ffffff);
+    border: 1px solid var(--color-border, #e0e0e0);
+    border-radius: 8px;
+    outline: none;
+    transition: all 0.2s ease;
+    cursor: pointer;
+
+    /* RTL support */
+    direction: rtl;
+    text-align: start;
+}
+
+.frequent-selectors__dropdown:hover:not(:disabled) {
+    border-color: var(--color-border-hover, #d0d0d0);
+}
+
+.frequent-selectors__dropdown:focus {
+    border-color: var(--color-primary, #007bff);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.frequent-selectors__dropdown:disabled {
+    background-color: var(--color-background-disabled, #f9f9f9);
+    color: var(--color-text-disabled, #999);
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* Placeholder option styling */
+.frequent-selectors__dropdown option[value=""] {
+    color: var(--color-text-placeholder, #999);
+}
+
+/* Responsive design - Mobile first */
+@media (max-width: 768px) {
+    .frequent-selectors {
+        gap: 1rem;
+    }
+
+    .frequent-selectors__header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .frequent-selectors__sort-toggle {
+        align-self: flex-end;
+    }
+}
+
+/* Dark mode support (if needed) */
+@media (prefers-color-scheme: dark) {
+    .frequent-selectors__title {
+        color: var(--color-text-primary-dark, #e0e0e0);
+    }
+
+    .frequent-selectors__label {
+        color: var(--color-text-secondary-dark, #b0b0b0);
+    }
+
+    .frequent-selectors__dropdown {
+        color: var(--color-text-primary-dark, #e0e0e0);
+        background-color: var(--color-background-dark, #2a2a2a);
+        border-color: var(--color-border-dark, #404040);
+    }
+
+    .frequent-selectors__dropdown:hover:not(:disabled) {
+        border-color: var(--color-border-hover-dark, #505050);
+    }
+
+    .frequent-selectors__sort-toggle {
+        background-color: var(--color-background-secondary-dark, #333);
+        border-color: var(--color-border-dark, #404040);
+        color: var(--color-text-primary-dark, #e0e0e0);
+    }
+
+    .frequent-selectors__sort-toggle:hover:not(:disabled) {
+        background-color: var(--color-background-hover-dark, #3a3a3a);
+    }
+}

@@ -1,0 +1,144 @@
+/**
+ * AbsencePage styles
+ * iOS Settings-inspired design with gray background
+ */
+
+.absence-page {
+    width: 100%;
+    min-height: 100vh;
+    background-color: #f2f2f7; /* iOS gray background */
+    padding: 0;
+    padding-top: var(--spacing-md);
+}
+
+.absence-page__wrapper {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.absence-page__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-md);
+    padding-bottom: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+    position: relative;
+    background-color: #f2f2f7; /* iOS gray background */
+    direction: rtl;
+}
+
+.absence-page__header-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--spacing-xs);
+    margin-inline: var(--spacing-md);
+}
+
+.absence-page__title {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    color: #1c1c1e; /* iOS dark text */
+    margin: 0;
+    text-align: right;
+}
+
+.absence-page__subtitle {
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-normal);
+    color: var(--color-text-secondary);
+    margin: 0;
+    text-align: right;
+}
+
+.absence-page__close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    color: var(--color-text-secondary);
+    font-size: 28px;
+    line-height: 1;
+    cursor: pointer;
+    border-radius: var(--radius-full);
+    transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.absence-page__spacer {
+    width: 32px;
+    height: 32px;
+}
+
+.absence-page__close:hover {
+    background-color: var(--color-gray-100);
+    color: var(--color-text-primary);
+}
+
+.absence-page__content {
+    padding: var(--spacing-md);
+    width: 100%;
+    background-color: #ffffff; /* White card */
+    border-radius: 10px; /* iOS rounded corners */
+    margin: 0 var(--spacing-md);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); /* Subtle shadow */
+    direction: rtl;
+    text-align: right;
+}
+
+.absence-page__search-zone {
+    background-color: #ffffff; /* White card */
+    border-radius: 10px; /* iOS rounded corners */
+    padding: var(--spacing-lg);
+    margin: var(--spacing-md);
+    min-height: 100px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); /* Subtle shadow */
+}
+
+/* Mobile Responsive */
+@media (min-width: 640px) {
+    .absence-page {
+        padding: var(--spacing-lg);
+    }
+
+    .absence-page__header {
+        padding: var(--spacing-lg);
+    }
+
+    .absence-page__content {
+        padding: var(--spacing-lg);
+    }
+
+    .absence-page__search-zone {
+        padding: var(--spacing-xl);
+    }
+}
+
+/* Dark Mode - iOS style */
+[data-theme="dark"] .absence-page {
+    background-color: #000000; /* iOS dark background */
+}
+
+[data-theme="dark"] .absence-page__header {
+    background-color: #000000;
+}
+
+[data-theme="dark"] .absence-page__title {
+    color: #ffffff;
+}
+
+[data-theme="dark"] .absence-page__content,
+[data-theme="dark"] .absence-page__search-zone {
+    background-color: #1c1c1e; /* iOS dark card */
+    box-shadow: 0 1px 3px rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .absence-page__close:hover {
+    background-color: #2c2c2e;
+}
+

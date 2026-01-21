@@ -25,6 +25,15 @@
   gap: 0.5rem;
 }
 
+/* Remove fieldset border and padding */
+.user-form__field fieldset,
+fieldset.user-form__field {
+  border: none;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+
 .user-form__label {
   font-size: 0.875rem;
   font-weight: 500;
@@ -157,6 +166,31 @@
 
 .user-form__button--secondary:active:not(:disabled) {
   background-color: #d1d5db;
+}
+
+/* Single action button (full width) */
+.user-form__actions--single {
+  justify-content: stretch;
+}
+
+.user-form__button--full {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-width: auto;
+  padding: 0.75rem 1.5rem;
+}
+
+/* RTL support for full button icon */
+[dir='rtl'] .user-form__button--full {
+  flex-direction: row-reverse;
+}
+
+.user-form__button--full:disabled {
+  background-color: #9ca3af;
+  opacity: 1;
 }
 
 /* Mobile responsive */

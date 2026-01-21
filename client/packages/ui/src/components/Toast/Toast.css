@@ -4,7 +4,7 @@
  */
 
 .toast__viewport {
-    position: fixed;
+    position: absolute;
     bottom: 0;
     inset-inline-end: 0;
     display: flex;

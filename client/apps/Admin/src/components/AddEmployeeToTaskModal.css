@@ -1,0 +1,261 @@
+/* AddEmployeeToTaskModal.css */
+
+.add-employee-modal {
+    width: 1100px !important;
+    max-width: 98vw !important;
+    height: 85vh;
+    max-height: 900px;
+    display: flex;
+    flex-direction: column;
+    padding: 0 !important;
+    overflow: hidden;
+    background-color: #fff;
+}
+
+.add-employee-modal__header {
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid #e5e5e5;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.add-employee-modal__header-content {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+}
+
+.add-employee-modal__icon {
+    width: 48px;
+    height: 48px;
+    background-color: #3b82f6;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    flex-shrink: 0;
+}
+
+.add-employee-modal__title-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.add-employee-modal__title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #111827;
+    margin: 0;
+}
+
+.add-employee-modal__subtitle {
+    font-size: 0.9rem;
+    color: #6b7280;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.add-employee-modal__breadcrumbs {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.breadcrumb-pill {
+    padding: 2px 10px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.pill-blue {
+    background-color: #eff6ff;
+    color: #3b82f6;
+}
+
+.pill-pink {
+    background-color: #fdf2f8;
+    color: #ec4899;
+}
+
+.pill-purple {
+    background-color: #f3e8ff;
+    color: #a855f7;
+}
+
+.breadcrumb-arrow {
+    color: #9ca3af;
+    font-size: 1rem;
+    line-height: 1;
+}
+
+.add-employee-modal__close {
+    position: absolute;
+    top: 1rem;
+    right: auto;
+    left: 1rem;
+    border: none;
+    background: none;
+    font-size: 1.5rem;
+    color: #9ca3af;
+    cursor: pointer;
+}
+
+.add-employee-modal__body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem 2rem;
+    overflow: hidden;
+    gap: 1.5rem;
+}
+
+.add-employee-modal__toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 1rem;
+}
+
+.add-employee-modal__search-bar {
+    position: relative;
+    width: 300px;
+}
+
+.add-employee-modal__search-input {
+    width: 100%;
+    padding: 0.625rem 1rem 0.625rem 2.5rem;
+    /* Left padding for icon */
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    direction: rtl;
+    /* For Hebrew text input */
+    text-align: right;
+}
+
+.add-employee-modal__search-icon {
+    position: absolute;
+    left: 0.75rem;
+    /* Icon on left */
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9ca3af;
+    width: 18px;
+    height: 18px;
+    z-index: 10;
+}
+
+.add-employee-modal__table-container {
+    flex: 1;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    overflow: auto;
+}
+
+.add-employee-modal__table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+}
+
+.add-employee-modal__table th {
+    background-color: #1e293b;
+    /* Dark header */
+    color: white;
+    font-weight: 500;
+    text-align: right;
+    padding: 0.75rem 1rem;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.add-employee-modal__table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #e5e7eb;
+    color: #374151;
+}
+
+.add-employee-modal__table tr:hover {
+    background-color: #f9fafb;
+}
+
+.add-employee-modal__checkbox {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+/* Pagination */
+.add-employee-modal__pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    padding-top: 0.5rem;
+}
+
+.add-employee-modal__page-btn {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #e5e7eb;
+    background: white;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.add-employee-modal__page-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.add-employee-modal__page-btn--active {
+    background-color: #f3f4f6;
+    border-color: #d1d5db;
+    color: #111827;
+    font-weight: 600;
+}
+
+.add-employee-modal__footer {
+    padding: 1.5rem 2rem;
+    border-top: 1px solid #e5e5e5;
+}
+
+.add-employee-modal__submit-btn {
+    width: 100%;
+    padding: 0.875rem;
+    background-color: #6b7280;
+    /* Disabled/Secondary look by default */
+    color: white;
+    font-weight: 600;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
+    cursor: not-allowed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: background-color 0.2s;
+}
+
+.add-employee-modal__submit-btn:not(:disabled) {
+    background-color: #3b82f6;
+    /* Primary blue when active */
+    cursor: pointer;
+}
+
+.add-employee-modal__submit-btn:not(:disabled):hover {
+    background-color: #2563eb;
+}

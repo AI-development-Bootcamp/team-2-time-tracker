@@ -9,6 +9,9 @@ COPY package.json pnpm-workspace.yaml pnpm-lock.yaml tsconfig.base.json ./
 COPY server/package.json ./server/
 COPY shared/types/package.json ./shared/types/
 
+# Copy Prisma schema before install (needed for postinstall script)
+COPY server/prisma ./server/prisma
+
 # Install ALL dependencies (including dev) - CI=true prevents TTY issues
 RUN CI=true pnpm install --frozen-lockfile
 

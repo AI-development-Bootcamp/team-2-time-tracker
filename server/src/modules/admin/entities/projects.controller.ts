@@ -7,15 +7,11 @@ import { Request, Response, NextFunction } from 'express';
 import * as projectsService from './projects.service';
 
 /**
- * List all projects with optional filters
+ * List all projects
  */
-export async function listProjects(req: Request, res: Response, next: NextFunction) {
+export async function listProjects(_req: Request, res: Response, next: NextFunction) {
     try {
-        const { clientId, userId } = req.query;
-        const projects = await projectsService.listProjects(
-            clientId as string | undefined,
-            userId as string | undefined
-        );
+        const projects = await projectsService.listProjects();
 
         res.json({
             success: true,
@@ -48,10 +44,12 @@ export async function getProject(req: Request, res: Response, next: NextFunction
  */
 export async function createProject(req: Request, res: Response, next: NextFunction) {
     try {
-        const { name, clientId, reportType, startDate, endDate } = req.body;
+        console.log('createProject called with body:', JSON.stringify(req.body, null, 2));
+        const { name, clientId, description, reportType, startDate, endDate } = req.body;
         const project = await projectsService.createProject({
             name,
             clientId,
+            description,
             reportType,
             startDate,
             endDate,
@@ -62,6 +60,7 @@ export async function createProject(req: Request, res: Response, next: NextFunct
             data: project,
         });
     } catch (error) {
+        console.error('createProject error:', error);
         next(error);
     }
 }
@@ -72,10 +71,11 @@ export async function createProject(req: Request, res: Response, next: NextFunct
 export async function updateProject(req: Request, res: Response, next: NextFunction) {
     try {
         const id = req.params.id as string;
-        const { name, clientId, startDate, endDate } = req.body;
+        const { name, clientId, description, startDate, endDate } = req.body;
         const project = await projectsService.updateProject(id, {
             name,
             clientId,
+            description,
             startDate,
             endDate,
         });

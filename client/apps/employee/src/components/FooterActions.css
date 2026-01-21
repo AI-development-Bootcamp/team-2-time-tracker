@@ -1,0 +1,116 @@
+.footer-actions {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: white;
+}
+
+.footer-actions__buttons {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px;
+    background: rgb(255, 255, 255);
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+    direction: ltr;
+}
+
+.footer-actions__button {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.footer-actions__button--timer {
+    justify-content: flex-start;
+}
+
+.footer-actions__button--manual {
+    justify-content: flex-end;
+}
+
+.footer-actions__icon {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.footer-actions__icon--play,
+.footer-actions__icon--stop,
+.footer-actions__icon--plus {
+    background: transparent;
+}
+
+.footer-actions__label {
+    font-family: 'Assistant', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: rgb(16, 23, 46);
+    white-space: nowrap;
+}
+
+.footer-actions__timer-display {
+    font-family: 'Assistant', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: rgb(254, 90, 137);
+    white-space: nowrap;
+    letter-spacing: 0.5px;
+    direction: ltr;
+}
+
+.footer-actions__separator {
+    width: 1px;
+    height: 40px;
+    background: rgb(229, 231, 235);
+    flex-shrink: 0;
+}
+
+/* Timer running state - pulsing animation */
+.footer-actions__button--timer-running .footer-actions__icon--stop svg circle {
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.8;
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 400px) {
+    .footer-actions__buttons {
+        padding: 10px 16px;
+        gap: 8px;
+    }
+
+    .footer-actions__label {
+        font-size: 14px;
+    }
+
+    .footer-actions__timer-display {
+        font-size: 18px;
+    }
+
+    .footer-actions__icon {
+        width: 40px;
+        height: 40px;
+    }
+
+    .footer-actions__icon svg {
+        width: 36px;
+        height: 36px;
+    }
+}

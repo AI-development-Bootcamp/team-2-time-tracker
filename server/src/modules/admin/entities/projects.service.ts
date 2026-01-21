@@ -44,18 +44,14 @@ function transformProjectWithAssignedUsers(project: any) {
 }
 
 /**
- * @description Retrieves all projects with optional filters.
- * @param {string} [clientId] - Optional client ID to filter by
- * @param {string} [userId] - Optional user ID to filter by (returns projects where user is assigned)
+ * @description Retrieves all projects with client info and assigned users.
  * @returns {Promise<Array>} Projects list with assignedUsers array
  * @example
  * const projects = await listProjects();
- * const clientProjects = await listProjects('client-uuid');
- * const userProjects = await listProjects(undefined, 'user-uuid');
  */
-export async function listProjects(clientId?: string, userId?: string) {
-    const projects = await projectsRepo.findAllProjects(clientId, userId);
-    return projects.map(transformProjectWithAssignedUsers);
+export async function listProjects() {
+    const projects = await projectsRepo.findAllProjects();
+    return projects.map((project) => transformProjectWithAssignedUsers(project));
 }
 
 /**
@@ -115,6 +111,7 @@ export async function getProjectUsers(projectId: string) {
 export async function createProject(data: {
     name: string;
     clientId: string;
+    description?: string | null;
     reportType?: ReportType;
     startDate?: string | null;
     endDate?: string | null;
@@ -146,6 +143,7 @@ export async function createProject(data: {
     const project = await projectsRepo.createProject({
         name: data.name,
         clientId: data.clientId,
+        description: data.description,
         reportType: data.reportType,
         startDate,
         endDate,
@@ -175,6 +173,7 @@ export async function updateProject(
     data: {
         name?: string;
         clientId?: string;
+        description?: string | null;
         startDate?: string | null;
         endDate?: string | null;
     }
@@ -244,6 +243,7 @@ export async function updateProject(
     const updatedProject = await projectsRepo.updateProject(id, {
         name: data.name,
         clientId: data.clientId,
+        description: data.description,
         startDate,
         endDate,
     });
