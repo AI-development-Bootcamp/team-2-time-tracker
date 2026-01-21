@@ -1,5 +1,4 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../stores/authStore';
 import './AdminLayout.css';
 import abraLogo from '../assets/images/abra-logo.svg';
@@ -9,13 +8,8 @@ interface AdminLayoutProps {
 }
 
 export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
-  const navigate = useNavigate();
-  const { user, logout } = useAuthStore();
+  const { user } = useAuthStore();
 
-  const handleLogout = async () => {
-    await logout();
-    navigate('/login');
-  };
 
   return (
     <div className="admin-layout">
@@ -24,7 +18,6 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
           <img src={abraLogo} alt="Abra Logo" className="admin-logo" />
         </div>
         <nav className="admin-layout__nav">
-          {/* Future: Navigation menu items */}
         </nav>
         <div className="admin-layout__footer">
           <div className="admin-layout__user">

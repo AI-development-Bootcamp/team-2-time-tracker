@@ -24,6 +24,7 @@ const options: swaggerJsdoc.Options = {
             { name: 'Admin - Clients', description: 'Admin client management endpoints' },
             { name: 'Admin - Projects', description: 'Admin project management endpoints' },
             { name: 'Admin - Tasks', description: 'Admin task management endpoints' },
+            { name: 'Admin - Assignments', description: 'Admin task assignment management endpoints' },
             { name: 'Health', description: 'Health check endpoints' },
         ],
         components: {
@@ -364,6 +365,105 @@ const options: swaggerJsdoc.Options = {
                             properties: {
                                 code: { type: 'string', example: 'VALIDATION_001', description: 'Error code for validation failures' },
                                 message: { type: 'string', example: 'Invalid date range: endDate must be >= startDate' },
+                            },
+                        },
+                    },
+                },
+                // Assignment Schemas
+                TaskAssignmentDto: {
+                    type: 'object',
+                    properties: {
+                        id: { type: 'string', format: 'uuid', example: 'd4e5f6a7-b8c9-0123-defg-234567890123' },
+                        userId: { type: 'string', format: 'uuid', example: 'e5f6a7b8-c9d0-1234-ef01-34567890abcd' },
+                        taskId: { type: 'string', format: 'uuid', example: 'c3d4e5f6-a7b8-9012-cdef-123456789012' },
+                        createdAt: { type: 'string', format: 'date-time', example: '2026-01-20T10:00:00.000Z' },
+                        userName: { type: 'string', example: 'John Doe' },
+                        userEmail: { type: 'string', format: 'email', example: 'john.doe@example.com' },
+                        taskName: { type: 'string', example: 'Design Homepage' },
+                        projectId: { type: 'string', format: 'uuid', example: 'b2c3d4e5-f6a7-8901-bcde-f12345678901' },
+                        projectName: { type: 'string', example: 'Website Redesign' },
+                        clientId: { type: 'string', format: 'uuid', example: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890' },
+                        clientName: { type: 'string', example: 'Acme Corporation' },
+                    },
+                },
+                CreateTaskAssignmentRequest: {
+                    type: 'object',
+                    required: ['userId', 'taskId'],
+                    properties: {
+                        userId: { type: 'string', format: 'uuid', example: 'e5f6a7b8-c9d0-1234-ef01-34567890abcd', description: 'ID of the user to assign to the task' },
+                        taskId: { type: 'string', format: 'uuid', example: 'c3d4e5f6-a7b8-9012-cdef-123456789012', description: 'ID of the task to assign the user to' },
+                    },
+                },
+                BulkCreateTaskAssignmentsRequest: {
+                    type: 'object',
+                    required: ['userIds', 'taskIds'],
+                    properties: {
+                        userIds: {
+                            type: 'array',
+                            items: { type: 'string', format: 'uuid' },
+                            minItems: 1,
+                            example: ['e5f6a7b8-c9d0-1234-ef01-34567890abcd', 'f6a7b8c9-d0e1-2345-f012-45678901bcde'],
+                            description: 'Array of user IDs to assign. Will be combined with taskIds using cartesian product.',
+                        },
+                        taskIds: {
+                            type: 'array',
+                            items: { type: 'string', format: 'uuid' },
+                            minItems: 1,
+                            example: ['c3d4e5f6-a7b8-9012-cdef-123456789012', 'd4e5f6a7-b8c9-0123-defg-234567890123'],
+                            description: 'Array of task IDs. Will be combined with userIds using cartesian product. For example, 2 users × 3 tasks = 6 assignments.',
+                        },
+                    },
+                },
+                TaskAssignmentResponse: {
+                    type: 'object',
+                    properties: {
+                        success: { type: 'boolean', example: true },
+                        data: { $ref: '#/components/schemas/TaskAssignmentDto' },
+                    },
+                },
+                ListTaskAssignmentsResponse: {
+                    type: 'object',
+                    properties: {
+                        success: { type: 'boolean', example: true },
+                        data: {
+                            type: 'array',
+                            items: { $ref: '#/components/schemas/TaskAssignmentDto' },
+                        },
+                    },
+                },
+                BulkCreateTaskAssignmentsResponse: {
+                    type: 'object',
+                    properties: {
+                        success: { type: 'boolean', example: true },
+                        data: {
+                            type: 'object',
+                            properties: {
+                                created: {
+                                    type: 'array',
+                                    items: { $ref: '#/components/schemas/TaskAssignmentDto' },
+                                    description: 'Array of successfully created assignments',
+                                },
+                                count: { type: 'number', example: 4, description: 'Total number of assignments created' },
+                            },
+                        },
+                    },
+                },
+                AssignmentDeleteResponse: {
+                    type: 'object',
+                    properties: {
+                        success: { type: 'boolean', example: true },
+                        message: { type: 'string', example: 'Task assignment deleted successfully' },
+                    },
+                },
+                AssignmentWithTimeEntriesError: {
+                    type: 'object',
+                    properties: {
+                        success: { type: 'boolean', example: false },
+                        error: {
+                            type: 'object',
+                            properties: {
+                                code: { type: 'string', example: 'VALIDATION_ASSIGNMENT_HAS_TIME_ENTRIES' },
+                                message: { type: 'string', example: 'Cannot delete assignment with existing time entries' },
                             },
                         },
                     },

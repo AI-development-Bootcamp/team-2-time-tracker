@@ -124,14 +124,14 @@ This module handles task-to-user assignments with single and bulk assignment cap
 ## 6. Documentation
 
 ### 6.1 API Documentation
-- [ ] 6.1.1 Document `GET /admin/assignments` in Swagger
-- [ ] 6.1.2 Document `POST /admin/assignments` in Swagger
-- [ ] 6.1.3 Document `POST /admin/assignments/bulk` in Swagger
-- [ ] 6.1.4 Document `DELETE /admin/assignments/:id` in Swagger
-- [ ] 6.1.5 Add examples showing cartesian product logic
-- [ ] 6.1.6 Add request/response examples for all endpoints
+- [x] 6.1.1 Document `GET /admin/assignments` in Swagger
+- [x] 6.1.2 Document `POST /admin/assignments` in Swagger
+- [x] 6.1.3 Document `POST /admin/assignments/bulk` in Swagger
+- [x] 6.1.4 Document `DELETE /admin/assignments/:id` in Swagger
+- [x] 6.1.5 Add examples showing cartesian product logic
+- [x] 6.1.6 Add request/response examples for all endpoints
 
 ### 6.2 Code Documentation
-- [ ] 6.2.1 Add JSDoc comments to assignments.service.ts
-- [ ] 6.2.2 Document cartesian product implementation
-- [ ] 6.2.3 Document duplicate handling strategy
+- [x] 6.2.1 Add JSDoc comments to assignments.service.ts
+- [x] 6.2.2 Document cartesian product implementation
+- [x] 6.2.3 Document duplicate handling strategy
