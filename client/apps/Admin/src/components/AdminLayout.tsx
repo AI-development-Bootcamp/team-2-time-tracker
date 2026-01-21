@@ -21,7 +21,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
     <div className="admin-layout">
       <aside className="admin-layout__sidebar">
         <div className="admin-layout__logo">
-           <img src={abraLogo} alt="Abra Logo" className="admin-logo" />
+          <img src={abraLogo} alt="Abra Logo" className="admin-logo" />
         </div>
         <nav className="admin-layout__nav">
           {/* Future: Navigation menu items */}
@@ -29,15 +29,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
         <div className="admin-layout__footer">
           <div className="admin-layout__user">
             <span className="admin-layout__user-name">{user?.fullName}</span>
-            <span className="admin-layout__user-email">{user?.email}</span>
           </div>
-          <button
-            className="admin-layout__logout-btn"
-            onClick={handleLogout}
-            type="button"
-          >
-            התנתק
-          </button>
         </div>
       </aside>
       <main className="admin-layout__content">

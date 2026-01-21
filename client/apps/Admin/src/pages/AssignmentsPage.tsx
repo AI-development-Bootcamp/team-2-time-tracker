@@ -319,7 +319,7 @@ function AssignmentsPage(): React.JSX.Element {
 
     return (
         <AdminLayout>
-            <label> placeholder</label>
+
             <DashboardHeader
                 title="שיוך עובד למשימה"
                 showAddButton={false}
