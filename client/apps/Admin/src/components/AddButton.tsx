@@ -50,12 +50,7 @@ export const AddButton: React.FC = () => {
           onClick={handleToggleDropdown}
           type="button"
         >
-<<<<<<< HEAD
           יצירה +
-=======
-          יצירה
-          <ChevronDown size={20} />
->>>>>>> origin/development
         </button>
 
         {isDropdownOpen && (
