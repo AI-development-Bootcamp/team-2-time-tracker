@@ -14,6 +14,7 @@ import { adminAuthRouter } from './modules/admin/auth/auth.routes';
 import { clientsRouter } from './modules/admin/entities/clients.routes';
 import { projectsRouter } from './modules/admin/entities/projects.routes';
 import { tasksRouter } from './modules/admin/entities/tasks.routes';
+import { assignmentsRouter } from './modules/admin/assignments/assignments.routes';
 
 const router: Router = Router();
 
@@ -36,6 +37,7 @@ router.use('/workday', workdayRouter);
 router.use('/selectors', selectorsRouter);
 router.use('/my', myRouter);
 router.use('/absences', absencesRouter);
+router.use('/admin/assignments', assignmentsRouter);
 
 export { router };
 

@@ -89,6 +89,15 @@ export const mockPrismaTask = {
     count: vi.fn(),
 };
 
+export const mockPrismaTaskAssignment = {
+    findUnique: vi.fn(),
+    findMany: vi.fn(),
+    create: vi.fn(),
+    createMany: vi.fn(),
+    delete: vi.fn(),
+    count: vi.fn(),
+};
+
 export const mockPrisma = {
     user: mockPrismaUser,
     refreshToken: mockPrismaRefreshToken,
@@ -100,6 +109,7 @@ export const mockPrisma = {
     client: mockPrismaClient,
     project: mockPrismaProject,
     task: mockPrismaTask,
+    taskAssignment: mockPrismaTaskAssignment,
     $transaction: vi.fn((callback) => callback(mockPrisma)),
 };
 
@@ -122,6 +132,7 @@ export function resetPrismaMocks() {
     Object.values(mockPrismaClient).forEach((mock) => mock.mockReset());
     Object.values(mockPrismaProject).forEach((mock) => mock.mockReset());
     Object.values(mockPrismaTask).forEach((mock) => mock.mockReset());
+    Object.values(mockPrismaTaskAssignment).forEach((mock) => mock.mockReset());
     mockPrisma.$transaction.mockReset();
 }
 
@@ -163,7 +174,7 @@ export function createMockRefreshToken(overrides = {}) {
 export function createMockAbsenceRequest(overrides = {}) {
     const startDate = new Date('2026-01-15');
     const endDate = new Date('2026-01-15');
-    
+
     return {
         id: '123e4567-e89b-12d3-a456-426614174000',
         userId: 'test-user-id',
@@ -240,7 +251,7 @@ export function createMockClient(overrides: Record<string, unknown> = {}) {
 export function createMockProject(overrides: Record<string, unknown> = {}) {
     // Extract nested overrides
     const { client: clientOverrides, tasks: tasksOverrides, _count: countOverrides, ...rest } = overrides;
-    
+
     return {
         id: 'test-project-id',
         clientId: 'test-client-id',
@@ -282,3 +293,35 @@ export function createMockTask(overrides = {}) {
         ...overrides,
     };
 }
+
+/**
+ * Create a mock task assignment object with full relation structure
+ */
+export function createMockTaskAssignment(overrides: any = {}) {
+    const user = createMockUser();
+    const client = createMockClient();
+    const project = createMockProject({ client });
+    const task = createMockTask();
+
+    // Enriched task for the assignment (as returned by service queries)
+    const taskWithRelations = {
+        ...task,
+        project: {
+            ...project,
+            client: client
+        }
+    };
+
+    return {
+        id: 'test-assignment-id',
+        userId: user.id,
+        taskId: task.id,
+        assignedByAdminId: 'admin-id',
+        createdAt: new Date(),
+        user: user,
+        task: taskWithRelations,
+        ...overrides,
+    };
+}
+
+

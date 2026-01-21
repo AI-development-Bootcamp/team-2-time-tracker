@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ChevronDown } from 'lucide-react';
 import './AddButton.css';
 import { CreateUserModal } from './CreateUserModal';
 import { CreateClientModal } from './CreateClientModal';
@@ -50,8 +49,7 @@ export const AddButton: React.FC = () => {
           onClick={handleToggleDropdown}
           type="button"
         >
-          יצירה
-          <ChevronDown size={20} />
+          יצירה +
         </button>
 
         {isDropdownOpen && (

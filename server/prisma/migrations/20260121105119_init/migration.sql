@@ -11,19 +11,25 @@ CREATE TYPE "TaskStatus" AS ENUM ('OPEN', 'CLOSED');
 CREATE TYPE "WorkLocation" AS ENUM ('OFFICE', 'CLIENT', 'HOME');
 
 -- CreateEnum
-CREATE TYPE "TimeEntrySource" AS ENUM ('MANUAL', 'TIMER');
-
--- CreateEnum
-CREATE TYPE "ReportType" AS ENUM ('TOTAL_HOURS', 'ENTRY_EXIT');
-
--- CreateEnum
 CREATE TYPE "AbsenceType" AS ENUM ('VACATION', 'SICK', 'RESERVES', 'OTHER');
 
 -- CreateEnum
 CREATE TYPE "AbsenceStatus" AS ENUM ('PENDING_DOCUMENT', 'SUBMITTED');
 
 -- CreateEnum
-CREATE TYPE "WorkdayStatus" AS ENUM ('MISSING', 'FULL', 'EXCEPTION');
+CREATE TYPE "TimeEntrySource" AS ENUM ('MANUAL', 'TIMER');
+
+-- CreateEnum
+CREATE TYPE "ReportType" AS ENUM ('TOTAL_HOURS', 'ENTRY_EXIT');
+
+-- CreateEnum
+CREATE TYPE "AuditEntity" AS ENUM ('USER', 'CLIENT', 'PROJECT', 'TASK', 'TASK_ASSIGNMENT', 'TIME_ENTRY', 'ABSENCE', 'MONTH_LOCK');
+
+-- CreateEnum
+CREATE TYPE "AuditAction" AS ENUM ('CREATE', 'UPDATE', 'STATUS_CHANGE', 'RESET_PASSWORD', 'LOCK_MONTH', 'UNLOCK_MONTH');
+
+-- CreateEnum
+CREATE TYPE "WorkdayStatus" AS ENUM ('FULL', 'PARTIAL', 'MISSING');
 
 -- CreateTable
 CREATE TABLE "users" (
@@ -105,6 +111,74 @@ CREATE TABLE "task_assignments" (
 );
 
 -- CreateTable
+CREATE TABLE "month_locks" (
+    "id" TEXT NOT NULL,
+    "month" DATE NOT NULL,
+    "locked_at" TIMESTAMP(3) NOT NULL,
+    "locked_by_admin_id" TEXT NOT NULL,
+    "unlocked_at" TIMESTAMP(3),
+    "unlocked_by_admin_id" TEXT,
+
+    CONSTRAINT "month_locks_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "workday_summaries" (
+    "id" TEXT NOT NULL,
+    "user_id" TEXT NOT NULL,
+    "work_date" DATE NOT NULL,
+    "target_minutes" INTEGER NOT NULL DEFAULT 540,
+    "work_minutes" INTEGER NOT NULL DEFAULT 0,
+    "absence_minutes" INTEGER NOT NULL DEFAULT 0,
+    "status" "WorkdayStatus" NOT NULL DEFAULT 'MISSING',
+    "is_locked" BOOLEAN NOT NULL DEFAULT false,
+    "locked_month_id" TEXT,
+    "is_submitted" BOOLEAN NOT NULL DEFAULT false,
+    "submitted_at" TIMESTAMP(3),
+    "requires_exact_total" BOOLEAN NOT NULL DEFAULT false,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "workday_summaries_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "timers" (
+    "id" TEXT NOT NULL,
+    "user_id" TEXT NOT NULL,
+    "work_date" DATE NOT NULL,
+    "started_at" TIMESTAMP(3) NOT NULL,
+    "stopped_at" TIMESTAMP(3),
+    "duration_minutes" INTEGER,
+    "is_running" BOOLEAN NOT NULL DEFAULT true,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "timers_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "time_entries" (
+    "id" TEXT NOT NULL,
+    "user_id" TEXT NOT NULL,
+    "work_date" DATE NOT NULL,
+    "location" "WorkLocation" NOT NULL,
+    "start_time" TIME NOT NULL,
+    "end_time" TIME NOT NULL,
+    "duration_minutes" INTEGER NOT NULL,
+    "task_id" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
+    "source" "TimeEntrySource" NOT NULL DEFAULT 'MANUAL',
+    "timer_id" TEXT,
+    "is_deleted" BOOLEAN NOT NULL DEFAULT false,
+    "deleted_at" TIMESTAMP(3),
+    "deleted_by_user_id" TEXT,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "time_entries_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "absence_requests" (
     "id" TEXT NOT NULL,
     "user_id" TEXT NOT NULL,
@@ -147,75 +221,27 @@ CREATE TABLE "absence_documents" (
 );
 
 -- CreateTable
-CREATE TABLE "month_locks" (
+CREATE TABLE "audit_logs" (
     "id" TEXT NOT NULL,
-    "month" DATE NOT NULL,
-    "locked_at" TIMESTAMP(3) NOT NULL,
-    "locked_by_admin_id" TEXT NOT NULL,
-    "unlocked_at" TIMESTAMP(3),
-    "unlocked_by_admin_id" TEXT,
-
-    CONSTRAINT "month_locks_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "timers" (
-    "id" TEXT NOT NULL,
-    "user_id" TEXT NOT NULL,
-    "work_date" DATE NOT NULL,
-    "started_at" TIMESTAMP(3) NOT NULL,
-    "stopped_at" TIMESTAMP(3),
-    "duration_minutes" INTEGER,
-    "is_running" BOOLEAN NOT NULL DEFAULT true,
+    "admin_id" TEXT NOT NULL,
+    "entity" "AuditEntity" NOT NULL,
+    "entity_id" TEXT NOT NULL,
+    "action" "AuditAction" NOT NULL,
+    "old_value" JSONB,
+    "new_value" JSONB,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "timers_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "time_entries" (
-    "id" TEXT NOT NULL,
-    "user_id" TEXT NOT NULL,
-    "work_date" DATE NOT NULL,
-    "location" "WorkLocation" NOT NULL,
-    "start_time" TIME NOT NULL,
-    "end_time" TIME NOT NULL,
-    "duration_minutes" INTEGER NOT NULL,
-    "task_id" TEXT NOT NULL,
-    "description" TEXT NOT NULL,
-    "source" "TimeEntrySource" NOT NULL DEFAULT 'MANUAL',
-    "timer_id" TEXT,
-    "is_deleted" BOOLEAN NOT NULL DEFAULT false,
-    "deleted_at" TIMESTAMP(3),
-    "deleted_by_user_id" TEXT,
-    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "time_entries_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "workday_summaries" (
-    "id" TEXT NOT NULL,
-    "user_id" TEXT NOT NULL,
-    "work_date" DATE NOT NULL,
-    "target_minutes" INTEGER NOT NULL DEFAULT 540,
-    "work_minutes" INTEGER NOT NULL DEFAULT 0,
-    "absence_minutes" INTEGER NOT NULL DEFAULT 0,
-    "status" "WorkdayStatus" NOT NULL DEFAULT 'MISSING',
-    "is_locked" BOOLEAN NOT NULL DEFAULT false,
-    "locked_month_id" TEXT,
-    "is_submitted" BOOLEAN NOT NULL DEFAULT false,
-    "submitted_at" TIMESTAMP(3),
-    "requires_exact_total" BOOLEAN NOT NULL DEFAULT false,
-    "updated_at" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "workday_summaries_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "audit_logs_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
+
+-- CreateIndex
+CREATE INDEX "users_is_active_idx" ON "users"("is_active");
+
+-- CreateIndex
+CREATE INDEX "users_role_idx" ON "users"("role");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "refresh_tokens_token_key" ON "refresh_tokens"("token");
@@ -254,6 +280,33 @@ CREATE INDEX "task_assignments_task_id_idx" ON "task_assignments"("task_id");
 CREATE UNIQUE INDEX "task_assignments_user_id_task_id_key" ON "task_assignments"("user_id", "task_id");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "month_locks_month_key" ON "month_locks"("month");
+
+-- CreateIndex
+CREATE INDEX "workday_summaries_is_locked_idx" ON "workday_summaries"("is_locked");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "workday_summaries_user_id_work_date_key" ON "workday_summaries"("user_id", "work_date");
+
+-- CreateIndex
+CREATE INDEX "timers_user_id_work_date_idx" ON "timers"("user_id", "work_date");
+
+-- CreateIndex
+CREATE INDEX "timers_user_id_is_running_idx" ON "timers"("user_id", "is_running");
+
+-- CreateIndex
+CREATE INDEX "time_entries_user_id_work_date_idx" ON "time_entries"("user_id", "work_date");
+
+-- CreateIndex
+CREATE INDEX "time_entries_task_id_idx" ON "time_entries"("task_id");
+
+-- CreateIndex
+CREATE INDEX "time_entries_user_id_task_id_idx" ON "time_entries"("user_id", "task_id");
+
+-- CreateIndex
+CREATE INDEX "time_entries_user_id_work_date_is_deleted_idx" ON "time_entries"("user_id", "work_date", "is_deleted");
+
+-- CreateIndex
 CREATE INDEX "absence_requests_user_id_start_date_end_date_idx" ON "absence_requests"("user_id", "start_date", "end_date");
 
 -- CreateIndex
@@ -275,34 +328,10 @@ CREATE UNIQUE INDEX "absence_days_user_id_work_date_absence_request_id_key" ON "
 CREATE INDEX "absence_documents_absence_request_id_idx" ON "absence_documents"("absence_request_id");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "month_locks_month_key" ON "month_locks"("month");
+CREATE INDEX "audit_logs_entity_entity_id_idx" ON "audit_logs"("entity", "entity_id");
 
 -- CreateIndex
-CREATE INDEX "month_locks_month_idx" ON "month_locks"("month");
-
--- CreateIndex
-CREATE INDEX "timers_user_id_work_date_idx" ON "timers"("user_id", "work_date");
-
--- CreateIndex
-CREATE INDEX "timers_user_id_is_running_idx" ON "timers"("user_id", "is_running");
-
--- CreateIndex
-CREATE INDEX "time_entries_user_id_work_date_idx" ON "time_entries"("user_id", "work_date");
-
--- CreateIndex
-CREATE INDEX "time_entries_task_id_idx" ON "time_entries"("task_id");
-
--- CreateIndex
-CREATE INDEX "time_entries_user_id_task_id_idx" ON "time_entries"("user_id", "task_id");
-
--- CreateIndex
-CREATE INDEX "workday_summaries_user_id_work_date_idx" ON "workday_summaries"("user_id", "work_date");
-
--- CreateIndex
-CREATE INDEX "workday_summaries_is_locked_idx" ON "workday_summaries"("is_locked");
-
--- CreateIndex
-CREATE UNIQUE INDEX "workday_summaries_user_id_work_date_key" ON "workday_summaries"("user_id", "work_date");
+CREATE INDEX "audit_logs_admin_id_created_at_idx" ON "audit_logs"("admin_id", "created_at");
 
 -- AddForeignKey
 ALTER TABLE "refresh_tokens" ADD CONSTRAINT "refresh_tokens_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -323,25 +352,16 @@ ALTER TABLE "task_assignments" ADD CONSTRAINT "task_assignments_task_id_fkey" FO
 ALTER TABLE "task_assignments" ADD CONSTRAINT "task_assignments_assigned_by_admin_id_fkey" FOREIGN KEY ("assigned_by_admin_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "absence_requests" ADD CONSTRAINT "absence_requests_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "absence_days" ADD CONSTRAINT "absence_days_absence_request_id_fkey" FOREIGN KEY ("absence_request_id") REFERENCES "absence_requests"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "absence_days" ADD CONSTRAINT "absence_days_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "absence_documents" ADD CONSTRAINT "absence_documents_absence_request_id_fkey" FOREIGN KEY ("absence_request_id") REFERENCES "absence_requests"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "absence_documents" ADD CONSTRAINT "absence_documents_uploaded_by_user_id_fkey" FOREIGN KEY ("uploaded_by_user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "month_locks" ADD CONSTRAINT "month_locks_locked_by_admin_id_fkey" FOREIGN KEY ("locked_by_admin_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "month_locks" ADD CONSTRAINT "month_locks_unlocked_by_admin_id_fkey" FOREIGN KEY ("unlocked_by_admin_id") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "workday_summaries" ADD CONSTRAINT "workday_summaries_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "workday_summaries" ADD CONSTRAINT "workday_summaries_locked_month_id_fkey" FOREIGN KEY ("locked_month_id") REFERENCES "month_locks"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "timers" ADD CONSTRAINT "timers_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -359,7 +379,19 @@ ALTER TABLE "time_entries" ADD CONSTRAINT "time_entries_timer_id_fkey" FOREIGN K
 ALTER TABLE "time_entries" ADD CONSTRAINT "time_entries_deleted_by_user_id_fkey" FOREIGN KEY ("deleted_by_user_id") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "workday_summaries" ADD CONSTRAINT "workday_summaries_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "absence_requests" ADD CONSTRAINT "absence_requests_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "workday_summaries" ADD CONSTRAINT "workday_summaries_locked_month_id_fkey" FOREIGN KEY ("locked_month_id") REFERENCES "month_locks"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "absence_days" ADD CONSTRAINT "absence_days_absence_request_id_fkey" FOREIGN KEY ("absence_request_id") REFERENCES "absence_requests"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "absence_days" ADD CONSTRAINT "absence_days_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "absence_documents" ADD CONSTRAINT "absence_documents_absence_request_id_fkey" FOREIGN KEY ("absence_request_id") REFERENCES "absence_requests"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "absence_documents" ADD CONSTRAINT "absence_documents_uploaded_by_user_id_fkey" FOREIGN KEY ("uploaded_by_user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "audit_logs" ADD CONSTRAINT "audit_logs_admin_id_fkey" FOREIGN KEY ("admin_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

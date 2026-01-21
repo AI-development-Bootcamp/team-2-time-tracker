@@ -24,4 +24,9 @@ export default defineConfig({
         },
         setupFiles: ['./tests/unit/setup.ts'],
     },
+    resolve: {
+        alias: {
+            '@shared/types': '../shared/types/src/index.ts',
+        },
+    },
 });
