@@ -17,6 +17,7 @@ interface NavItem {
 }
 
 export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
+  const navigate = useNavigate();
   const location = useLocation();
   const { user } = useAuthStore();
 
