@@ -19,6 +19,7 @@ const ABSENCE_TYPE_OPTIONS: SelectOption[] = [
     { value: 'VACATION_FULL', label: 'חופשה - יום מלא', emoji: '🏖️' },
     { value: 'SICK', label: 'מחלה', emoji: '😷' },
     { value: 'RESERVES', label: 'מילואים', emoji: '🚨' },
+    { value: 'OTHER', label: 'אחר', emoji: '📝' },
 ];
 
 

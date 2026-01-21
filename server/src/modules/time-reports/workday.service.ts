@@ -100,16 +100,27 @@ export async function getWorkday(userId: string, dateStr: string) {
     // Calculate work minutes from entries
     const workMinutes = timeEntries.reduce((sum: number, entry: { durationMinutes: number }) => sum + entry.durationMinutes, 0);
 
-    // Get absence minutes for the date (if absences module exists)
-    // For now, we'll check if there are absence_days for this user/date
-    const absenceDays = await prisma.$queryRaw<{ minutes: number }[]>`
-        SELECT COALESCE(SUM(minutes), 0) as minutes 
-        FROM absence_days 
-        WHERE user_id = ${userId} 
-        AND work_date = ${workDate}
-    `.catch(() => [{ minutes: 0 }]);
+    // Get absence minutes and details for the date
+    const absenceDaysRecords = await prisma.absenceDay.findMany({
+        where: {
+            userId,
+            workDate,
+        },
+        include: {
+            absenceRequest: true,
+        },
+    });
 
-    const absenceMinutes = Number(absenceDays[0]?.minutes || 0);
+    const absenceMinutes = absenceDaysRecords.reduce((sum, day) => sum + day.minutes, 0);
+
+    const absences = absenceDaysRecords.map((day) => ({
+        id: day.absenceRequestId,
+        type: day.absenceRequest.type,
+        startDate: day.absenceRequest.startDate.toISOString().split('T')[0],
+        endDate: day.absenceRequest.endDate.toISOString().split('T')[0],
+        minutes: day.minutes,
+    }));
+
     const totalMinutes = workMinutes + absenceMinutes;
     const status = calculateStatus(totalMinutes);
 
@@ -161,7 +172,7 @@ export async function getWorkday(userId: string, dateStr: string) {
             requiresExactTotal: summary.requiresExactTotal,
         },
         timeEntries: timeEntries.map(formatTimeEntry),
-        absences: [], // TODO: Fetch actual absences when absences module is integrated
+        absences,
     };
 }
 

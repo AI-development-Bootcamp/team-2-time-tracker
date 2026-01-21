@@ -52,6 +52,9 @@ interface MultiProjectTimeEntryFormProps {
     onOpenChange: (open: boolean) => void;
     /** Submission handler - called once per project entry */
     onSubmit: (data: CreateTimeEntryInput) => Promise<void>;
+
+    /** Callback fired when an absence is successfully submitted */
+    onAbsenceSubmitSuccess?: () => void;
 }
 
 /**
@@ -68,10 +71,11 @@ export const MultiProjectTimeEntryForm: React.FC<MultiProjectTimeEntryFormProps>
     open,
     onOpenChange,
     onSubmit,
+    onAbsenceSubmitSuccess,
 }) => {
     // Dialog mode: 'time-entry' or 'absence'
     const [dialogMode, setDialogMode] = useState<'time-entry' | 'absence'>('time-entry');
-    
+
     const [currentDate, setCurrentDate] = useState<string>(new Date().toISOString().split('T')[0]);
     const [startTime, setStartTime] = useState('09:00');
     const [endTime, setEndTime] = useState('15:00');
@@ -317,7 +321,7 @@ export const MultiProjectTimeEntryForm: React.FC<MultiProjectTimeEntryFormProps>
                     fileUploadSuccess = false;
                     const errorMessage = typeof uploadErr === 'string' ? uploadErr : 'שגיאה בהעלאת הקובץ';
                     console.error('Error uploading file:', uploadErr);
-                    
+
                     // Show warning that absence was saved but file upload failed
                     toast.warning(`הדיווח נשמר, אך העלאת הקובץ נכשלה: ${errorMessage}`);
                 }
@@ -326,6 +330,11 @@ export const MultiProjectTimeEntryForm: React.FC<MultiProjectTimeEntryFormProps>
             // Success - show notification and close dialog
             if (fileUploadSuccess) {
                 toast.success('הדיווח נשמר בהצלחה!');
+            }
+
+            // Notify parent about success
+            if (onAbsenceSubmitSuccess) {
+                onAbsenceSubmitSuccess();
             }
 
             // Close dialog and reset form
@@ -456,149 +465,149 @@ export const MultiProjectTimeEntryForm: React.FC<MultiProjectTimeEntryFormProps>
                             })}
                         </div>
 
-                {/* Project forms */}
-                <div className="multi-project-form__entries">
-                    <h3 className="multi-project-form__section-title">דיווחי פרוייקטים</h3>
+                        {/* Project forms */}
+                        <div className="multi-project-form__entries">
+                            <h3 className="multi-project-form__section-title">דיווחי פרוייקטים</h3>
 
-                    {projectForms.map((form) => {
-                        const availableProjects = getAvailableProjects(form.id);
-                        const tasks = form.projectId ? getTasksForProject(form.projectId) : [];
-                        const client = form.projectId ? getClientForProject(form.projectId) : undefined;
-                        const project = allProjects.find(p => p.id === form.projectId);
+                            {projectForms.map((form) => {
+                                const availableProjects = getAvailableProjects(form.id);
+                                const tasks = form.projectId ? getTasksForProject(form.projectId) : [];
+                                const client = form.projectId ? getClientForProject(form.projectId) : undefined;
+                                const project = allProjects.find(p => p.id === form.projectId);
 
-                        return (
-                            <div key={form.id} className="multi-project-form__entry">
-                                {projectForms.length > 1 && (
-                                    <button
-                                        className="multi-project-form__entry-remove"
-                                        onClick={() => handleRemoveForm(form.id)}
-                                        type="button"
-                                    >
-                                        ×
-                                    </button>
-                                )}
+                                return (
+                                    <div key={form.id} className="multi-project-form__entry">
+                                        {projectForms.length > 1 && (
+                                            <button
+                                                className="multi-project-form__entry-remove"
+                                                onClick={() => handleRemoveForm(form.id)}
+                                                type="button"
+                                            >
+                                                ×
+                                            </button>
+                                        )}
 
-                                {/* Breadcrumb */}
-                                {client && project && (
-                                    <div className="multi-project-form__breadcrumb">
-                                        {client.name} → {project.name}
+                                        {/* Breadcrumb */}
+                                        {client && project && (
+                                            <div className="multi-project-form__breadcrumb">
+                                                {client.name} → {project.name}
+                                            </div>
+                                        )}
+
+                                        {/* Project selector */}
+                                        <div className="multi-project-form__field">
+                                            <label>פרויקט</label>
+                                            <select
+                                                value={form.projectId}
+                                                onChange={(e) => handleProjectChange(form.id, e.target.value)}
+                                            >
+                                                <option value="">בחר פרויקט...</option>
+                                                {availableProjects.map(project => {
+                                                    const projectClient = clients.find(c => c.id === project.clientId);
+                                                    return (
+                                                        <option key={project.id} value={project.id}>
+                                                            {projectClient?.name} - {project.name}
+                                                        </option>
+                                                    );
+                                                })}
+                                            </select>
+                                        </div>
+
+                                        {/* Task selector */}
+                                        <div className="multi-project-form__field">
+                                            <label>משימה</label>
+                                            <select
+                                                value={form.taskId}
+                                                onChange={(e) => handleTaskChange(form.id, e.target.value)}
+                                                disabled={!form.projectId}
+                                            >
+                                                <option value="">בחר משימה...</option>
+                                                {tasks.map(task => (
+                                                    <option key={task.id} value={task.id}>
+                                                        {task.name}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
+
+                                        {/* Location selector */}
+                                        <div className="multi-project-form__field">
+                                            <label>מיקום</label>
+                                            <select
+                                                value={form.location}
+                                                onChange={(e) => handleLocationChange(form.id, e.target.value as WorkLocation)}
+                                            >
+                                                <option value={WorkLocation.OFFICE}>משרד</option>
+                                                <option value={WorkLocation.CLIENT}>לקוח</option>
+                                                <option value={WorkLocation.HOME}>בית</option>
+                                            </select>
+                                        </div>
+
+                                        {/* Description field */}
+                                        <div className="multi-project-form__field">
+                                            <label>תיאור עבודה</label>
+                                            <textarea
+                                                value={form.description}
+                                                onChange={(e) => handleDescriptionChange(form.id, e.target.value)}
+                                                placeholder="תאר את העבודה שביצעת..."
+                                                rows={3}
+                                            />
+                                        </div>
                                     </div>
-                                )}
+                                );
+                            })}
 
-                                {/* Project selector */}
-                                <div className="multi-project-form__field">
-                                    <label>פרויקט</label>
-                                    <select
-                                        value={form.projectId}
-                                        onChange={(e) => handleProjectChange(form.id, e.target.value)}
-                                    >
-                                        <option value="">בחר פרויקט...</option>
-                                        {availableProjects.map(project => {
-                                            const projectClient = clients.find(c => c.id === project.clientId);
-                                            return (
-                                                <option key={project.id} value={project.id}>
-                                                    {projectClient?.name} - {project.name}
-                                                </option>
-                                            );
-                                        })}
-                                    </select>
-                                </div>
+                            {/* Add project button */}
+                            <Button
+                                variant="secondary"
+                                onClick={handleAddProjectForm}
+                                type="button"
+                            >
+                                + הוספת פרוייקט
+                            </Button>
+                        </div>
 
-                                {/* Task selector */}
-                                <div className="multi-project-form__field">
-                                    <label>משימה</label>
-                                    <select
-                                        value={form.taskId}
-                                        onChange={(e) => handleTaskChange(form.id, e.target.value)}
-                                        disabled={!form.projectId}
-                                    >
-                                        <option value="">בחר משימה...</option>
-                                        {tasks.map(task => (
-                                            <option key={task.id} value={task.id}>
-                                                {task.name}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
-
-                                {/* Location selector */}
-                                <div className="multi-project-form__field">
-                                    <label>מיקום</label>
-                                    <select
-                                        value={form.location}
-                                        onChange={(e) => handleLocationChange(form.id, e.target.value as WorkLocation)}
-                                    >
-                                        <option value={WorkLocation.OFFICE}>משרד</option>
-                                        <option value={WorkLocation.CLIENT}>לקוח</option>
-                                        <option value={WorkLocation.HOME}>בית</option>
-                                    </select>
-                                </div>
-
-                                {/* Description field */}
-                                <div className="multi-project-form__field">
-                                    <label>תיאור עבודה</label>
-                                    <textarea
-                                        value={form.description}
-                                        onChange={(e) => handleDescriptionChange(form.id, e.target.value)}
-                                        placeholder="תאר את העבודה שביצעת..."
-                                        rows={3}
-                                    />
-                                </div>
+                        {/* Time fields */}
+                        <div className="multi-project-form__time-fields">
+                            <div className="multi-project-form__field">
+                                <label>שעת התחלה</label>
+                                <input
+                                    type="time"
+                                    value={startTime}
+                                    onChange={(e) => setStartTime(e.target.value)}
+                                    disabled={isTimeLocked}
+                                    style={isTimeLocked ? { backgroundColor: '#f3f4f6', cursor: 'not-allowed' } : {}}
+                                />
                             </div>
-                        );
-                    })}
+                            <div className="multi-project-form__field">
+                                <label>שעת סיום</label>
+                                <input
+                                    type="time"
+                                    value={endTime}
+                                    onChange={(e) => setEndTime(e.target.value)}
+                                    disabled={isTimeLocked}
+                                    style={isTimeLocked ? { backgroundColor: '#f3f4f6', cursor: 'not-allowed' } : {}}
+                                />
+                            </div>
+                        </div>
 
-                    {/* Add project button */}
-                    <Button
-                        variant="secondary"
-                        onClick={handleAddProjectForm}
-                        type="button"
-                    >
-                        + הוספת פרוייקט
-                    </Button>
-                </div>
+                        {/* Error message */}
+                        {error && (
+                            <div className="multi-project-form__error">
+                                {error}
+                            </div>
+                        )}
 
-                {/* Time fields */}
-                <div className="multi-project-form__time-fields">
-                    <div className="multi-project-form__field">
-                        <label>שעת התחלה</label>
-                        <input
-                            type="time"
-                            value={startTime}
-                            onChange={(e) => setStartTime(e.target.value)}
-                            disabled={isTimeLocked}
-                            style={isTimeLocked ? { backgroundColor: '#f3f4f6', cursor: 'not-allowed' } : {}}
-                        />
-                    </div>
-                    <div className="multi-project-form__field">
-                        <label>שעת סיום</label>
-                        <input
-                            type="time"
-                            value={endTime}
-                            onChange={(e) => setEndTime(e.target.value)}
-                            disabled={isTimeLocked}
-                            style={isTimeLocked ? { backgroundColor: '#f3f4f6', cursor: 'not-allowed' } : {}}
-                        />
-                    </div>
-                </div>
-
-                {/* Error message */}
-                {error && (
-                    <div className="multi-project-form__error">
-                        {error}
-                    </div>
-                )}
-
-                {/* Submit button */}
-                <div className="multi-project-form__actions">
-                    <Button
-                        onClick={handleSubmit}
-                        disabled={isSubmitting}
-                        type="button"
-                    >
-                        {isSubmitting ? 'שומר...' : 'שמירה'}
-                    </Button>
-                </div>
+                        {/* Submit button */}
+                        <div className="multi-project-form__actions">
+                            <Button
+                                onClick={handleSubmit}
+                                disabled={isSubmitting}
+                                type="button"
+                            >
+                                {isSubmitting ? 'שומר...' : 'שמירה'}
+                            </Button>
+                        </div>
                     </>
                 )}
 

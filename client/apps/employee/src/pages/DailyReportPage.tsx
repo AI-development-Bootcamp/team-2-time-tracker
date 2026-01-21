@@ -59,13 +59,57 @@ export const DailyReportPage: React.FC = () => {
             try {
                 const workday = await workdayApi.getWorkday(dateStr);
                 const entries = workday.data?.timeEntries || [];
+
+                // Map absences to virtual time entries
+                const absences = workday.data?.absences || [];
+                const absenceEntries: TimeEntryDto[] = absences.map((absence: any) => {
+                    const absenceTypeMap: Record<string, string> = {
+                        'VACATION': 'חופשה',
+                        'SICK': 'מחלה',
+                        'RESERVES': 'מילואים',
+                        'OTHER': 'היעדרות אחרת'
+                    };
+
+                    const minutes = absence.minutes;
+                    const hours = Math.floor(minutes / 60);
+                    const mins = minutes % 60;
+
+                    // Construct end time based on 09:00 start
+                    const endHour = 9 + hours;
+                    const endMinStr = mins.toString().padStart(2, '0');
+                    const endTime = `${endHour.toString().padStart(2, '0')}:${endMinStr}`;
+
+                    return {
+                        id: `absence-${absence.id}-${dateStr}`,
+                        workDate: dateStr, // Use the actual date of the report
+                        startTime: '09:00',
+                        endTime: endTime,
+                        durationMinutes: absence.minutes,
+                        location: WorkLocation.OFFICE, // Default
+                        description: 'מערכת: דיווח היעדרות',
+                        source: 'MANUAL' as any,
+                        task: {
+                            id: `absence-task-${absence.id}`,
+                            name: absenceTypeMap[absence.type] || 'היעדרות',
+                            project: {
+                                id: 'absence-project',
+                                name: 'היעדרות'
+                            },
+                            client: {
+                                id: 'absence-client',
+                                name: 'כללי'
+                            }
+                        }
+                    };
+                });
+
                 days.push({
                     date: dateStr,
                     workday,
-                    entries
+                    entries: [...entries, ...absenceEntries]
                 });
                 // Collect all entries for the store
-                allEntries.push(...entries);
+                allEntries.push(...entries, ...absenceEntries);
             } catch (error) {
                 // If workday doesn't exist, create empty day
                 days.push({
@@ -223,6 +267,7 @@ export const DailyReportPage: React.FC = () => {
                 open={isFormOpen}
                 onOpenChange={handleOpenChange}
                 onSubmit={handleFormSubmit}
+                onAbsenceSubmitSuccess={fetchMultipleDays}
             />
         </div>
     );
