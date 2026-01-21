@@ -91,7 +91,7 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ onClose,
       const requestData = {
         name: data.name,
         clientId: data.clientId,
-        description: data.description || null,
+        description: data.description || undefined,
         reportType: data.reportType,
         startDate: data.startDate || null,
         endDate: data.endDate || null,
