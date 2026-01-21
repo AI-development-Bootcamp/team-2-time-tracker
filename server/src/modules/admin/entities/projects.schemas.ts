@@ -12,6 +12,7 @@ export const createProjectSchema = z
     .object({
         name: z.string().min(1, 'Name is required').max(100),
         clientId: z.string().uuid('Invalid client ID'),
+        description: z.string().max(250).optional().nullable(),
         reportType: z.enum(['TOTAL_HOURS', 'ENTRY_EXIT']).optional(),
         startDate: z.string().date().optional().nullable(),
         endDate: z.string().date().optional().nullable(),
@@ -36,6 +37,7 @@ export const updateProjectSchema = z
     .object({
         name: z.string().min(1).max(100).optional(),
         clientId: z.string().uuid().optional(),
+        description: z.string().max(250).optional().nullable(),
         startDate: z.string().date().optional().nullable(),
         endDate: z.string().date().optional().nullable(),
     })

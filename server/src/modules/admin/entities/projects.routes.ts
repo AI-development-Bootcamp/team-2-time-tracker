@@ -19,6 +19,17 @@ const router: Router = Router();
 /**
  * @swagger
  * /admin/projects:
+ *   get:
+ *     summary: List all projects
+ *     tags: [Admin - Projects]
+ *     security:
+ *       - bearerAuth: []
+ */
+router.get('/', authenticate, requireAdmin, projectsController.listProjects);
+
+/**
+ * @swagger
+ * /admin/projects:
  *   post:
  *     summary: Create a new project
  *     tags: [Admin - Projects]

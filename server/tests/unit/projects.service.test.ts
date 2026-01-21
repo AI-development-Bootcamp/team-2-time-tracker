@@ -33,6 +33,59 @@ describe('projects.service', () => {
         vi.clearAllMocks();
     });
 
+    describe('listProjects', () => {
+        it('should return all projects', async () => {
+            const mockProjects = [
+                createMockProject({ name: 'Project 1' }),
+                createMockProject({ name: 'Project 2' }),
+            ];
+            vi.mocked(projectsRepo.findAllProjects).mockResolvedValue(mockProjects);
+
+            const result = await projectsService.listProjects();
+
+            expect(result).toHaveLength(2);
+            expect(result[0].name).toBe('Project 1');
+            expect(result[1].name).toBe('Project 2');
+            expect(projectsRepo.findAllProjects).toHaveBeenCalled();
+        });
+
+        it('should return empty array when no projects exist', async () => {
+            vi.mocked(projectsRepo.findAllProjects).mockResolvedValue([]);
+
+            const result = await projectsService.listProjects();
+
+            expect(result).toEqual([]);
+            expect(projectsRepo.findAllProjects).toHaveBeenCalled();
+        });
+
+        it('should transform projects with assigned users', async () => {
+            const mockProjects = [
+                createMockProject({
+                    name: 'Project 1',
+                    tasks: [
+                        {
+                            assignments: [
+                                {
+                                    user: {
+                                        id: 'user-1',
+                                        fullName: 'John Doe',
+                                        email: 'john@example.com',
+                                    },
+                                },
+                            ],
+                        },
+                    ],
+                }),
+            ];
+            vi.mocked(projectsRepo.findAllProjects).mockResolvedValue(mockProjects);
+
+            const result = await projectsService.listProjects();
+
+            expect(result[0]).toHaveProperty('assignedUsers');
+            expect(result[0]).not.toHaveProperty('tasks');
+        });
+    });
+
     describe('getProjectById', () => {
         it('should return project when found', async () => {
             const mockProject = createMockProject();

@@ -26,6 +26,7 @@ export const updateClientStatusSchema = z.object({
 export const createProjectSchema = z.object({
     name: z.string().min(1, 'Project name is required'),
     clientId: z.string().min(1, 'Client ID is required'),
+    description: z.string().max(250, 'Description cannot exceed 250 characters').nullable().optional(),
     reportType: z.nativeEnum(ReportType).optional(),
     startDate: z.string().nullable().optional(),
     endDate: z.string().nullable().optional(),
@@ -45,6 +46,7 @@ export const createProjectSchema = z.object({
 export const updateProjectSchema = z.object({
     name: z.string().min(1, 'Project name is required').optional(),
     clientId: z.string().min(1, 'Client ID is required').optional(),
+    description: z.string().max(250, 'Description cannot exceed 250 characters').nullable().optional(),
     reportType: z.nativeEnum(ReportType).optional(),
     startDate: z.string().nullable().optional(),
     endDate: z.string().nullable().optional(),
