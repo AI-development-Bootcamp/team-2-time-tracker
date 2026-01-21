@@ -7,6 +7,15 @@ import { Response, NextFunction } from 'express';
 import { AuthenticatedRequest } from '../../src/middlewares/auth.middleware';
 import { BadRequestError, NotFoundError, ForbiddenError } from '../../src/shared/errors';
 
+// Mock jwt config to avoid env.ts validation during import
+vi.mock('../../src/config/jwt', () => ({
+    jwtConfig: {
+        secret: 'test-secret',
+        expiresIn: '2h',
+        expiresInSeconds: 7200,
+    },
+}));
+
 // Mock dependencies before imports
 vi.mock('../../src/db', () => {
     const mockPrismaAbsenceRequest = {

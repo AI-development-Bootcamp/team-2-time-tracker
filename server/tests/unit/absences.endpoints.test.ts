@@ -40,6 +40,15 @@ vi.mock('jsonwebtoken', () => ({
     },
 }));
 
+// Mock jwt config to avoid env.ts validation during import
+vi.mock('../../src/config/jwt', () => ({
+    jwtConfig: {
+        secret: 'test-secret',
+        expiresIn: '2h',
+        expiresInSeconds: 7200,
+    },
+}));
+
 // Mock auth repo
 import * as authRepo from '../../src/modules/auth/auth.repo';
 vi.mock('../../src/modules/auth/auth.repo', () => ({

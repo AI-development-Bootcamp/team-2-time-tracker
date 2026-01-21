@@ -16,6 +16,15 @@ import {
     createMockMonthLock,
 } from '../helpers/mockTimerPrisma';
 
+// Mock jwt config to avoid env.ts validation during import
+vi.mock('../../src/config/jwt', () => ({
+    jwtConfig: {
+        secret: 'test-secret',
+        expiresIn: '2h',
+        expiresInSeconds: 7200,
+    },
+}));
+
 // Import after mocks
 import * as timerService from '../../src/modules/timer/timer.service';
 import { BadRequestError, NotFoundError } from '../../src/shared/errors';
