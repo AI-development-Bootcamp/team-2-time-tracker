@@ -7,6 +7,7 @@ import {
     mockWorkdayPrisma,
     mockPrismaWorkdaySummary,
     mockPrismaTimeEntry,
+    mockPrismaAbsenceDay,
     resetWorkdayPrismaMocks,
     createMockWorkdaySummary,
     createMockTimeEntry,
@@ -47,6 +48,7 @@ describe('workday.service', () => {
 
             mockPrismaWorkdaySummary.findUnique.mockResolvedValue(mockSummary);
             mockPrismaTimeEntry.findMany.mockResolvedValue([mockEntry]);
+            mockPrismaAbsenceDay.findMany.mockResolvedValue([]);
             mockWorkdayPrisma.$queryRaw.mockResolvedValue([{ minutes: 0 }]);
             mockPrismaWorkdaySummary.update.mockResolvedValue(mockSummary);
 
@@ -64,6 +66,7 @@ describe('workday.service', () => {
 
             mockPrismaWorkdaySummary.findUnique.mockResolvedValue(null);
             mockPrismaTimeEntry.findMany.mockResolvedValue([]);
+            mockPrismaAbsenceDay.findMany.mockResolvedValue([]);
             mockWorkdayPrisma.$queryRaw.mockResolvedValue([{ minutes: 0 }]);
             mockPrismaWorkdaySummary.create.mockResolvedValue(mockSummary);
 
@@ -78,6 +81,19 @@ describe('workday.service', () => {
 
             mockPrismaWorkdaySummary.findUnique.mockResolvedValue(mockSummary);
             mockPrismaTimeEntry.findMany.mockResolvedValue([]);
+            mockPrismaAbsenceDay.findMany.mockResolvedValue([{
+                id: 'absence-day-id',
+                absenceRequestId: 'absence-request-id',
+                userId: 'test-user-id',
+                workDate: new Date('2026-01-17'),
+                minutes: 60,
+                absenceRequest: {
+                    id: 'absence-request-id',
+                    type: 'SICK',
+                    startDate: new Date('2026-01-17'),
+                    endDate: new Date('2026-01-17'),
+                },
+            }]);
             mockWorkdayPrisma.$queryRaw.mockResolvedValue([{ minutes: 60 }]);
             mockPrismaWorkdaySummary.update.mockResolvedValue({
                 ...mockSummary,
@@ -99,6 +115,7 @@ describe('workday.service', () => {
             mockPrismaTimeEntry.findMany.mockResolvedValue([
                 createMockTimeEntry({ durationMinutes: 540 }),
             ]);
+            mockPrismaAbsenceDay.findMany.mockResolvedValue([]);
             mockWorkdayPrisma.$queryRaw.mockResolvedValue([{ minutes: 0 }]);
             mockPrismaWorkdaySummary.update.mockResolvedValue(mockSummary);
 
@@ -117,6 +134,7 @@ describe('workday.service', () => {
             mockPrismaTimeEntry.findMany.mockResolvedValue([
                 createMockTimeEntry({ durationMinutes: 600 }),
             ]);
+            mockPrismaAbsenceDay.findMany.mockResolvedValue([]);
             mockWorkdayPrisma.$queryRaw.mockResolvedValue([{ minutes: 0 }]);
             mockPrismaWorkdaySummary.update.mockResolvedValue(mockSummary);
 
@@ -140,6 +158,7 @@ describe('workday.service', () => {
             mockPrismaTimeEntry.findMany.mockResolvedValue([
                 createMockTimeEntry({ durationMinutes: 540 }),
             ]);
+            mockPrismaAbsenceDay.findMany.mockResolvedValue([]);
             mockWorkdayPrisma.$queryRaw.mockResolvedValue([{ minutes: 0 }]);
 
             // First call (inside getWorkday) returns regular summary
@@ -201,6 +220,7 @@ describe('workday.service', () => {
             mockPrismaTimeEntry.findMany.mockResolvedValue([
                 createMockTimeEntry({ durationMinutes: 480 }),
             ]);
+            mockPrismaAbsenceDay.findMany.mockResolvedValue([]);
             mockWorkdayPrisma.$queryRaw.mockResolvedValue([{ minutes: 0 }]);
             mockPrismaWorkdaySummary.update.mockResolvedValue(mockSummary);
 
@@ -223,6 +243,7 @@ describe('workday.service', () => {
             mockPrismaTimeEntry.findMany.mockResolvedValue([
                 createMockTimeEntry({ durationMinutes: 540 }),
             ]);
+            mockPrismaAbsenceDay.findMany.mockResolvedValue([]);
             mockWorkdayPrisma.$queryRaw.mockResolvedValue([{ minutes: 0 }]);
             mockPrismaWorkdaySummary.update.mockResolvedValue(mockSummary);
 

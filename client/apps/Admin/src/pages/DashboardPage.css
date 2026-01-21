@@ -1,0 +1,12 @@
+/**
+ * Dashboard Page Styles
+ */
+
+.dashboard-page__content {
+    padding: 2rem;
+}
+
+.dashboard-page__content p {
+    color: #6b7280;
+    font-size: 0.875rem;
+}

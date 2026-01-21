@@ -21,19 +21,38 @@ export const createApp = (): Express => {
 
     // Security Middleware
     app.use(helmet());
+
+    const allowedOrigins = env.CORS_ORIGIN.split(',').map(url => url.trim());
+
+    // Log allowed CORS origins in development
+    if (env.NODE_ENV === 'development') {
+        logger.info(`CORS allowed origins: ${allowedOrigins.join(', ')}`);
+    }
+
     app.use(cors({
-        origin: env.CORS_ORIGIN,
+        origin: (origin, callback) => {
+            if (!origin || allowedOrigins.includes(origin)) {
+                callback(null, true);
+            } else {
+                if (env.NODE_ENV === 'development') {
+                    logger.warn(`CORS mismatch: "${origin}" not in allowed origins`);
+                }
+                callback(new Error('Not allowed by CORS'));
+            }
+        },
         credentials: true,
     }));
 
-    // Rate Limiting
-    const limiter = rateLimit({
-        windowMs: 15 * 60 * 1000, // 15 minutes
-        limit: 10000, // Limit each IP to 10000 requests per windowMs
-        standardHeaders: 'draft-7',
-        legacyHeaders: false,
-    });
-    app.use(limiter);
+    // Rate Limiting (skip in development mode for easier testing)
+    if (env.NODE_ENV !== 'development') {
+        const limiter = rateLimit({
+            windowMs: 15 * 60 * 1000, // 15 minutes
+            limit: 10000, // Limit each IP to 10000 requests per windowMs
+            standardHeaders: 'draft-7',
+            legacyHeaders: false,
+        });
+        app.use(limiter);
+    }
 
     // Parsing & Logging
     app.use(express.json());

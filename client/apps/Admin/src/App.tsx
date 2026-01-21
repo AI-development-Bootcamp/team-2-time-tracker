@@ -1,9 +1,33 @@
-function App() {
+/**
+ * @fileoverview Admin application root component
+ * @module App
+ */
+
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import LoginPage from './pages/LoginPage';
+import AuthGuard from './components/AuthGuard';
+import DashboardPage from './pages/DashboardPage';
+
+/**
+ * @description Main Admin application component with routing
+ * @returns {React.JSX.Element} Application component
+ */
+function App(): React.JSX.Element {
     return (
-        <div>
-            <h1>Admin Portal</h1>
-            <p>Time Tracking System - Administration</p>
-        </div>
+        <BrowserRouter>
+            <Routes>
+                <Route path="/login" element={<LoginPage />} />
+                <Route
+                    path="/"
+                    element={
+                        <AuthGuard>
+                            <DashboardPage />
+                        </AuthGuard>
+                    }
+                />
+                <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+        </BrowserRouter>
     );
 }
 

@@ -25,11 +25,16 @@ export const mockPrismaTimer = {
     findFirst: vi.fn(),
 };
 
+export const mockPrismaAbsenceDay = {
+    findMany: vi.fn(),
+};
+
 export const mockWorkdayPrisma = {
     workdaySummary: mockPrismaWorkdaySummary,
     timeEntry: mockPrismaTimeEntry,
     monthLock: mockPrismaMonthLock,
     timer: mockPrismaTimer,
+    absenceDay: mockPrismaAbsenceDay,
     $queryRaw: vi.fn(),
     $transaction: vi.fn((callback) => callback(mockWorkdayPrisma)),
 };
@@ -53,6 +58,7 @@ export function resetWorkdayPrismaMocks() {
     Object.values(mockPrismaTimeEntry).forEach((mock) => mock.mockReset());
     Object.values(mockPrismaMonthLock).forEach((mock) => mock.mockReset());
     Object.values(mockPrismaTimer).forEach((mock) => mock.mockReset());
+    Object.values(mockPrismaAbsenceDay).forEach((mock) => mock.mockReset());
     mockWorkdayPrisma.$queryRaw.mockReset();
 }
 

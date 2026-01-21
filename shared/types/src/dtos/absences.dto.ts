@@ -1,6 +1,6 @@
 import { AbsenceType } from '../enums/absenceType.enum';
 import { AbsenceStatus } from '../enums/absenceStatus.enum';
-import type { PaginationDto } from './timeReports.dto';
+import { PaginationDto } from './pagination.dto';
 
 export interface AbsenceDayDto {
     id: string;
@@ -66,8 +66,6 @@ export interface DeleteAbsenceResponseDto {
     success: boolean;
     message: string;
 }
-
-export type { PaginationDto };
 
 export interface ListAbsencesResponseDto {
     success: boolean;

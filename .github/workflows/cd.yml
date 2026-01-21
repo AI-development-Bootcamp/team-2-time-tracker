@@ -1,0 +1,79 @@
+name: Deployment
+
+on:
+  push:
+    branches:
+      - 'development'
+
+jobs:
+  server:
+    name: Deploy Server
+    runs-on: ubuntu-latest
+    environment: deploy 
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy Server to Render
+        run: |
+          if [ -z "$DEPLOY_URL" ]; then
+            echo "❌ Error: DEPLOY_URL is not set"
+            exit 1
+          fi
+          echo "🚀 Sending deploy hook to Render Server..."
+          if curl -X POST "$DEPLOY_URL" -f -s -o /dev/null; then
+            echo "✅ Success"
+          else
+            echo "❌ Failed"
+            exit 1
+          fi
+        env:
+          DEPLOY_URL: ${{ secrets.RENDER_DEPLOY_SERVER }}
+
+  client:
+    name: Deploy Employee
+    runs-on: ubuntu-latest
+    environment: deploy
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy Client to Render
+        run: |
+          if [ -z "$DEPLOY_URL" ]; then
+            echo "❌ Error: DEPLOY_URL is not set"
+            exit 1
+          fi
+          echo "🚀 Sending deploy hook to Render Employee..."
+          if curl -X POST "$DEPLOY_URL" -f -s -o /dev/null; then
+            echo "✅ Success"
+          else
+            echo "❌ Failed"
+            exit 1
+          fi
+        env:
+          DEPLOY_URL: ${{ secrets.RENDER_DEPLOY_EMPLOYEE }}
+
+  admin:
+    name: Deploy Admin
+    runs-on: ubuntu-latest
+    environment: deploy
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy Admin to Render
+        run: |
+          if [ -z "$DEPLOY_URL" ]; then
+            echo "❌ Error: DEPLOY_URL is not set"
+            exit 1
+          fi
+          echo "🚀 Sending deploy hook to Render Admin..."
+          if curl -X POST "$DEPLOY_URL" -f -s -o /dev/null; then
+            echo "✅ Success"
+          else
+            echo "❌ Failed"
+            exit 1
+          fi
+        env:
+          DEPLOY_URL: ${{ secrets.RENDER_DEPLOY_ADMIN }}

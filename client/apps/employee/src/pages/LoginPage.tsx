@@ -26,7 +26,7 @@ export default function LoginPage() {
         // Only redirect if authenticated and we haven't already redirected
         // This prevents redirect loops when checkAuth() clears auth state
         // Also wait for auth check to complete (not loading) before redirecting
-        if (isAuthenticated && !hasRedirectedRef.current && !isLoading && hasCheckedAuthRef.current) {
+        if (isAuthenticated && !hasRedirectedRef.current && !isLoading) {
             hasRedirectedRef.current = true;
             const from = location.state?.from?.pathname || '/';
             navigate(from, { replace: true });
@@ -38,8 +38,12 @@ export default function LoginPage() {
 
     const handleSubmit = async (data: { email: string; password: string; rememberMe?: boolean }) => {
         try {
+            console.log('[LoginPage] Submitting login...');
             await login(data);
+            console.log('[LoginPage] Login successful, auth state:', { isAuthenticated, isLoading });
+            // Navigation handled by effect
         } catch (err) {
+            console.error('[LoginPage] Login failed:', err);
             // Error set in store
         }
     };

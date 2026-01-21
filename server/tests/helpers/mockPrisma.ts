@@ -3,6 +3,12 @@
  */
 
 import { vi } from 'vitest';
+import { EntityStatus, ReportType } from '@shared/types';
+
+export enum TaskStatus {
+    OPEN = 'OPEN',
+    CLOSED = 'CLOSED',
+}
 
 export const mockPrismaUser = {
     findUnique: vi.fn(),
@@ -56,6 +62,33 @@ export const mockPrismaWorkdaySummary = {
     update: vi.fn(),
 };
 
+export const mockPrismaClient = {
+    findUnique: vi.fn(),
+    findMany: vi.fn(),
+    create: vi.fn(),
+    update: vi.fn(),
+    delete: vi.fn(),
+    count: vi.fn(),
+};
+
+export const mockPrismaProject = {
+    findUnique: vi.fn(),
+    findMany: vi.fn(),
+    create: vi.fn(),
+    update: vi.fn(),
+    delete: vi.fn(),
+    count: vi.fn(),
+};
+
+export const mockPrismaTask = {
+    findUnique: vi.fn(),
+    findMany: vi.fn(),
+    create: vi.fn(),
+    update: vi.fn(),
+    delete: vi.fn(),
+    count: vi.fn(),
+};
+
 export const mockPrisma = {
     user: mockPrismaUser,
     refreshToken: mockPrismaRefreshToken,
@@ -64,6 +97,9 @@ export const mockPrisma = {
     absenceDocument: mockPrismaAbsenceDocument,
     monthLock: mockPrismaMonthLock,
     workdaySummary: mockPrismaWorkdaySummary,
+    client: mockPrismaClient,
+    project: mockPrismaProject,
+    task: mockPrismaTask,
     $transaction: vi.fn((callback) => callback(mockPrisma)),
 };
 
@@ -83,6 +119,9 @@ export function resetPrismaMocks() {
     Object.values(mockPrismaAbsenceDocument).forEach((mock) => mock.mockReset());
     Object.values(mockPrismaMonthLock).forEach((mock) => mock.mockReset());
     Object.values(mockPrismaWorkdaySummary).forEach((mock) => mock.mockReset());
+    Object.values(mockPrismaClient).forEach((mock) => mock.mockReset());
+    Object.values(mockPrismaProject).forEach((mock) => mock.mockReset());
+    Object.values(mockPrismaTask).forEach((mock) => mock.mockReset());
     mockPrisma.$transaction.mockReset();
 }
 
@@ -170,6 +209,70 @@ export function createMockAbsenceDocument(overrides = {}) {
         fileSize: 1024,
         uploadedByUserId: 'test-user-id',
         uploadedAt: new Date(),
+        ...overrides,
+    };
+}
+
+/**
+ * Create a mock client object
+ */
+export function createMockClient(overrides = {}) {
+    return {
+        id: 'test-client-id',
+        name: 'Test Client',
+        description: 'Test client description',
+        status: EntityStatus.ACTIVE,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        ...overrides,
+    };
+}
+
+/**
+ * Create a mock project object matching findAllProjects return type
+ */
+export function createMockProject(overrides: Record<string, unknown> = {}) {
+    // Extract nested overrides
+    const { client: clientOverrides, tasks: tasksOverrides, _count: countOverrides, ...rest } = overrides;
+    
+    return {
+        id: 'test-project-id',
+        clientId: 'test-client-id',
+        name: 'Test Project',
+        description: null as string | null,
+        status: EntityStatus.ACTIVE,
+        reportType: ReportType.TOTAL_HOURS,
+        startDate: new Date('2026-01-01') as Date | null,
+        endDate: new Date('2026-12-31') as Date | null,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        client: {
+            id: 'test-client-id',
+            name: 'Test Client',
+            ...(clientOverrides as Record<string, unknown> ?? {}),
+        },
+        tasks: (tasksOverrides as Array<{ assignments: Array<{ user: { id: string; fullName: string; email: string } }> }>) ?? [],
+        _count: {
+            tasks: 0,
+            ...(countOverrides as Record<string, unknown> ?? {}),
+        },
+        ...rest,
+    };
+}
+
+/**
+ * Create a mock task object
+ */
+export function createMockTask(overrides = {}) {
+    return {
+        id: 'test-task-id',
+        projectId: 'test-project-id',
+        name: 'Test Task',
+        status: TaskStatus.OPEN,
+        startDate: new Date('2026-01-01'),
+        endDate: null,
+        createdAt: new Date(),
+        updatedAt: new Date(),
         ...overrides,
     };
 }
