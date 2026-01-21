@@ -3,11 +3,13 @@ import { Client } from 'pg';
 
 describe('Database Connection', () => {
     it('should connect to the database using the provided credentials', async () => {
-        const connectionString = process.env.DATABASE_URL;
-        if (!connectionString) {
-            console.warn('Skipping database connection test: DATABASE_URL not defined');
+        // Skip if no real DATABASE_URL was provided (only mock URL from test setup)
+        if (process.env.TEST_HAS_REAL_DATABASE !== 'true') {
+            console.warn('Skipping database connection test: No real DATABASE_URL provided');
             return;
         }
+
+        const connectionString = process.env.DATABASE_URL;
 
         const client = new Client({
             connectionString,
