@@ -33,42 +33,6 @@ describe('projects.service', () => {
         vi.clearAllMocks();
     });
 
-    describe.skip('listProjects', () => {
-        it('should return all projects', async () => {
-            const mockProjects = [
-                createMockProject({ id: '1', name: 'Project 1' }),
-                createMockProject({ id: '2', name: 'Project 2' }),
-            ];
-
-            vi.mocked(projectsRepo.findAllProjects).mockResolvedValue(mockProjects);
-
-            const result = await projectsService.listProjects();
-
-            expect(result).toHaveLength(2);
-            expect(result).toEqual(mockProjects);
-            expect(projectsRepo.findAllProjects).toHaveBeenCalledOnce();
-        });
-
-        it('should return projects filtered by clientId', async () => {
-            const mockProjects = [createMockProject({ clientId: 'client-1' })];
-            vi.mocked(projectsRepo.findAllProjects).mockResolvedValue(mockProjects);
-
-            const result = await projectsService.listProjects('client-1');
-
-            expect(result).toEqual(mockProjects);
-            expect(projectsRepo.findAllProjects).toHaveBeenCalledWith('client-1');
-        });
-
-        it('should return empty array when no projects exist', async () => {
-            vi.mocked(projectsRepo.findAllProjects).mockResolvedValue([]);
-
-            const result = await projectsService.listProjects();
-
-            expect(result).toHaveLength(0);
-            expect(result).toEqual([]);
-        });
-    });
-
     describe('getProjectById', () => {
         it('should return project when found', async () => {
             const mockProject = createMockProject();

@@ -44,21 +44,6 @@ function transformProjectWithAssignedUsers(project: any) {
 }
 
 /**
- * @description Retrieves all projects with optional filters.
- * @param {string} [clientId] - Optional client ID to filter by
- * @param {string} [userId] - Optional user ID to filter by (returns projects where user is assigned)
- * @returns {Promise<Array>} Projects list with assignedUsers array
- * @example
- * const projects = await listProjects();
- * const clientProjects = await listProjects('client-uuid');
- * const userProjects = await listProjects(undefined, 'user-uuid');
- */
-export async function listProjects(clientId?: string, userId?: string) {
-    const projects = await projectsRepo.findAllProjects(clientId, userId);
-    return projects.map(transformProjectWithAssignedUsers);
-}
-
-/**
  * @description Retrieves a single project by ID.
  * @param {string} id - Project's UUID
  * @returns {Promise<Object>} Project data with assignedUsers array

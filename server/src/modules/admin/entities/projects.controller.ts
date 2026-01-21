@@ -7,26 +7,6 @@ import { Request, Response, NextFunction } from 'express';
 import * as projectsService from './projects.service';
 
 /**
- * List all projects with optional filters
- */
-export async function listProjects(req: Request, res: Response, next: NextFunction) {
-    try {
-        const { clientId, userId } = req.query;
-        const projects = await projectsService.listProjects(
-            clientId as string | undefined,
-            userId as string | undefined
-        );
-
-        res.json({
-            success: true,
-            data: projects,
-        });
-    } catch (error) {
-        next(error);
-    }
-}
-
-/**
  * Get a single project by ID
  */
 export async function getProject(req: Request, res: Response, next: NextFunction) {
