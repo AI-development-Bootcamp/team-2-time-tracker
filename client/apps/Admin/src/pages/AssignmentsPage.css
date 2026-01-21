@@ -186,8 +186,8 @@
 
 .assignments-page__search-input {
     width: 100%;
-    padding: 0.75rem 1rem 0.75rem 2.5rem;
-    /* Left padding for icon */
+    padding: 0.75rem 2.5rem 0.75rem 1rem;
+    /* Right padding for icon */
     border: 1px solid var(--color-border, #ddd);
     border-radius: 8px;
     font-size: 0.875rem;
@@ -202,8 +202,8 @@
 
 .assignments-page__search-icon {
     position: absolute;
-    left: 0.75rem;
-    /* Icon on left */
+    right: 0.75rem;
+    /* Icon on right */
     top: 50%;
     transform: translateY(-50%);
     color: #9ca3af;
@@ -254,6 +254,13 @@
 .assignment-badge--editing {
     border-color: var(--color-primary, #007bff);
     background-color: var(--color-primary-50, #eff6ff);
+}
+
+.assignment-badge--empty {
+    background-color: var(--color-gray-50, #f9fafb);
+    color: var(--color-text-secondary, #666);
+    font-style: italic;
+    border-color: var(--color-gray-300, #d1d5db);
 }
 
 .assignment-badge__remove {
@@ -411,4 +418,42 @@
         padding: 0.75rem 0.5rem;
         font-size: 0.8125rem;
     }
+}
+
+/* Pagination */
+.assignments-page__pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 20px;
+    padding: 20px 0;
+}
+
+.assignments-page__pagination-btn {
+    min-width: 32px;
+    height: 32px;
+    padding: 6px 10px;
+    border: 1px solid var(--border-color);
+    background-color: white;
+    color: var(--text-color-primary);
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+.assignments-page__pagination-btn:hover:not(:disabled) {
+    background-color: #f8f9fa;
+}
+
+.assignments-page__pagination-btn.active {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+.assignments-page__pagination-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
