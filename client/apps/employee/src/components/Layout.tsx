@@ -15,16 +15,24 @@ import { Outlet } from 'react-router-dom';
 export default function Layout() {
     return (
         <div style={{
-            height: '100%',
+            height: '100vh',
+            height: '100dvh',
+            width: '100%',
             display: 'flex',
             flexDirection: 'column',
-            overflow: 'hidden'
+            overflow: 'hidden',
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0
         }}>
             <main style={{
                 flex: 1,
                 overflow: 'hidden',
                 display: 'flex',
-                flexDirection: 'column'
+                flexDirection: 'column',
+                minHeight: 0
             }}>
                 <Outlet />
             </main>

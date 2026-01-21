@@ -22,8 +22,10 @@
     padding: var(--spacing-lg);
     width: 90vw;
     max-width: 450px;
-    max-height: 85vh;
-    overflow-y: auto;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
     z-index: calc(var(--z-modal) + 1);
     animation: contentShow var(--transition-normal);
 }
@@ -37,6 +39,7 @@
     font-weight: var(--font-weight-semibold);
     color: var(--color-text-primary);
     margin-bottom: var(--spacing-sm);
+    flex-shrink: 0;
 }
 
 .dialog__description {
@@ -47,6 +50,30 @@
 
 .dialog__body {
     margin-top: var(--spacing-md);
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    min-height: 0;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+}
+
+/* Custom scrollbar for dialog body */
+.dialog__body::-webkit-scrollbar {
+    width: 6px;
+}
+
+.dialog__body::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.dialog__body::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+}
+
+.dialog__body::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.3);
 }
 
 .dialog__close {

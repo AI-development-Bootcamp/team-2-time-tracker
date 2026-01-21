@@ -3,13 +3,35 @@
     display: flex;
     flex-direction: column;
     gap: 16px;
-    max-height: 80vh;
+    height: 100%;
     overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+}
+
+/* Custom scrollbar */
+.multi-project-form::-webkit-scrollbar {
+    width: 6px;
+}
+
+.multi-project-form::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.multi-project-form::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+}
+
+.multi-project-form::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.3);
 }
 
 /* Tab switcher section */
 .multi-project-form__tabs {
     margin-bottom: 8px;
+    flex-shrink: 0;
 }
 
 /* Absence form wrapper */
@@ -25,6 +47,7 @@
     font-size: 14px;
     text-align: center;
     color: #6b7280;
+    flex-shrink: 0;
 }
 
 .multi-project-form__section-title {
@@ -103,6 +126,7 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 12px;
+    flex-shrink: 0;
 }
 
 .multi-project-form__description {
@@ -117,13 +141,16 @@
     font-weight: 500;
 }
 
-.multi-project-form__description textarea {
+.multi-project-form__description textarea,
+.multi-project-form__field textarea {
     padding: 10px 12px;
     border: 1px solid #d1d5db;
     border-radius: 6px;
     font-size: 14px;
     resize: vertical;
     font-family: inherit;
+    min-height: 60px;
+    max-height: 120px;
 }
 
 .multi-project-form__error {
@@ -145,6 +172,8 @@
 
 .multi-project-form__actions {
     margin-top: 8px;
+    flex-shrink: 0;
+    padding-bottom: 4px;
 }
 
 .multi-project-form-dialog {

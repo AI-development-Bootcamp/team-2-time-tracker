@@ -70,22 +70,33 @@ export const DailyReportPage: React.FC = () => {
         clearError
     } = useTimerStore();
 
-    // Fetch last 14 days of data
+    // Fetch all days for the current month
     const fetchMultipleDays = useCallback(async () => {
         setLoading(true);
         const days: DayData[] = [];
         const allEntries: TimeEntryDto[] = [];
-        const today = new Date();
 
-        for (let i = 0; i < 14; i++) {
-            const date = new Date(today);
-            date.setDate(date.getDate() - i);
-            const dateStr = date.toISOString().split('T')[0];
-            //maybe create an api call that returns all workdays for a range of dates?
-            //ask oz tmrw
-            try {
-                const workday = await workdayApi.getWorkday(dateStr);
-                const entries = workday.data?.timeEntries || [];
+        // Get the month string in YYYY-MM format
+        const year = currentMonth.getFullYear();
+        const month = (currentMonth.getMonth() + 1).toString().padStart(2, '0');
+        const monthStr = `${year}-${month}`;
+
+        try {
+            // First, get the calendar to know which days exist in the month
+            const calendar = await workdayApi.getMonthlyCalendar(monthStr);
+            const calendarDays = calendar.data?.days || [];
+
+            // Sort days in reverse chronological order (most recent first)
+            const sortedDays = [...calendarDays].sort((a, b) =>
+                new Date(b.date).getTime() - new Date(a.date).getTime()
+            );
+
+            // Fetch detailed workday data for each day
+            for (const calendarDay of sortedDays) {
+                const dateStr = calendarDay.date;
+                try {
+                    const workday = await workdayApi.getWorkday(dateStr);
+                    const entries = workday.data?.timeEntries || [];
 
                 // Map absences to virtual time entries
                 const absences = workday.data?.absences || [];
@@ -130,28 +141,31 @@ export const DailyReportPage: React.FC = () => {
                     };
                 });
 
-                days.push({
-                    date: dateStr,
-                    workday,
-                    entries: [...entries, ...absenceEntries]
-                });
-                // Collect all entries for the store
-                allEntries.push(...entries, ...absenceEntries);
-            } catch (error) {
-                // If workday doesn't exist, create empty day
-                days.push({
-                    date: dateStr,
-                    workday: null,
-                    entries: []
-                });
+                    days.push({
+                        date: dateStr,
+                        workday,
+                        entries: [...entries, ...absenceEntries]
+                    });
+                    // Collect all entries for the store
+                    allEntries.push(...entries, ...absenceEntries);
+                } catch (error) {
+                    // If workday doesn't exist, create empty day
+                    days.push({
+                        date: dateStr,
+                        workday: null,
+                        entries: []
+                    });
+                }
             }
+        } catch (error) {
+            console.error('Failed to fetch monthly calendar:', error);
         }
 
         // Update both local state and Zustand store
         setDaysData(days);
         setEntries(allEntries);
         setLoading(false);
-    }, [setEntries]);
+    }, [currentMonth, setEntries]);
 
     useEffect(() => {
         fetchMultipleDays();
