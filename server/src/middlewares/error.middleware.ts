@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { AppError } from '../shared/errors';
+import { AppError, ValidationError } from '../shared/errors';
 import { logger } from '../shared/logger';
 
 export const errorMiddleware = (
@@ -8,6 +8,29 @@ export const errorMiddleware = (
     res: Response,
     _next: NextFunction
 ): void => {
+    if (err instanceof ValidationError) {
+        logger.warn(`Validation Error: ${err.message}`);
+        const errorResponse: {
+            success: false;
+            error: {
+                code: string;
+                message: string;
+                details?: unknown;
+            };
+        } = {
+            success: false,
+            error: {
+                code: err.code || err.statusCode.toString(),
+                message: err.message,
+            },
+        };
+        if (err.details !== undefined) {
+            errorResponse.error.details = err.details;
+        }
+        res.status(err.statusCode).json(errorResponse);
+        return;
+    }
+
     if (err instanceof AppError) {
         logger.warn(`Operational Error: ${err.message}`);
         res.status(err.statusCode).json({

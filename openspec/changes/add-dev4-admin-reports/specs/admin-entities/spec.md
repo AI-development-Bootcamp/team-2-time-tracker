@@ -36,6 +36,18 @@ The system SHALL allow admins to perform CRUD operations on projects.
 - **WHEN** admin requests projects with `clientId` query parameter
 - **THEN** response contains only projects for that client
 
+#### Scenario: Filter projects by user
+- **WHEN** admin requests projects with `userId` query parameter
+- **THEN** response contains only projects that have tasks assigned to that user
+
+#### Scenario: Get project with assigned users
+- **WHEN** admin requests `GET /admin/projects/:id`
+- **THEN** response includes `assignedUsers` array with user details (id, fullName, email)
+
+#### Scenario: Get all users for a project
+- **WHEN** admin requests `GET /admin/projects/:id/users`
+- **THEN** response contains list of all users assigned to tasks in that project
+
 #### Scenario: Create project
 - **WHEN** admin submits `POST /admin/projects` with project data
 - **THEN** project is created with `status: ACTIVE` and default `reportType: TOTAL_HOURS`

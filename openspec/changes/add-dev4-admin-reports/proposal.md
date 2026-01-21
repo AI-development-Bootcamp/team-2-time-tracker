@@ -6,6 +6,13 @@ Administrators need comprehensive tools to manage the system, view reports, and 
 
 ## What Changes
 
+### Admin Authentication
+
+- Dedicated admin login page (only ADMIN users can login)
+- JWT-based authentication using existing auth infrastructure
+- Auth guard to protect all admin routes
+- Automatic redirect to login for unauthenticated users
+
 ### Admin Dashboard
 - Overview statistics (active users, projects, today's stats, month completion rate)
 - Real-time dashboard with key metrics
@@ -27,11 +34,22 @@ Administrators need comprehensive tools to manage the system, view reports, and 
   - Date validation: endDate >= startDate
   - Prevent closing tasks with existing time entries
 - Soft delete pattern (status-based, no physical deletion)
+- **Enhanced project filtering**
+  - Filter projects by user (userId query parameter)
+  - Projects response includes assigned users information
 
 ### Task Assignments
 - Assign tasks to users (single and bulk operations)
 - View all assignments
 - Remove assignments
+- **Enhanced filtering and search capabilities**
+  - Filter assignments by project (projectId query parameter)
+  - Search assignments by employee name (fullName search)
+  - Include expanded assignment details (user name, project name, client name)
+- **Project-User relationships**
+  - Get all users assigned to a project: `GET /admin/projects/:id/users`
+  - Get all projects for a user: `GET /admin/projects?userId=...`
+  - Projects response includes assigned users list
 
 ### Admin Reports
 - Dashboard overview with aggregated statistics
@@ -45,15 +63,9 @@ Administrators need comprehensive tools to manage the system, view reports, and 
 - View lock status and history
 - Month lock prevents all workday/entry edits
 
-### Audit Logs
-- Automatic logging of all admin actions
-- Filterable audit log viewer
-- Track who changed what and when
-- Support for CREATE, UPDATE, STATUS_CHANGE, RESET_PASSWORD, LOCK_MONTH, UNLOCK_MONTH actions
-
 ## Impact
 
-- **Affected specs**: `admin-reports`, `admin-users`, `admin-entities`, `admin-assignments`, `month-locks`, `audit-logs`
+- **Affected specs**: `admin-reports`, `admin-users`, `admin-entities`, `admin-assignments`, `month-locks`
 - **Affected code**:
   - `server/src/modules/admin/*` (all admin submodules)
   - `server/src/modules/admin/users/*`
@@ -61,23 +73,21 @@ Administrators need comprehensive tools to manage the system, view reports, and 
   - `server/src/modules/admin/assignments/*`
   - `server/src/modules/admin/reports/*`
   - `server/src/modules/admin/month-locks/*`
-  - `server/src/modules/admin/audit-logs/*`
   - `client/apps/admin/src/pages/*` (all admin pages)
   - `client/apps/admin/src/components/*` (admin components)
   - `shared/types/src/dtos/admin*.dto.ts` (admin DTOs)
-- **Dependencies**: 
+- **Dependencies**:
   - Developer 1 (auth, users, infrastructure)
   - Developer 2 (time entries, workday data for reports)
   - Developer 3 (absence data for reports)
 - **Blocks**: None (final feature layer)
-- **Shared with**: All developers (audit logging service used by other modules)
 
 ## References
 
 - Business rules: `project-features/projectsummery.md` (Section 4.4, 5)
-- Database schema: `project-features/schemes.md` (clients, projects, tasks, task_assignments, month_locks, audit_logs)
-- API endpoints: `project-features/endpoints.md` (Admin sections 8-13)
-- DTOs: `project-features/dtos.md` (Admin sections 9-14)
+- Database schema: `project-features/schemes.md` (clients, projects, tasks, task_assignments, month_locks)
+- API endpoints: `project-features/endpoints.md` (Admin sections 8-12)
+- DTOs: `project-features/dtos.md` (Admin sections 9-13)
 - Task division: `project-features/task_division.md` (Developer 4 section)
 - Developer rules: `server/CLAUDE.md`, `client/CLAUDE.md`
 

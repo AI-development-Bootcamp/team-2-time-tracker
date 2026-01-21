@@ -19,9 +19,17 @@
         },
         "types": [
             "vite/client"
-        ]
+        ],
+        "baseUrl": ".",
+        "paths": {
+            "@shared/types": ["../../../shared/types/src/index.ts"],
+            "@shared/types/*": ["../../../shared/types/src/*"]
+        }
     },
     "include": [
         "src"
+    ],
+    "references": [
+        { "path": "../../../shared/types" }
     ]
 }

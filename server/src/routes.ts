@@ -10,6 +10,10 @@ import { selectorsRouter } from './modules/selectors/selectors.routes';
 import { myRouter } from './modules/selectors/my.routes';
 import absencesRouter from './modules/absences/absences.routes';
 import healthRouter from './modules/health/health.routes';
+import { adminAuthRouter } from './modules/admin/auth/auth.routes';
+import { clientsRouter } from './modules/admin/entities/clients.routes';
+import { projectsRouter } from './modules/admin/entities/projects.routes';
+import { tasksRouter } from './modules/admin/entities/tasks.routes';
 
 const router: Router = Router();
 
@@ -21,7 +25,11 @@ router.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // API Routes
 router.use('/auth', authRouter);
+router.use('/admin/auth', adminAuthRouter);
 router.use('/admin/users', usersRouter);
+router.use('/admin/clients', clientsRouter);
+router.use('/admin/projects', projectsRouter);
+router.use('/admin/tasks', tasksRouter);
 router.use('/timer', timerRouter);
 router.use('/time-entries', timeReportsRouter);
 router.use('/workday', workdayRouter);
