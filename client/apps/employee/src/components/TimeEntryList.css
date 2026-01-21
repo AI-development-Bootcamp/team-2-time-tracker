@@ -78,28 +78,33 @@
 }
 
 .time-entry-group__badge--red {
-    background: rgb(254, 226, 226);
-    color: rgb(220, 38, 38);
+    background: #FCE3D6;
+    color: #AC2632;
 }
 
 .time-entry-group__badge--yellow {
-    background: rgb(254, 243, 199);
-    color: rgb(180, 83, 9);
+    background: #FEF5CC;
+    color: #945312;
 }
 
 .time-entry-group__badge--green {
-    background: rgb(220, 252, 231);
-    color: rgb(22, 163, 74);
+    background: #E3F9CA;
+    color: #106103;
 }
 
 .time-entry-group__badge--gray {
-    background: rgb(229, 231, 235);
-    color: rgb(107, 114, 128);
+    background: #F0F4FA;
+    color: #0C3058;
 }
 
 .time-entry-group__badge--blue {
-    background: rgb(219, 234, 254);
-    color: rgb(37, 99, 235);
+    background: #F0F4FA;
+    color: #0C3058;
+}
+
+.time-entry-group__badge--pink {
+    background: #FFECFC;
+    color: #AE0088;
 }
 
 /* Status Icon inside badge */
@@ -112,15 +117,15 @@
 }
 
 .time-entry-group__status-icon--green {
-    color: rgb(22, 163, 74);
+    color: #106103;
 }
 
 .time-entry-group__status-icon--yellow {
-    color: rgb(180, 83, 9);
+    color: #945312;
 }
 
 .time-entry-group__status-icon--red {
-    color: rgb(220, 38, 38);
+    color: #AC2632;
 }
 
 /* Calendar Icon */

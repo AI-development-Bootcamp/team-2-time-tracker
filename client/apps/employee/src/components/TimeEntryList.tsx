@@ -16,9 +16,9 @@ import './TimeEntryList.css';
 // Import icons
 import workdayIcon from '../assets/icons/workday.png';
 import dayoffIcon from '../assets/icons/dayoff.png';
-import halfWorkdayIcon from '../assets/icons/half_workday.svg';
+import halfWorkdayIcon from '../assets/icons/half_workday.png';
 import editIcon from '../assets/icons/edit-2.png';
-import { ReactComponent as ArrowIcon } from '../assets/icons/arrow_forward_ios.svg';
+import arrowIcon from '../assets/icons/arrow_forward_ios.png';
 
 /**
  * Data structure representing a single day's entries and status.
@@ -114,7 +114,7 @@ export const TimeEntryList: React.FC<TimeEntryListProps> = ({
         const absenceType = getAbsenceType(dayData);
         if (absenceType) {
             const isHalfDay = isHalfDayVacation(dayData);
-            return { badge: absenceType, color: 'blue', icon: 'none', isDayOff: true, isHalfDay };
+            return { badge: absenceType, color: isHalfDay ? 'pink' : 'blue', icon: 'none', isDayOff: true, isHalfDay };
         }
 
         // If no entries at all
@@ -155,7 +155,7 @@ export const TimeEntryList: React.FC<TimeEntryListProps> = ({
             return (
                 <span className={`time-entry-group__status-icon time-entry-group__status-icon--${color}`}>
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
-                        <path d="M20 6L9 17l-5-5" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+                        <path d="M20 6L9 17l-5-5" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                 </span>
             );
@@ -165,8 +165,8 @@ export const TimeEntryList: React.FC<TimeEntryListProps> = ({
             return (
                 <span className={`time-entry-group__status-icon time-entry-group__status-icon--${color}`}>
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
-                        <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
-                        <path d="M12 8v4M12 16h.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                        <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" />
+                        <path d="M12 8v4M12 16h.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
                     </svg>
                 </span>
             );
@@ -176,8 +176,8 @@ export const TimeEntryList: React.FC<TimeEntryListProps> = ({
             return (
                 <span className={`time-entry-group__status-icon time-entry-group__status-icon--${color}`}>
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
-                        <circle cx="12" cy="12" r="10" fill="currentColor"/>
-                        <path d="M15 9l-6 6M9 9l6 6" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+                        <circle cx="12" cy="12" r="10" fill="currentColor" />
+                        <path d="M15 9l-6 6M9 9l6 6" stroke="white" strokeWidth="2" strokeLinecap="round" />
                     </svg>
                 </span>
             );
@@ -202,9 +202,14 @@ export const TimeEntryList: React.FC<TimeEntryListProps> = ({
                         >
                             {/* Right side in RTL - Calendar icon and Date */}
                             <div className="time-entry-group__header-right">
-                                {/* Calendar Icon - dayoff for weekend/absence, workday for regular days */}
+                                {/* Calendar Icon - halfWorkday for half-day absence, dayoff for full-day absence, workday for regular days */}
                                 <span className="time-entry-group__calendar-icon">
-                                    <img src={status.isDayOff ? dayoffIcon : workdayIcon} alt="" width="20" height="20" />
+                                    <img
+                                        src={status.isHalfDay ? halfWorkdayIcon : (status.isDayOff ? dayoffIcon : workdayIcon)}
+                                        alt=""
+                                        width="20"
+                                        height="20"
+                                    />
                                 </span>
                                 <span className="time-entry-group__date">{formatDate(dayData.date)}</span>
                             </div>
@@ -215,7 +220,7 @@ export const TimeEntryList: React.FC<TimeEntryListProps> = ({
                                     {renderStatusIcon(status.icon, status.color)}
                                 </span>
                                 <span className={`time-entry-group__chevron ${isExpanded ? 'time-entry-group__chevron--expanded' : ''}`}>
-                                    <ArrowIcon />
+                                    <img src={arrowIcon} alt="" width="16" height="16" />
                                 </span>
                             </div>
                         </button>
