@@ -76,6 +76,7 @@ export interface ProjectDto {
     id: string;
     name: string;
     clientId: string;
+    description?: string | null;
     reportType: ReportType;
     status: EntityStatus;
     startDate: string | null;
@@ -108,6 +109,7 @@ export interface ListProjectsResponseDto {
 export interface CreateProjectRequestDto {
     name: string;
     clientId: string;
+    description?: string | null;
     reportType?: ReportType;
     startDate?: string | null;
     endDate?: string | null;
@@ -119,6 +121,7 @@ export interface CreateProjectRequestDto {
 export interface UpdateProjectRequestDto {
     name?: string;
     clientId?: string;
+    description?: string | null;
     reportType?: ReportType;
     startDate?: string | null;
     endDate?: string | null;
