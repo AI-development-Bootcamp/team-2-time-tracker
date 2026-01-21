@@ -12,6 +12,7 @@ export const createTaskSchema = z
     .object({
         name: z.string().min(1, 'Name is required').max(100),
         projectId: z.string().uuid('Invalid project ID'),
+        description: z.string().trim().max(250).optional().nullable(),
         startDate: z.string().date().optional().nullable(),
         endDate: z.string().date().optional().nullable(),
     })
@@ -35,6 +36,7 @@ export const updateTaskSchema = z
     .object({
         name: z.string().min(1).max(100).optional(),
         projectId: z.string().uuid().optional(),
+        description: z.string().trim().max(250).optional().nullable(),
         startDate: z.string().date().optional().nullable(),
         endDate: z.string().date().optional().nullable(),
     })
