@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { useTimeEntryStore } from '@/app/stores/timeEntries.store';
 import { useTimerStore } from '@/app/stores/timer.store';
 import { TimeEntryDto, CreateTimeEntryInput, GetWorkdayResponseDto, WorkLocation } from '@shared/types';
@@ -27,6 +27,33 @@ export const DailyReportPage: React.FC = () => {
     const [timerTimes, setTimerTimes] = useState<{ start: string; end: string } | null>(null);
     const [daysData, setDaysData] = useState<DayData[]>([]);
     const [loading, setLoading] = useState(true);
+    const [currentMonth, setCurrentMonth] = useState(new Date());
+
+    // Hebrew month names
+    const hebrewMonths = useMemo(() => [
+        'ינואר', 'פברואר', 'מרץ', 'אפריל', 'מאי', 'יוני',
+        'יולי', 'אוגוסט', 'ספטמבר', 'אוקטובר', 'נובמבר', 'דצמבר'
+    ], []);
+
+    const currentMonthName = useMemo(() => {
+        return hebrewMonths[currentMonth.getMonth()];
+    }, [currentMonth, hebrewMonths]);
+
+    const handlePrevMonth = () => {
+        setCurrentMonth(prev => {
+            const newDate = new Date(prev);
+            newDate.setMonth(newDate.getMonth() - 1);
+            return newDate;
+        });
+    };
+
+    const handleNextMonth = () => {
+        setCurrentMonth(prev => {
+            const newDate = new Date(prev);
+            newDate.setMonth(newDate.getMonth() + 1);
+            return newDate;
+        });
+    };
 
     // Stores
     const {
@@ -241,6 +268,32 @@ export const DailyReportPage: React.FC = () => {
 
     return (
         <div className="daily-report-page">
+            {/* Header with month navigation */}
+            <header className="daily-report-page__header">
+                <h1 className="daily-report-page__title">דיווח שעות</h1>
+                <div className="daily-report-page__month-nav">
+                    <button
+                        className="daily-report-page__nav-btn"
+                        onClick={handlePrevMonth}
+                        aria-label="חודש קודם"
+                    >
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M9 18l6-6-6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                    </button>
+                    <span className="daily-report-page__month-name">{currentMonthName}</span>
+                    <button
+                        className="daily-report-page__nav-btn"
+                        onClick={handleNextMonth}
+                        aria-label="חודש הבא"
+                    >
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                    </button>
+                </div>
+            </header>
+
             {/* Scrollable Content Area */}
             <div className="daily-report-page__content">
                 <TimeEntryList

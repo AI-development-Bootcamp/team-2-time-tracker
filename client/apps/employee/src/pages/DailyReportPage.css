@@ -7,6 +7,60 @@
     overflow: hidden;
 }
 
+/* Header */
+.daily-report-page__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    background: white;
+    border-bottom: 1px solid rgb(230, 230, 235);
+    direction: rtl;
+}
+
+.daily-report-page__title {
+    font-family: 'Assistant', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: rgb(102, 51, 153);
+    margin: 0;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+.daily-report-page__month-nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.daily-report-page__nav-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    color: rgb(107, 114, 128);
+    cursor: pointer;
+    border-radius: 6px;
+    transition: background-color 0.2s;
+}
+
+.daily-report-page__nav-btn:hover {
+    background: rgb(242, 242, 247);
+}
+
+.daily-report-page__month-name {
+    font-family: 'Assistant', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: rgb(16, 23, 46);
+    min-width: 80px;
+    text-align: center;
+}
+
 .daily-report-page__content {
     flex: 1;
     overflow-y: auto;
@@ -50,7 +104,6 @@
 }
 
 /* Remove old styles that are no longer needed */
-.daily-report-page__header,
 .daily-report-page__date-nav,
 .daily-report-page__summary,
 .daily-report-page__timer,
