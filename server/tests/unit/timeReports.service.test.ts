@@ -22,6 +22,15 @@ import {
     createMockWorkdaySummary,
 } from '../helpers/mockTimerPrisma';
 
+// Mock jwt config to avoid env.ts validation during import
+vi.mock('../../src/config/jwt', () => ({
+    jwtConfig: {
+        secret: 'test-secret',
+        expiresIn: '2h',
+        expiresInSeconds: 7200,
+    },
+}));
+
 // Import after mocks
 import * as timeReportsService from '../../src/modules/time-reports/timeReports.service';
 import { BadRequestError, NotFoundError, ForbiddenError } from '../../src/shared/errors';

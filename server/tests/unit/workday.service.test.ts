@@ -14,6 +14,15 @@ import {
     createMockMonthLock,
 } from '../helpers/mockWorkdayPrisma';
 
+// Mock jwt config to avoid env.ts validation during import
+vi.mock('../../src/config/jwt', () => ({
+    jwtConfig: {
+        secret: 'test-secret',
+        expiresIn: '2h',
+        expiresInSeconds: 7200,
+    },
+}));
+
 // Mock the repo module before importing service
 import * as timeReportsRepo from '../../src/modules/time-reports/timeReports.repo';
 vi.mocked(timeReportsRepo);

@@ -3,7 +3,7 @@
  */
 
 import { vi } from 'vitest';
-import { EntityStatus, ReportType } from '@shared/types';
+import { EntityStatus, ReportType, UserRole } from '@shared/types';
 
 export enum TaskStatus {
     OPEN = 'OPEN',
@@ -132,9 +132,8 @@ export function createMockUser(overrides = {}) {
     return {
         id: 'test-user-id',
         email: 'test@example.com',
-        password: '$2b$12$hashedpassword',
         fullName: 'Test User',
-        role: 'EMPLOYEE',
+        role: UserRole.EMPLOYEE,
         isActive: true,
         mustChangePassword: false,
         createdAt: new Date(),

@@ -16,6 +16,15 @@ import {
     createMockUser,
 } from '../helpers/mockPrisma';
 
+// Mock jwt config to avoid env.ts validation during import
+vi.mock('../../src/config/jwt', () => ({
+    jwtConfig: {
+        secret: 'test-secret',
+        expiresIn: '2h',
+        expiresInSeconds: 7200,
+    },
+}));
+
 // Import after mocks are set up
 import * as absencesService from '../../src/modules/absences/absences.service';
 import { BadRequestError, NotFoundError } from '../../src/shared/errors';
