@@ -115,6 +115,7 @@ export async function getProjectUsers(projectId: string) {
 export async function createProject(data: {
     name: string;
     clientId: string;
+    description?: string | null;
     reportType?: ReportType;
     startDate?: string | null;
     endDate?: string | null;
@@ -146,6 +147,7 @@ export async function createProject(data: {
     const project = await projectsRepo.createProject({
         name: data.name,
         clientId: data.clientId,
+        description: data.description,
         reportType: data.reportType,
         startDate,
         endDate,
@@ -175,6 +177,7 @@ export async function updateProject(
     data: {
         name?: string;
         clientId?: string;
+        description?: string | null;
         startDate?: string | null;
         endDate?: string | null;
     }
@@ -244,6 +247,7 @@ export async function updateProject(
     const updatedProject = await projectsRepo.updateProject(id, {
         name: data.name,
         clientId: data.clientId,
+        description: data.description,
         startDate,
         endDate,
     });
