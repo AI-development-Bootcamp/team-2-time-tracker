@@ -59,7 +59,7 @@ describe('workday.service', () => {
             mockPrismaTimeEntry.findMany.mockResolvedValue([mockEntry]);
             mockPrismaAbsenceDay.findMany.mockResolvedValue([]);
             mockWorkdayPrisma.$queryRaw.mockResolvedValue([{ minutes: 0 }]);
-            mockPrismaWorkdaySummary.update.mockResolvedValue(mockSummary);
+            mockPrismaWorkdaySummary.upsert.mockResolvedValue(mockSummary);
 
             const result = await workdayService.getWorkday('test-user-id', '2026-01-17');
 
@@ -77,11 +77,11 @@ describe('workday.service', () => {
             mockPrismaTimeEntry.findMany.mockResolvedValue([]);
             mockPrismaAbsenceDay.findMany.mockResolvedValue([]);
             mockWorkdayPrisma.$queryRaw.mockResolvedValue([{ minutes: 0 }]);
-            mockPrismaWorkdaySummary.create.mockResolvedValue(mockSummary);
+            mockPrismaWorkdaySummary.upsert.mockResolvedValue(mockSummary);
 
             const result = await workdayService.getWorkday('test-user-id', '2026-01-17');
 
-            expect(mockPrismaWorkdaySummary.create).toHaveBeenCalled();
+            expect(mockPrismaWorkdaySummary.upsert).toHaveBeenCalled();
             expect(result).toHaveProperty('date', '2026-01-17');
         });
 
@@ -103,8 +103,9 @@ describe('workday.service', () => {
                     endDate: new Date('2026-01-17'),
                 },
             }]);
+
             mockWorkdayPrisma.$queryRaw.mockResolvedValue([{ minutes: 60 }]);
-            mockPrismaWorkdaySummary.update.mockResolvedValue({
+            mockPrismaWorkdaySummary.upsert.mockResolvedValue({
                 ...mockSummary,
                 absenceMinutes: 60,
             });
@@ -126,7 +127,7 @@ describe('workday.service', () => {
             ]);
             mockPrismaAbsenceDay.findMany.mockResolvedValue([]);
             mockWorkdayPrisma.$queryRaw.mockResolvedValue([{ minutes: 0 }]);
-            mockPrismaWorkdaySummary.update.mockResolvedValue(mockSummary);
+            mockPrismaWorkdaySummary.upsert.mockResolvedValue(mockSummary);
 
             const result = await workdayService.getWorkday('test-user-id', '2026-01-17');
 
@@ -145,7 +146,7 @@ describe('workday.service', () => {
             ]);
             mockPrismaAbsenceDay.findMany.mockResolvedValue([]);
             mockWorkdayPrisma.$queryRaw.mockResolvedValue([{ minutes: 0 }]);
-            mockPrismaWorkdaySummary.update.mockResolvedValue(mockSummary);
+            mockPrismaWorkdaySummary.upsert.mockResolvedValue(mockSummary);
 
             const result = await workdayService.getWorkday('test-user-id', '2026-01-17');
 
@@ -171,7 +172,7 @@ describe('workday.service', () => {
             mockWorkdayPrisma.$queryRaw.mockResolvedValue([{ minutes: 0 }]);
 
             // First call (inside getWorkday) returns regular summary
-            mockPrismaWorkdaySummary.update.mockResolvedValueOnce(mockSummary);
+            mockPrismaWorkdaySummary.upsert.mockResolvedValue(mockSummary);
 
             // Second call (inside submitWorkday) returns submitted summary
             mockPrismaWorkdaySummary.update.mockResolvedValueOnce({
@@ -231,7 +232,7 @@ describe('workday.service', () => {
             ]);
             mockPrismaAbsenceDay.findMany.mockResolvedValue([]);
             mockWorkdayPrisma.$queryRaw.mockResolvedValue([{ minutes: 0 }]);
-            mockPrismaWorkdaySummary.update.mockResolvedValue(mockSummary);
+            mockPrismaWorkdaySummary.upsert.mockResolvedValue(mockSummary);
 
             await expect(
                 workdayService.submitWorkday('test-user-id', '2026-01-17')
@@ -254,7 +255,7 @@ describe('workday.service', () => {
             ]);
             mockPrismaAbsenceDay.findMany.mockResolvedValue([]);
             mockWorkdayPrisma.$queryRaw.mockResolvedValue([{ minutes: 0 }]);
-            mockPrismaWorkdaySummary.update.mockResolvedValue(mockSummary);
+            mockPrismaWorkdaySummary.upsert.mockResolvedValue(mockSummary);
 
             await expect(
                 workdayService.submitWorkday('test-user-id', '2026-01-17')

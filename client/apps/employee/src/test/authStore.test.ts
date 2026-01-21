@@ -116,7 +116,10 @@ describe('Auth Store', () => {
 
         it('should set loading state during login', async () => {
             mockLoginApi.mockImplementation(
-                () => new Promise((resolve) => setTimeout(resolve, 100))
+                () => new Promise((resolve) => setTimeout(() => resolve({
+                    user: { id: 'test', email: 'test@example.com', fullName: 'Test', role: 'EMPLOYEE' },
+                    token: 'token'
+                }), 100))
             );
 
             const loginPromise = store.login('test@example.com', 'password123');
