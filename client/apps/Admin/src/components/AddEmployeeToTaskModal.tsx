@@ -8,7 +8,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { usersApi } from '../api/usersApi';
 import { bulkCreateAssignments } from '../api/assignmentsApi';
 import { UserPlus, Search, ChevronLeft, ChevronRight } from 'lucide-react';
-import { AdminUserDto, UserRole } from '@shared/types';
+import { UserRole } from '@shared/types';
 import './AddEmployeeToTaskModal.css';
 
 interface AddEmployeeToTaskModalProps {
