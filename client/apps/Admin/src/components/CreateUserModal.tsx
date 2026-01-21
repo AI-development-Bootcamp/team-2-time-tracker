@@ -32,6 +32,7 @@ export const CreateUserModal: React.FC<CreateUserModalProps> = ({ onClose, onSuc
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm<CreateUserFormData>({
     resolver: zodResolver(createUserSchema),
@@ -43,6 +44,13 @@ export const CreateUserModal: React.FC<CreateUserModalProps> = ({ onClose, onSuc
       role: UserRole.EMPLOYEE,
     },
   });
+
+  const firstName = watch('firstName');
+  const lastName = watch('lastName');
+  const email = watch('email');
+  const password = watch('password');
+
+  const isFormValid = firstName?.trim() && lastName?.trim() && email?.trim() && password?.trim();
 
   /**
    * @description Handles form submission
@@ -189,21 +197,14 @@ export const CreateUserModal: React.FC<CreateUserModalProps> = ({ onClose, onSuc
               )}
             </div>
 
-            <div className="user-form__actions">
-              <button
-                type="button"
-                className="user-form__button user-form__button--secondary"
-                onClick={onClose}
-                disabled={isSubmitting}
-              >
-                ביטול
-              </button>
+            <div className="user-form__actions user-form__actions--single">
               <button
                 type="submit"
-                className="user-form__button user-form__button--primary"
-                disabled={isSubmitting}
+                className="user-form__button user-form__button--primary user-form__button--full"
+                disabled={isSubmitting || !isFormValid}
               >
-                {isSubmitting ? 'יוצר משתמש...' : 'צור משתמש'}
+                <Plus size={20} strokeWidth={2.5} />
+                <span>{isSubmitting ? 'יוצר משתמש...' : 'צור משתמש חדש'}</span>
               </button>
             </div>
           </form>
