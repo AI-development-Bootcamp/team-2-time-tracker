@@ -24,7 +24,7 @@ export class SelectorsRepo {
                     some: {
                         tasks: {
                             some: {
-                                taskAssignments: {
+                                assignments: {
                                     some: {
                                         userId
                                     }
@@ -78,7 +78,7 @@ export class SelectorsRepo {
             // Filter by assigned tasks
             tasks: {
                 some: {
-                    taskAssignments: {
+                    assignments: {
                         some: {
                             userId
                         }
@@ -137,7 +137,7 @@ export class SelectorsRepo {
         const where: Prisma.TaskWhereInput = {
             status: 'OPEN',
             // Filter by user assignments
-            taskAssignments: {
+            assignments: {
                 some: {
                     userId
                 }

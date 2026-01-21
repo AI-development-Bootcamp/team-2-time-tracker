@@ -39,6 +39,7 @@ export interface ListClientsResponseDto {
  */
 export interface CreateClientRequestDto {
     name: string;
+    description?: string ;
 }
 
 /**
@@ -76,6 +77,7 @@ export interface ProjectDto {
     id: string;
     name: string;
     clientId: string;
+    description?: string | null;
     reportType: ReportType;
     status: EntityStatus;
     startDate: string | null;
@@ -108,6 +110,7 @@ export interface ListProjectsResponseDto {
 export interface CreateProjectRequestDto {
     name: string;
     clientId: string;
+    description?: string | null;
     reportType?: ReportType;
     startDate?: string | null;
     endDate?: string | null;
@@ -119,6 +122,7 @@ export interface CreateProjectRequestDto {
 export interface UpdateProjectRequestDto {
     name?: string;
     clientId?: string;
+    description?: string | null;
     reportType?: ReportType;
     startDate?: string | null;
     endDate?: string | null;
@@ -178,6 +182,7 @@ export interface TaskDto {
     id: string;
     name: string;
     projectId: string;
+    description: string | null;
     status: TaskStatus;
     startDate: string | null;
     endDate: string | null;
@@ -208,6 +213,7 @@ export interface ListTasksResponseDto {
 export interface CreateTaskRequestDto {
     name: string;
     projectId: string;
+    description?: string | null;
     startDate?: string | null;
     endDate?: string | null;
 }
@@ -218,6 +224,7 @@ export interface CreateTaskRequestDto {
 export interface UpdateTaskRequestDto {
     name?: string;
     projectId?: string;
+    description?: string | null;
     startDate?: string | null;
     endDate?: string | null;
 }
