@@ -15,6 +15,11 @@ import React, { useEffect, useRef } from 'react';
 import { useTimerStore } from '../app/stores/timer.store';
 import './FooterActions.css';
 
+// Import icons
+import playIcon from '../assets/icons/pink_play.png';
+import stopIcon from '../assets/icons/stop.png';
+import plusIcon from '../assets/icons/plus.png';
+
 interface FooterActionsProps {
     onStopTimer: () => void;
     onManualReport: () => void;
@@ -104,7 +109,7 @@ export const FooterActions: React.FC<FooterActionsProps> = ({
     return (
         <div className="footer-actions">
             <div className="footer-actions__buttons">
-                {/* Timer Button - changes based on timer state */}
+                {/* Timer Section - Left side */}
                 <button
                     className={`footer-actions__button footer-actions__button--timer ${isRunning ? 'footer-actions__button--timer-running' : ''}`}
                     onClick={handleTimerButtonClick}
@@ -113,10 +118,7 @@ export const FooterActions: React.FC<FooterActionsProps> = ({
                         <>
                             {/* Stop Icon */}
                             <div className="footer-actions__icon footer-actions__icon--stop">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                    <circle cx="12" cy="12" r="10" fill="#FF4444" />
-                                    <rect x="8" y="8" width="8" height="8" fill="white" />
-                                </svg>
+                                <img src={stopIcon} alt="עצור" width="40" height="40" />
                             </div>
                             {/* Timer Display */}
                             <span className="footer-actions__timer-display">{formatTime()}</span>
@@ -125,9 +127,7 @@ export const FooterActions: React.FC<FooterActionsProps> = ({
                         <>
                             {/* Play Icon */}
                             <div className="footer-actions__icon footer-actions__icon--play">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                    <path d="M8 5v14l11-7z" fill="white" />
-                                </svg>
+                                <img src={playIcon} alt="התחל" width="40" height="40" />
                             </div>
                             <span className="footer-actions__label">הפעלת שעון</span>
                         </>
@@ -137,17 +137,14 @@ export const FooterActions: React.FC<FooterActionsProps> = ({
                 {/* Separator */}
                 <div className="footer-actions__separator" />
 
-                {/* Manual Report Button */}
+                {/* Manual Report Section - Right side */}
                 <button
                     className="footer-actions__button footer-actions__button--manual"
                     onClick={onManualReport}
                 >
                     <span className="footer-actions__label">דיווח ידני</span>
                     <div className="footer-actions__icon footer-actions__icon--plus">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                            <circle cx="12" cy="12" r="10" stroke="white" strokeWidth="2" />
-                            <path d="M12 8v8M8 12h8" stroke="white" strokeWidth="2" strokeLinecap="round" />
-                        </svg>
+                        <img src={plusIcon} alt="דיווח ידני" width="40" height="40" />
                     </div>
                 </button>
             </div>

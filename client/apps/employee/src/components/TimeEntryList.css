@@ -19,17 +19,22 @@
     overflow: hidden;
 }
 
+.time-entry-group--weekend {
+    opacity: 0.7;
+}
+
 .time-entry-group__header {
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 12px 16px;
+    padding: 14px 16px;
     background: white;
     border: none;
     cursor: pointer;
     font-family: 'Assistant', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     transition: background-color 0.2s;
+    direction: rtl;
 }
 
 .time-entry-group__header:hover {
@@ -39,79 +44,103 @@
 .time-entry-group__header-left {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
 }
 
-.time-entry-group__status {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-}
-
-.time-entry-group__status--green {
-    background: rgb(52, 211, 153);
-}
-
-.time-entry-group__status--yellow {
-    background: rgb(251, 191, 36);
-}
-
-.time-entry-group__status--red {
-    background: rgb(239, 68, 68);
+.time-entry-group__header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
 .time-entry-group__chevron {
-    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     color: rgb(107, 114, 128);
+    transition: transform 0.2s;
 }
 
+.time-entry-group__chevron--expanded {
+    transform: rotate(180deg);
+}
+
+/* Badge Styles */
 .time-entry-group__badge {
-    padding: 2px 8px;
-    border-radius: 12px;
-    font-size: 12px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 2px 8px 6px;
+    gap: 4px;
+    height: 28px;
+    border-radius: 100px;
+    font-size: 14px;
     font-weight: 500;
     font-family: 'Assistant', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 .time-entry-group__badge--red {
-    background: rgb(254, 226, 226);
-    color: rgb(239, 68, 68);
+    background: #FCE3D6;
+    color: #AC2632;
 }
 
 .time-entry-group__badge--yellow {
-    background: rgb(254, 243, 199);
-    color: rgb(217, 119, 6);
+    background: #FEF5CC;
+    color: #945312;
 }
 
 .time-entry-group__badge--green {
-    background: rgb(209, 250, 229);
-    color: rgb(5, 150, 105);
+    background: #E3F9CA;
+    color: #106103;
 }
 
-.time-entry-group__icon {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
+.time-entry-group__badge--gray {
+    background: #F0F4FA;
+    color: #0C3058;
+}
+
+.time-entry-group__badge--blue {
+    background: #F0F4FA;
+    color: #0C3058;
+}
+
+.time-entry-group__badge--pink {
+    background: #FFECFC;
+    color: #AE0088;
+}
+
+/* Status Icon inside badge */
+.time-entry-group__status-icon {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 12px;
-    font-weight: 600;
+    width: 16px;
+    height: 16px;
 }
 
-.time-entry-group__icon--red {
-    background: rgb(254, 226, 226);
-    color: rgb(239, 68, 68);
+.time-entry-group__status-icon--green {
+    color: #106103;
 }
 
-.time-entry-group__icon--yellow {
-    background: rgb(254, 243, 199);
-    color: rgb(217, 119, 6);
+.time-entry-group__status-icon--yellow {
+    color: #945312;
 }
 
-.time-entry-group__icon--green {
-    background: rgb(209, 250, 229);
-    color: rgb(5, 150, 105);
+.time-entry-group__status-icon--red {
+    color: #AC2632;
+}
+
+.time-entry-group__status-icon--gray {
+    color: #0C3058;
+}
+
+/* Calendar Icon */
+.time-entry-group__calendar-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgb(156, 163, 175);
 }
 
 .time-entry-group__date {
@@ -119,6 +148,88 @@
     font-weight: 500;
     color: rgb(16, 23, 46);
     direction: rtl;
+}
+
+/* Entries Container */
+.time-entry-group__entries {
+    background: white;
+}
+
+/* Entry Items - Figma Layout */
+.time-entry-item {
+    padding: 16px 20px;
+    border-top: 1px solid #E8E8E8;
+}
+
+.time-entry-item__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    direction: rtl;
+}
+
+.time-entry-item__row:first-child {
+    margin-bottom: 8px;
+}
+
+.time-entry-item__edit {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    color: #3B82F6;
+    font-family: 'Assistant', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.time-entry-item__edit:hover {
+    color: #2563EB;
+}
+
+.time-entry-item__time-range {
+    font-size: 14px;
+    font-weight: 600;
+    color: #3B82F6;
+    font-family: 'Assistant', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    direction: ltr;
+}
+
+.time-entry-item__task-name {
+    font-size: 13px;
+    font-weight: 400;
+    color: #141E3E;
+    font-family: 'Assistant', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.time-entry-item__duration {
+    font-size: 13px;
+    color: #848891;
+    font-family: 'Assistant', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* Add Report Link */
+.time-entry-group__add-link {
+    display: block;
+    width: 100%;
+    padding: 14px 24px;
+    background: none;
+    border: none;
+    border-top: 1px solid rgb(242, 242, 247);
+    cursor: pointer;
+    color: rgb(59, 130, 246);
+    font-family: 'Assistant', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    text-align: center;
+    transition: background-color 0.2s;
+}
+
+.time-entry-group__add-link:hover {
+    background: rgb(245, 245, 248);
 }
 
 /* Empty State */
@@ -129,7 +240,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 16px;
+    gap: 12px;
+    background: rgb(250, 250, 252);
 }
 
 .time-entry-group__empty-text {
@@ -139,6 +251,7 @@
     margin: 0;
 }
 
+/* Legacy styles - keeping for compatibility */
 .time-entry-group__add-button {
     display: flex;
     align-items: center;
@@ -166,93 +279,4 @@
 
 .time-entry-group__add-button svg {
     flex-shrink: 0;
-}
-
-/* Entries */
-.time-entry-group__entries {
-    border-top: 1px solid rgb(242, 242, 247);
-}
-
-/* Entry Items */
-.time-entry-item {
-    padding: 12px 16px;
-    border-bottom: 1px solid rgb(242, 242, 247);
-}
-
-.time-entry-item:last-child {
-    border-bottom: none;
-}
-
-.time-entry-item__main {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 8px;
-}
-
-.time-entry-item__left {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.time-entry-item__right {
-    text-align: right;
-}
-
-.time-entry-item__edit {
-    background: none;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    color: rgb(59, 130, 246);
-    font-family: 'Assistant', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    font-size: 14px;
-    text-decoration: underline;
-}
-
-.time-entry-item__edit:hover {
-    color: rgb(37, 99, 235);
-}
-
-.time-entry-item__time-range {
-    font-size: 16px;
-    font-weight: 600;
-    color: rgb(59, 130, 246);
-    font-family: 'Assistant', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-}
-
-.time-entry-item__task-name {
-    font-size: 16px;
-    font-weight: 500;
-    color: rgb(16, 23, 46);
-    font-family: 'Assistant', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    direction: rtl;
-}
-
-.time-entry-item__details {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    direction: rtl;
-}
-
-.time-entry-item__location {
-    font-size: 14px;
-    color: rgb(107, 114, 128);
-    font-family: 'Assistant', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-}
-
-.time-entry-item__duration {
-    font-size: 14px;
-    color: rgb(107, 114, 128);
-    font-family: 'Assistant', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-}
-
-.time-entry-item__description {
-    font-size: 14px;
-    color: rgb(107, 114, 128);
-    font-family: 'Assistant', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    margin-top: 8px;
-    direction: rtl;
 }
