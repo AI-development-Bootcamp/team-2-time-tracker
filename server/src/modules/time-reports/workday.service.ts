@@ -125,32 +125,32 @@ export async function getWorkday(userId: string, dateStr: string) {
     const status = calculateStatus(totalMinutes);
 
     // Update or create the workday summary with calculated values
-    if (!summary) {
-        summary = await prisma.workdaySummary.create({
-            data: {
+    // Upsert the workday summary with calculated values
+    summary = await prisma.workdaySummary.upsert({
+        where: {
+            userId_workDate: {
                 userId,
                 workDate,
-                targetMinutes: TARGET_MINUTES,
-                workMinutes,
-                absenceMinutes,
-                status,
-                isLocked,
-                lockedMonthId: monthLock?.id,
             },
-        });
-    } else {
-        // Update if values changed
-        summary = await prisma.workdaySummary.update({
-            where: { id: summary.id },
-            data: {
-                workMinutes,
-                absenceMinutes,
-                status,
-                isLocked,
-                lockedMonthId: monthLock?.id,
-            },
-        });
-    }
+        },
+        create: {
+            userId,
+            workDate,
+            targetMinutes: TARGET_MINUTES,
+            workMinutes,
+            absenceMinutes,
+            status,
+            isLocked,
+            lockedMonthId: monthLock?.id,
+        },
+        update: {
+            workMinutes,
+            absenceMinutes,
+            status,
+            isLocked,
+            lockedMonthId: monthLock?.id,
+        },
+    });
 
     // Format response
     return {
