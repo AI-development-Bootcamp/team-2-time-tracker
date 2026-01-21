@@ -44,6 +44,17 @@ function transformProjectWithAssignedUsers(project: any) {
 }
 
 /**
+ * @description Retrieves all projects with client info and assigned users.
+ * @returns {Promise<Array>} Projects list with assignedUsers array
+ * @example
+ * const projects = await listProjects();
+ */
+export async function listProjects() {
+    const projects = await projectsRepo.findAllProjects();
+    return projects.map((project) => transformProjectWithAssignedUsers(project));
+}
+
+/**
  * @description Retrieves a single project by ID.
  * @param {string} id - Project's UUID
  * @returns {Promise<Object>} Project data with assignedUsers array

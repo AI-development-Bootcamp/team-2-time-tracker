@@ -7,6 +7,54 @@ import { prisma } from '../../../db';
 import { EntityStatus, ReportType, Prisma } from '@prisma/client';
 
 /**
+ * Find all projects
+ * @returns Projects list with client info and task assignments
+ */
+export async function findAllProjects() {
+    return prisma.project.findMany({
+        orderBy: { createdAt: 'desc' },
+        select: {
+            id: true,
+            name: true,
+            clientId: true,
+            description: true,
+            status: true,
+            reportType: true,
+            startDate: true,
+            endDate: true,
+            createdAt: true,
+            updatedAt: true,
+            client: {
+                select: {
+                    id: true,
+                    name: true,
+                },
+            },
+            tasks: {
+                select: {
+                    assignments: {
+                        select: {
+                            user: {
+                                select: {
+                                    id: true,
+                                    fullName: true,
+                                    email: true,
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+            _count: {
+                select: {
+                    tasks: true,
+                },
+            },
+        },
+    });
+}
+
+/**
  * Find a project by ID
  * @param id - Project ID
  * @returns Project or null

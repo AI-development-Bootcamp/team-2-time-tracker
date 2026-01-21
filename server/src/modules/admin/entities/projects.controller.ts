@@ -7,6 +7,22 @@ import { Request, Response, NextFunction } from 'express';
 import * as projectsService from './projects.service';
 
 /**
+ * List all projects
+ */
+export async function listProjects(_req: Request, res: Response, next: NextFunction) {
+    try {
+        const projects = await projectsService.listProjects();
+
+        res.json({
+            success: true,
+            data: projects,
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
+/**
  * Get a single project by ID
  */
 export async function getProject(req: Request, res: Response, next: NextFunction) {
