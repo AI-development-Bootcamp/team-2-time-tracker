@@ -2,6 +2,10 @@ import { useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { LoginForm } from '@client/ui';
 import { useAuthStore } from '../app/stores/auth.store';
+import logoImage from '../assets/logo.png';
+import welcomeImage from '../assets/Welcome_app.png';
+import backgroundImage from '../assets/employee-bg.png';
+import './LoginPage.css';
 
 export default function LoginPage() {
     const navigate = useNavigate();
@@ -35,28 +39,31 @@ export default function LoginPage() {
     const handleSubmit = async (data: { email: string; password: string; rememberMe?: boolean }) => {
         try {
             await login(data);
-            // Navigation handled by effect
         } catch (err) {
             // Error set in store
         }
     };
 
     return (
-        <div className="flex h-full items-center justify-center bg-gray-50 px-4">
-            <div className="w-full max-w-md space-y-8">
-                <div className="text-center">
-                    <h2 className="mt-6 text-3xl font-bold tracking-tight text-gray-900">
-                        כניסה למערכת
-                    </h2>
-                </div>
+        <div className="login-page" style={{ backgroundImage: `url(${backgroundImage})` }}>
+            <div className="login-card">
+                <img src={logoImage} alt="abra" className="login-logo" />
 
-                <div className="bg-white p-8 shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl">
-                    <LoginForm
-                        onSubmit={handleSubmit}
-                        isLoading={isLoading}
-                        error={error || undefined}
-                    />
-                </div>
+                <img src={welcomeImage} alt="Welcome" className="login-welcome-image" />
+
+                <h1 className="login-title">ברוכים הבאים!</h1>
+
+                <p className="login-description">
+                    ברוכים הבאים למערכת דיווחי השעות שלנו 🎉
+                    <br />
+                    שנוצרה במיוחד עבורכם!
+                </p>
+
+                <LoginForm
+                    onSubmit={handleSubmit}
+                    isLoading={isLoading}
+                    error={error || undefined}
+                />
             </div>
         </div>
     );
