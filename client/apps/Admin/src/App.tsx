@@ -6,8 +6,8 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
 import AuthGuard from './components/AuthGuard';
-import DashboardPage from './pages/DashboardPage';
 import AssignmentsPage from './pages/AssignmentsPage';
+import HourReportPage from './pages/HourReportPage';
 
 /**
  * @description Main Admin application component with routing
@@ -18,14 +18,7 @@ function App(): React.JSX.Element {
         <BrowserRouter>
             <Routes>
                 <Route path="/login" element={<LoginPage />} />
-                <Route
-                    path="/"
-                    element={
-                        <AuthGuard>
-                            <DashboardPage />
-                        </AuthGuard>
-                    }
-                />
+                <Route path="/" element={<Navigate to="/assignments" replace />} />
                 <Route
                     path="/assignments"
                     element={
@@ -34,7 +27,15 @@ function App(): React.JSX.Element {
                         </AuthGuard>
                     }
                 />
-                <Route path="*" element={<Navigate to="/" replace />} />
+                <Route
+                    path="/hour-report"
+                    element={
+                        <AuthGuard>
+                            <HourReportPage />
+                        </AuthGuard>
+                    }
+                />
+                <Route path="*" element={<Navigate to="/assignments" replace />} />
             </Routes>
         </BrowserRouter>
     );

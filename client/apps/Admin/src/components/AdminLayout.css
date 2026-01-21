@@ -34,7 +34,51 @@
 
 .admin-layout__nav {
   flex: 1;
-  padding: 1.5rem 1rem;
+  padding: 1.5rem 0;
+}
+
+.admin-layout__nav-item {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  padding: 0.75rem 1.5rem;
+  margin-bottom: 0.5rem;
+  background-color: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  border: none;
+  border-radius: 0;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  position: relative;
+  text-align: right;
+}
+
+.admin-layout__nav-item svg {
+  margin-left: 12px;
+  flex-shrink: 0;
+}
+  
+  .admin-layout__nav-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+  }
+  
+.admin-layout__nav-item--active {
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.admin-layout__nav-item--active::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: 4px;
+  background-color: #FFA500;
 }
 
 .admin-layout__footer {

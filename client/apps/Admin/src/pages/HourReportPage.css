@@ -1,0 +1,226 @@
+.hour-report-page {
+    padding: 30px 40px 50px 40px;
+}
+
+.hour-report-page__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 30px;
+    gap: 40px;
+}
+
+.hour-report-page__header-left {
+    flex: 1;
+    text-align: right;
+}
+
+.hour-report-page__header-right {
+    display: flex;
+    align-items: flex-start;
+}
+
+.hour-report-page__title {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: var(--text-color-primary);
+    margin: 0 0 8px 0;
+}
+
+.hour-report-page__subtitle {
+    font-size: 0.9rem;
+    color: var(--text-color-secondary);
+    line-height: 1.5;
+}
+
+.hour-report-page__content {
+    margin-top: 20px;
+}
+
+.hour-report-page__search-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.hour-report-page__search {
+    width: 280px;
+    padding: 10px 15px 10px 15px;
+    padding-right: 40px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-size: 0.9rem;
+    text-align: right;
+    direction: rtl;
+}
+
+.hour-report-page__search::placeholder {
+    color: #848891;
+}
+
+.hour-report-page__search-icon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #848891;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.hour-report-page__search::placeholder {
+    color: var(--text-color-secondary);
+}
+
+.hour-report-page__table-container {
+    overflow-x: auto;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+}
+
+.hour-report-page__table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.hour-report-page__table th,
+.hour-report-page__table td {
+    padding: 14px 20px;
+    text-align: right;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.hour-report-page__table th {
+    background-color: #1e2a3a;
+    color: white;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.hour-report-page__table tbody tr {
+    background-color: white;
+}
+
+.hour-report-page__table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+.hour-report-page__table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.hour-report-page__empty {
+    text-align: center;
+    padding: 20px;
+    color: var(--text-color-secondary);
+}
+
+.hour-report-page__toggle {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.hour-report-page__toggle-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: var(--text-color-primary);
+    transition: all 0.2s;
+}
+
+.hour-report-page__toggle-btn:hover {
+    opacity: 0.8;
+}
+
+.hour-report-page__toggle-radio {
+    width: 18px;
+    height: 18px;
+    border: 2px solid #ccc;
+    border-radius: 50%;
+    position: relative;
+    display: inline-block;
+    transition: all 0.2s;
+}
+
+.hour-report-page__toggle-btn.active .hour-report-page__toggle-radio {
+    border-color: #007bff;
+}
+
+.hour-report-page__toggle-btn.active .hour-report-page__toggle-radio::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 10px;
+    height: 10px;
+    background-color: #007bff;
+    border-radius: 50%;
+}
+
+.hour-report-page__pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 20px;
+    padding: 20px 0;
+}
+
+.hour-report-page__pagination-btn {
+    min-width: 32px;
+    height: 32px;
+    padding: 6px 10px;
+    border: 1px solid var(--border-color);
+    background-color: white;
+    color: var(--text-color-primary);
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+.hour-report-page__pagination-btn:hover:not(:disabled) {
+    background-color: #f8f9fa;
+}
+
+.hour-report-page__pagination-btn.active {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+.hour-report-page__pagination-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.hour-report-page__loading,
+.hour-report-page__error {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 3rem;
+    text-align: center;
+}
+
+.hour-report-page__error {
+    color: #d32f2f;
+    background-color: #ffebee;
+    border-radius: 8px;
+    margin: 1rem 0;
+}
+
+.hour-report-page__loading {
+    color: #666;
+}
+
+.hour-report-page__toggle-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

@@ -11,6 +11,8 @@ import type {
     ProjectDto,
     ProjectResponseDto,
     UpdateProjectRequestDto,
+    ListProjectsResponseDto,
+    ReportType,
     TaskDto,
     TaskResponseDto,
     UpdateTaskRequestDto,
@@ -63,6 +65,41 @@ export async function getProject(id: string): Promise<ProjectDto> {
  */
 export async function updateProject(id: string, data: UpdateProjectRequestDto): Promise<ProjectDto> {
     const response = await httpClient.put<ProjectResponseDto>(`/admin/projects/${id}`, data);
+    return response.data.data;
+}
+
+/**
+ * @description Get all projects with optional filters
+ * @param {Object} filters - Optional filters
+ * @param {string} filters.clientId - Filter by client ID
+ * @param {string} filters.userId - Filter by user ID
+ * @returns {Promise<ProjectDto[]>} List of projects
+ */
+export async function getProjects(filters?: {
+    clientId?: string;
+    userId?: string;
+}): Promise<ProjectDto[]> {
+    const response = await httpClient.get<ListProjectsResponseDto>(
+        '/admin/projects',
+        { params: filters }
+    );
+    return response.data.data;
+}
+
+/**
+ * @description Update project report type
+ * @param {string} id - Project ID
+ * @param {ReportType} reportType - New report type
+ * @returns {Promise<ProjectDto>} Updated project
+ */
+export async function updateProjectReportType(
+    id: string,
+    reportType: ReportType
+): Promise<ProjectDto> {
+    const response = await httpClient.put<ProjectResponseDto>(
+        `/admin/projects/${id}/report-type`,
+        { reportType }
+    );
     return response.data.data;
 }
 

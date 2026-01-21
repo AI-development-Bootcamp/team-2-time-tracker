@@ -16,6 +16,7 @@ import type { TaskAssignmentDto } from '@shared/types';
 import { getAssignments, deleteAssignment } from '../api/assignmentsApi';
 import { AdminLayout } from '../components/AdminLayout';
 import { DashboardHeader } from '../components/DashboardHeader';
+import { AddButton } from '../components/AddButton';
 import { EditClientModal } from '../components/EditClientModal';
 import { EditProjectModal } from '../components/EditProjectModal';
 import { EditTaskModal } from '../components/EditTaskModal';
@@ -344,6 +345,7 @@ function AssignmentsPage(): React.JSX.Element {
                                 className="assignments-page__search-input"
                             />
                         </div>
+                        <AddButton />
                     </div>
                 </div>
 
