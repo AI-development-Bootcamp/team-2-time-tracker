@@ -14,6 +14,7 @@ vi.mock('@prisma/client', () => ({
         project: { findMany: vi.fn(), findUnique: vi.fn(), create: vi.fn(), update: vi.fn(), delete: vi.fn(), count: vi.fn() },
         task: { findMany: vi.fn(), findUnique: vi.fn(), create: vi.fn(), update: vi.fn(), delete: vi.fn(), count: vi.fn() },
         timeEntry: { findMany: vi.fn(), findUnique: vi.fn(), create: vi.fn(), update: vi.fn(), delete: vi.fn(), count: vi.fn() },
+        taskAssignment: { findMany: vi.fn(), findUnique: vi.fn(), create: vi.fn(), createMany: vi.fn(), update: vi.fn(), delete: vi.fn(), count: vi.fn() },
         $connect: vi.fn(),
         $disconnect: vi.fn(),
         $transaction: vi.fn((callback) => callback({})),
@@ -100,6 +101,17 @@ export const mockPrismaTimeEntry = {
     count: vi.fn(),
 };
 
+export const mockPrismaTaskAssignment = {
+    findMany: vi.fn(),
+    findUnique: vi.fn(),
+    create: vi.fn(),
+    createMany: vi.fn(),
+    update: vi.fn(),
+    delete: vi.fn(),
+    count: vi.fn(),
+};
+
+
 export const mockPrisma = {
     user: mockPrismaUser,
     refreshToken: mockPrismaRefreshToken,
@@ -107,6 +119,7 @@ export const mockPrisma = {
     project: mockPrismaProject,
     task: mockPrismaTask,
     timeEntry: mockPrismaTimeEntry,
+    taskAssignment: mockPrismaTaskAssignment,
     $transaction: vi.fn((callback) => callback(mockPrisma)),
     $connect: vi.fn(),
     $disconnect: vi.fn(),
@@ -121,6 +134,7 @@ vi.mock('../../src/db', () => ({
         project: mockPrismaProject,
         task: mockPrismaTask,
         timeEntry: mockPrismaTimeEntry,
+        taskAssignment: mockPrismaTaskAssignment,
         $transaction: vi.fn((callback) => callback(mockPrisma)),
         $connect: vi.fn(),
         $disconnect: vi.fn(),
@@ -137,6 +151,7 @@ export function resetPrismaMocks() {
     Object.values(mockPrismaProject).forEach((mock) => mock.mockReset());
     Object.values(mockPrismaTask).forEach((mock) => mock.mockReset());
     Object.values(mockPrismaTimeEntry).forEach((mock) => mock.mockReset());
+    Object.values(mockPrismaTaskAssignment).forEach((mock) => mock.mockReset());
 }
 
 /**
@@ -244,6 +259,22 @@ export function createMockTask(overrides = {}) {
             assignments: 0,
             timeEntries: 0,
         },
+        ...overrides,
+    };
+}
+
+/**
+ * Create a mock task assignment object
+ */
+export function createMockTaskAssignment(overrides = {}) {
+    return {
+        id: 'test-assignment-id',
+        userId: 'test-user-id',
+        taskId: 'test-task-id',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        user: createMockUser(),
+        task: createMockTask(),
         ...overrides,
     };
 }

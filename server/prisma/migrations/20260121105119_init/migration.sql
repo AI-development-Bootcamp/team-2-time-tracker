@@ -28,6 +28,9 @@ CREATE TYPE "AuditEntity" AS ENUM ('USER', 'CLIENT', 'PROJECT', 'TASK', 'TASK_AS
 -- CreateEnum
 CREATE TYPE "AuditAction" AS ENUM ('CREATE', 'UPDATE', 'STATUS_CHANGE', 'RESET_PASSWORD', 'LOCK_MONTH', 'UNLOCK_MONTH');
 
+-- CreateEnum
+CREATE TYPE "WorkdayStatus" AS ENUM ('FULL', 'PARTIAL', 'MISSING');
+
 -- CreateTable
 CREATE TABLE "users" (
     "id" TEXT NOT NULL,
@@ -127,7 +130,7 @@ CREATE TABLE "workday_summaries" (
     "target_minutes" INTEGER NOT NULL DEFAULT 540,
     "work_minutes" INTEGER NOT NULL DEFAULT 0,
     "absence_minutes" INTEGER NOT NULL DEFAULT 0,
-    "status" TEXT NOT NULL DEFAULT 'MISSING',
+    "status" "WorkdayStatus" NOT NULL DEFAULT 'MISSING',
     "is_locked" BOOLEAN NOT NULL DEFAULT false,
     "locked_month_id" TEXT,
     "is_submitted" BOOLEAN NOT NULL DEFAULT false,
@@ -278,12 +281,6 @@ CREATE UNIQUE INDEX "task_assignments_user_id_task_id_key" ON "task_assignments"
 
 -- CreateIndex
 CREATE UNIQUE INDEX "month_locks_month_key" ON "month_locks"("month");
-
--- CreateIndex
-CREATE INDEX "month_locks_month_idx" ON "month_locks"("month");
-
--- CreateIndex
-CREATE INDEX "workday_summaries_user_id_work_date_idx" ON "workday_summaries"("user_id", "work_date");
 
 -- CreateIndex
 CREATE INDEX "workday_summaries_is_locked_idx" ON "workday_summaries"("is_locked");

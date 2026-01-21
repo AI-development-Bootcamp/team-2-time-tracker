@@ -13,3 +13,10 @@ export const bulkCreateTaskAssignmentsSchema = z.object({
     userIds: z.array(z.string().min(1)).min(1, 'At least one user ID is required'),
     taskIds: z.array(z.string().min(1)).min(1, 'At least one task ID is required'),
 });
+
+export const listAssignmentsQuerySchema = z.object({
+    userId: z.string().optional(),
+    taskId: z.string().optional(),
+    projectId: z.string().optional(),
+    userName: z.string().optional(),
+});

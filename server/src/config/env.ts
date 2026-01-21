@@ -21,6 +21,7 @@ const envSchema = z.object({
   JWT_SECRET: z.string().min(1, 'JWT_SECRET is required'),
   JWT_EXPIRES_IN: z.string().default('2h'),
   CORS_ORIGIN: z.string().default('*'),
+  DEFAULT_SEED_PASSWORD: z.string().default('password123'),
 });
 
 const parsedEnv = envSchema.safeParse(process.env);

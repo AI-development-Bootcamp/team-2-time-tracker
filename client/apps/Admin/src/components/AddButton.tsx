@@ -49,7 +49,7 @@ export const AddButton: React.FC = () => {
           onClick={handleToggleDropdown}
           type="button"
         >
-           יצירה +
+          יצירה +
         </button>
 
         {isDropdownOpen && (

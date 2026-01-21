@@ -76,9 +76,20 @@ export const createApp = (): Express => {
 
 // Start Server if run directly
 if (require.main === module) {
-    const app = createApp();
-    app.listen(env.PORT, () => {
-        logger.info(`Server running on port ${env.PORT} in ${env.NODE_ENV} mode`);
-        logger.info(`Docs available at http://localhost:${env.PORT}/api/docs`);
-    });
+    (async () => {
+        try {
+            // Initialize database (migrations + seed)
+            const { initializeDatabase } = await import('./db');
+            await initializeDatabase();
+
+            const app = createApp();
+            app.listen(env.PORT, () => {
+                logger.info(`Server running on port ${env.PORT} in ${env.NODE_ENV} mode`);
+                logger.info(`Docs available at http://localhost:${env.PORT}/api/docs`);
+            });
+        } catch (error) {
+            logger.error('Failed to start server:', error);
+            process.exit(1);
+        }
+    })();
 }

@@ -7,6 +7,7 @@ import { adminAuthRouter } from './modules/admin/auth/auth.routes';
 import { clientsRouter } from './modules/admin/entities/clients.routes';
 import { projectsRouter } from './modules/admin/entities/projects.routes';
 import { tasksRouter } from './modules/admin/entities/tasks.routes';
+import { assignmentsRouter } from './modules/admin/assignments/assignments.routes';
 
 const router: Router = Router();
 
@@ -25,5 +26,6 @@ router.use('/admin/users', usersRouter);
 router.use('/admin/clients', clientsRouter);
 router.use('/admin/projects', projectsRouter);
 router.use('/admin/tasks', tasksRouter);
+router.use('/admin/assignments', assignmentsRouter);
 
 export { router };

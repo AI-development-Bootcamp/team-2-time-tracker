@@ -1,0 +1,112 @@
+/**
+ * Single Assignment Form Styles
+ * RTL-compatible styling for single assignment creation
+ */
+
+.single-assignment-form__form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.single-assignment-form__error {
+    padding: 1rem;
+    background: var(--color-error-light, #fee2e2);
+    color: var(--color-error-dark, #991b1b);
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.single-assignment-form__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.single-assignment-form__label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-text-primary, #111827);
+}
+
+.single-assignment-form__required {
+    color: var(--color-error, #dc2626);
+}
+
+.single-assignment-form__select {
+    padding: 0.625rem 1rem;
+    border: 1px solid var(--color-border, #e5e7eb);
+    border-radius: 6px;
+    font-size: 0.875rem;
+    background: var(--color-background, #fff);
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+
+.single-assignment-form__select:hover:not(:disabled) {
+    border-color: var(--color-primary, #007bff);
+}
+
+.single-assignment-form__select:focus {
+    outline: none;
+    border-color: var(--color-primary, #007bff);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.single-assignment-form__select:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background: var(--color-surface, #f9fafb);
+}
+
+.single-assignment-form__hint {
+    font-size: 0.75rem;
+    color: var(--color-text-secondary, #666);
+    font-style: italic;
+}
+
+.single-assignment-form__actions {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+    margin-top: 1rem;
+}
+
+.single-assignment-form__button {
+    padding: 0.625rem 1.5rem;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+}
+
+.single-assignment-form__button--primary {
+    background: var(--color-primary, #007bff);
+    color: white;
+}
+
+.single-assignment-form__button--primary:hover:not(:disabled) {
+    background: var(--color-primary-dark, #0056b3);
+}
+
+.single-assignment-form__button--primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.single-assignment-form__button--secondary {
+    background: var(--color-surface, #f3f4f6);
+    color: var(--color-text-primary, #111827);
+}
+
+.single-assignment-form__button--secondary:hover:not(:disabled) {
+    background: var(--color-surface-hover, #e5e7eb);
+}
+
+.single-assignment-form__button--secondary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}

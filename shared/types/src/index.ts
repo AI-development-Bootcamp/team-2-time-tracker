@@ -27,3 +27,6 @@ export * from './zod/admin-entities.schema';
 export * from './zod/admin-assignments.schema';
 export * from './zod/admin-reports.schema';
 export * from './zod/month-locks.schema';
+
+// Utils
+export * from './utils/cartesian';

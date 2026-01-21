@@ -225,15 +225,21 @@ model MonthLock {
 // Workday Summaries
 // =========================
 
+enum WorkdayStatus {
+  FULL
+  PARTIAL
+  MISSING
+}
+
 model WorkdaySummary {
-  id                 String    @id @default(uuid())
-  userId             String    @map("user_id")
-  workDate           DateTime  @map("work_date") @db.Date
-  targetMinutes      Int       @default(540) @map("target_minutes")
-  workMinutes        Int       @default(0) @map("work_minutes")
-  absenceMinutes     Int       @default(0) @map("absence_minutes")
-  status             String    @default("MISSING")
-  isLocked           Boolean   @default(false) @map("is_locked")
+  id                 String        @id @default(uuid())
+  userId             String        @map("user_id")
+  workDate           DateTime      @map("work_date") @db.Date
+  targetMinutes      Int           @default(540) @map("target_minutes")
+  workMinutes        Int           @default(0) @map("work_minutes")
+  absenceMinutes     Int           @default(0) @map("absence_minutes")
+  status             WorkdayStatus @default(MISSING)
+  isLocked           Boolean       @default(false) @map("is_locked")
   lockedMonthId      String?   @map("locked_month_id")
   isSubmitted        Boolean   @default(false) @map("is_submitted")
   submittedAt        DateTime? @map("submitted_at")
