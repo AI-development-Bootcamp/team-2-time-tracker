@@ -7,7 +7,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
 import AuthGuard from './components/AuthGuard';
 import DashboardPage from './pages/DashboardPage';
-import AssignmentsPage from './pages/AssignmentsPage';
+//import AssignmentsPage from './pages/AssignmentsPage';
 import HourReportPage from './pages/HourReportPage';
 
 /**
@@ -24,7 +24,7 @@ function App(): React.JSX.Element {
                     path="/assignments"
                     element={
                         <AuthGuard>
-                            <AssignmentsPage />
+                            <DashboardPage />
                         </AuthGuard>
                     }
                 />
