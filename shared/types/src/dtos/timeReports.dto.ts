@@ -1,5 +1,6 @@
 import { WorkLocation } from '../enums/locationType.enum';
 import { TimeEntrySource } from '../enums/timeEntrySource.enum';
+import { PaginationDto } from './pagination.dto';
 
 /**
  * Task info nested in TimeEntryDto
@@ -72,18 +73,6 @@ export interface DeleteTimeEntryResponseDto {
         id: string;
         isDeleted: boolean;
     };
-}
-
-/**
- * Pagination DTO
- */
-export interface PaginationDto {
-    page: number;
-    pageSize: number;
-    total: number;
-    totalPages: number;
-    hasNext: boolean;
-    hasPrev: boolean;
 }
 
 /**

@@ -44,6 +44,7 @@ vi.mock('../../src/shared/storage.service', () => ({
     getSignedDownloadUrl: vi.fn(),
     isValidFileSize: vi.fn(),
     isValidMimeType: vi.fn(),
+    isStorageConfigured: vi.fn(() => true),
 }));
 
 vi.mock('../../src/config/upload', () => ({

@@ -9,10 +9,11 @@ export default defineConfig({
             provider: 'v8',
             reporter: ['text', 'html'],
             include: ['src/**/*.ts'],
-            'src/app.ts',
-            'src/config/**',
-            'src/**/*.d.ts',
-            'src/db/seed.ts',
+            exclude: [
+                'src/app.ts',
+                'src/config/**',
+                'src/**/*.d.ts',
+                'src/db/seed.ts',
             ],
             thresholds: {
                 branches: 60,

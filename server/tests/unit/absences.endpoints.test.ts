@@ -53,6 +53,7 @@ vi.mock('../../src/shared/storage.service', () => ({
     getSignedDownloadUrl: vi.fn(() => Promise.resolve('https://storage.example.com/signed-url')),
     isValidFileSize: vi.fn(() => true),
     isValidMimeType: vi.fn(() => true),
+    isStorageConfigured: vi.fn(() => true),
 }));
 
 // Mock multer

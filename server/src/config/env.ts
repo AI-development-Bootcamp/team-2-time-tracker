@@ -22,6 +22,7 @@ const envSchema = z.object({
   JWT_EXPIRES_IN: z.string().default('2h'),
   CORS_ORIGIN: z.string().default('*'),
   DEFAULT_SEED_PASSWORD: z.string().min(1, 'DEFAULT_SEED_PASSWORD is required'),
+  DATABASE_PASSWORD: z.string().min(1, 'DATABASE_PASSWORD is required'),
   // IDrive e2 storage configuration
   IDRIVE_ACCESS_KEY: z.string().optional(),
   IDRIVE_SECRET_KEY: z.string().optional(),

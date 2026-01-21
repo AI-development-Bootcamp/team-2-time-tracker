@@ -5,6 +5,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import {
     mockPrisma,
+    mockPrismaUser,
     mockPrismaAbsenceRequest,
     mockPrismaAbsenceDay,
     mockPrismaMonthLock,
@@ -12,6 +13,7 @@ import {
     resetPrismaMocks,
     createMockAbsenceRequest,
     createMockAbsenceDay,
+    createMockUser,
 } from '../helpers/mockPrisma';
 
 // Import after mocks are set up
@@ -22,6 +24,8 @@ describe('absences.service', () => {
     beforeEach(() => {
         resetPrismaMocks();
         vi.clearAllMocks();
+        // Mock user lookup - service needs to validate user exists
+        mockPrismaUser.findUnique.mockResolvedValue(createMockUser());
         // Default transaction mock
         mockPrisma.$transaction.mockImplementation(async (callback) => {
             return callback(mockPrisma);

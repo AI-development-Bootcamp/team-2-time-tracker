@@ -7,6 +7,7 @@ import {
     mockWorkdayPrisma,
     mockPrismaWorkdaySummary,
     mockPrismaTimeEntry,
+    mockPrismaAbsenceDay,
     resetWorkdayPrismaMocks,
     createMockWorkdaySummary,
     createMockTimeEntry,
@@ -47,6 +48,7 @@ describe('workday.service', () => {
 
             mockPrismaWorkdaySummary.findUnique.mockResolvedValue(mockSummary);
             mockPrismaTimeEntry.findMany.mockResolvedValue([mockEntry]);
+            mockPrismaAbsenceDay.findMany.mockResolvedValue([]);
             mockWorkdayPrisma.$queryRaw.mockResolvedValue([{ minutes: 0 }]);
             mockPrismaWorkdaySummary.update.mockResolvedValue(mockSummary);
 
@@ -64,6 +66,7 @@ describe('workday.service', () => {
 
             mockPrismaWorkdaySummary.findUnique.mockResolvedValue(null);
             mockPrismaTimeEntry.findMany.mockResolvedValue([]);
+            mockPrismaAbsenceDay.findMany.mockResolvedValue([]);
             mockWorkdayPrisma.$queryRaw.mockResolvedValue([{ minutes: 0 }]);
             mockPrismaWorkdaySummary.create.mockResolvedValue(mockSummary);
 
@@ -78,6 +81,7 @@ describe('workday.service', () => {
 
             mockPrismaWorkdaySummary.findUnique.mockResolvedValue(mockSummary);
             mockPrismaTimeEntry.findMany.mockResolvedValue([]);
+            mockPrismaAbsenceDay.findMany.mockResolvedValue([{ minutes: 60, absenceRequest: { type: 'SICK' } }]);
             mockWorkdayPrisma.$queryRaw.mockResolvedValue([{ minutes: 60 }]);
             mockPrismaWorkdaySummary.update.mockResolvedValue({
                 ...mockSummary,
@@ -99,6 +103,7 @@ describe('workday.service', () => {
             mockPrismaTimeEntry.findMany.mockResolvedValue([
                 createMockTimeEntry({ durationMinutes: 540 }),
             ]);
+            mockPrismaAbsenceDay.findMany.mockResolvedValue([]);
             mockWorkdayPrisma.$queryRaw.mockResolvedValue([{ minutes: 0 }]);
             mockPrismaWorkdaySummary.update.mockResolvedValue(mockSummary);
 
@@ -117,6 +122,7 @@ describe('workday.service', () => {
             mockPrismaTimeEntry.findMany.mockResolvedValue([
                 createMockTimeEntry({ durationMinutes: 600 }),
             ]);
+            mockPrismaAbsenceDay.findMany.mockResolvedValue([]);
             mockWorkdayPrisma.$queryRaw.mockResolvedValue([{ minutes: 0 }]);
             mockPrismaWorkdaySummary.update.mockResolvedValue(mockSummary);
 
@@ -140,6 +146,7 @@ describe('workday.service', () => {
             mockPrismaTimeEntry.findMany.mockResolvedValue([
                 createMockTimeEntry({ durationMinutes: 540 }),
             ]);
+            mockPrismaAbsenceDay.findMany.mockResolvedValue([]);
             mockWorkdayPrisma.$queryRaw.mockResolvedValue([{ minutes: 0 }]);
 
             // First call (inside getWorkday) returns regular summary
@@ -201,6 +208,7 @@ describe('workday.service', () => {
             mockPrismaTimeEntry.findMany.mockResolvedValue([
                 createMockTimeEntry({ durationMinutes: 480 }),
             ]);
+            mockPrismaAbsenceDay.findMany.mockResolvedValue([]);
             mockWorkdayPrisma.$queryRaw.mockResolvedValue([{ minutes: 0 }]);
             mockPrismaWorkdaySummary.update.mockResolvedValue(mockSummary);
 
@@ -223,6 +231,7 @@ describe('workday.service', () => {
             mockPrismaTimeEntry.findMany.mockResolvedValue([
                 createMockTimeEntry({ durationMinutes: 540 }),
             ]);
+            mockPrismaAbsenceDay.findMany.mockResolvedValue([]);
             mockWorkdayPrisma.$queryRaw.mockResolvedValue([{ minutes: 0 }]);
             mockPrismaWorkdaySummary.update.mockResolvedValue(mockSummary);
 

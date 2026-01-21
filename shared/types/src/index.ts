@@ -1,6 +1,7 @@
 // Enums
 export * from './enums/roles.enum';
 export * from './enums/entityStatus.enum';
+export * from './enums/taskStatus.enum';
 export * from './enums/absenceType.enum';
 export * from './enums/absenceStatus.enum';
 export * from './enums/locationType.enum';
@@ -15,6 +16,7 @@ export * from './constants/workday.constants';
 export * from './dtos/auth.dto';
 export * from './dtos/timer.dto';
 export * from './dtos/selectors.dto';
+export * from './dtos/pagination.dto';
 export * from './dtos/timeReports.dto';
 export * from './dtos/absences.dto';
 
