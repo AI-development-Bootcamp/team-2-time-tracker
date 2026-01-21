@@ -43,14 +43,16 @@ export const createApp = (): Express => {
         credentials: true,
     }));
 
-    // Rate Limiting
-    const limiter = rateLimit({
-        windowMs: 15 * 60 * 1000, // 15 minutes
-        limit: 10000, // Limit each IP to 10000 requests per windowMs
-        standardHeaders: 'draft-7',
-        legacyHeaders: false,
-    });
-    app.use(limiter);
+    // Rate Limiting (skip in development mode for easier testing)
+    if (env.NODE_ENV !== 'development') {
+        const limiter = rateLimit({
+            windowMs: 15 * 60 * 1000, // 15 minutes
+            limit: 10000, // Limit each IP to 10000 requests per windowMs
+            standardHeaders: 'draft-7',
+            legacyHeaders: false,
+        });
+        app.use(limiter);
+    }
 
     // Parsing & Logging
     app.use(express.json());
