@@ -81,7 +81,19 @@ describe('workday.service', () => {
 
             mockPrismaWorkdaySummary.findUnique.mockResolvedValue(mockSummary);
             mockPrismaTimeEntry.findMany.mockResolvedValue([]);
-            mockPrismaAbsenceDay.findMany.mockResolvedValue([{ minutes: 60, absenceRequest: { type: 'SICK' } }]);
+            mockPrismaAbsenceDay.findMany.mockResolvedValue([{
+                id: 'absence-day-id',
+                absenceRequestId: 'absence-request-id',
+                userId: 'test-user-id',
+                workDate: new Date('2026-01-17'),
+                minutes: 60,
+                absenceRequest: {
+                    id: 'absence-request-id',
+                    type: 'SICK',
+                    startDate: new Date('2026-01-17'),
+                    endDate: new Date('2026-01-17'),
+                },
+            }]);
             mockWorkdayPrisma.$queryRaw.mockResolvedValue([{ minutes: 60 }]);
             mockPrismaWorkdaySummary.update.mockResolvedValue({
                 ...mockSummary,

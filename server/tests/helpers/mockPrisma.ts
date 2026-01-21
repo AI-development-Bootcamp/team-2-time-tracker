@@ -242,6 +242,7 @@ export function createMockProject(overrides = {}) {
         endDate: new Date('2026-12-31'),
         createdAt: new Date(),
         updatedAt: new Date(),
+        assignedUsers: [],
         ...overrides,
     };
 }

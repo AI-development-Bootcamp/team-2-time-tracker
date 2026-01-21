@@ -5,8 +5,8 @@
 import { describe, it, expect, vi, beforeEach, beforeAll } from 'vitest';
 import express, { Express } from 'express';
 import request from 'supertest';
-import { router } from '../../src/routes';
-import { errorMiddleware } from '../../src/middlewares/error.middleware';
+
+// Import mock helpers
 import {
     mockPrisma,
     mockPrismaUser,
@@ -22,6 +22,12 @@ import {
     createMockAbsenceDocument,
 } from '../helpers/mockPrisma';
 
+// Explicitly mock the db module in this test file as well
+// This ensures the mock is registered for imports from this file's perspective
+vi.mock('../../src/db', () => ({
+    prisma: mockPrisma,
+}));
+
 // Mock jsonwebtoken
 vi.mock('jsonwebtoken', () => ({
     default: {
@@ -35,15 +41,14 @@ vi.mock('jsonwebtoken', () => ({
 }));
 
 // Mock auth repo
+import * as authRepo from '../../src/modules/auth/auth.repo';
 vi.mock('../../src/modules/auth/auth.repo', () => ({
-    findUserById: vi.fn(() => Promise.resolve({
-        id: 'test-user-id',
-        email: 'test@example.com',
-        fullName: 'Test User',
-        role: 'EMPLOYEE',
-        isActive: true,
-    })),
+    findUserById: vi.fn(),
 }));
+
+// Import router and middleware AFTER mocks are set up
+import { router } from '../../src/routes';
+import { errorMiddleware } from '../../src/middlewares/error.middleware';
 
 // Mock storage service
 vi.mock('../../src/shared/storage.service', () => ({
@@ -61,11 +66,12 @@ vi.mock('multer', () => {
     const memoryStorage = vi.fn(() => ({}));
     const mockMulter = vi.fn(() => ({
         single: vi.fn(() => (req: any, res: any, next: any) => {
-            // For supertest, the file is attached via .attach() and multer will parse it
-            // Since we're mocking, we'll create a mock file object if not already present
-            if (!req.file && req.body) {
-                // This is a fallback - supertest should handle the file attachment
-                // but if multer is called, we need to mock the file object
+            // Check if the request has multipart content (file attachment)
+            const contentType = req.headers['content-type'] || '';
+            const hasMultipartContent = contentType.includes('multipart/form-data');
+            
+            if (hasMultipartContent) {
+                // Simulate multer successfully parsing an uploaded file
                 req.file = {
                     fieldname: 'file',
                     originalname: 'document.pdf',
@@ -75,6 +81,7 @@ vi.mock('multer', () => {
                     size: 1024,
                 };
             }
+            // If no multipart content, req.file stays undefined (no file uploaded)
             next();
         }),
     }));
@@ -98,8 +105,19 @@ describe('Absence Endpoints', () => {
     beforeEach(() => {
         resetPrismaMocks();
         vi.clearAllMocks();
-        // Mock user lookup for authentication
+        
+        // Mock auth repo for authentication middleware
+        vi.mocked(authRepo.findUserById).mockResolvedValue({
+            id: 'test-user-id',
+            email: 'test@example.com',
+            fullName: 'Test User',
+            role: 'EMPLOYEE',
+            isActive: true,
+        } as any);
+        
+        // Mock user lookup for absences service (verifies user exists)
         mockPrismaUser.findUnique.mockResolvedValue(createMockUser());
+        
         // Set default transaction mock
         mockPrisma.$transaction.mockImplementation(async (callback) => {
             return callback(mockPrisma);
