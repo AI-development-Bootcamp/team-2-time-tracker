@@ -1,38 +1,43 @@
-import { defineConfig } from 'vite';
+import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
 
 // Vite configuration - https://vite.dev/config/
-export default defineConfig({
-  // React plugin for JSX transformation and Fast Refresh
-  plugins: [react()],
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), '');
+  const apiUrl = env.VITE_API_URL || 'http://localhost:3000';
 
-  // Path alias resolution to match tsconfig paths
-  resolve: {
-    alias: {
-      '@': resolve(__dirname, 'src'),
-    },
-  },
+  return {
+    // React plugin for JSX transformation and Fast Refresh
+    plugins: [react()],
 
-  // Development server configuration
-  server: {
-    port: 5173,
-    // Proxy API requests to backend during development
-    proxy: {
-      '/api': {
-        target: 'http://localhost:3000',
-        changeOrigin: true,
-      },
-      '/health': {
-        target: 'http://localhost:3000',
-        changeOrigin: true,
+    // Path alias resolution to match tsconfig paths
+    resolve: {
+      alias: {
+        '@': resolve(__dirname, 'src'),
       },
     },
-  },
 
-  // Production build configuration
-  build: {
-    outDir: 'dist',
-    sourcemap: true,
-  },
+    // Development server configuration
+    server: {
+      port: 5173,
+      // Proxy API requests to backend during development
+      proxy: {
+        '/api': {
+          target: apiUrl,
+          changeOrigin: true,
+        },
+        '/health': {
+          target: apiUrl,
+          changeOrigin: true,
+        },
+      },
+    },
+
+    // Production build configuration
+    build: {
+      outDir: 'dist',
+      sourcemap: true,
+    },
+  };
 });
