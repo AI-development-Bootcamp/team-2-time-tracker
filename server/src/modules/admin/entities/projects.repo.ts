@@ -39,6 +39,7 @@ export async function findAllProjects(clientId?: string, userId?: string) {
             id: true,
             name: true,
             clientId: true,
+            description: true,
             status: true,
             reportType: true,
             startDate: true,
@@ -87,6 +88,7 @@ export async function findProjectById(id: string) {
             id: true,
             name: true,
             clientId: true,
+            description: true,
             status: true,
             reportType: true,
             startDate: true,
@@ -131,6 +133,7 @@ export async function findProjectById(id: string) {
 export async function createProject(data: {
     name: string;
     clientId: string;
+    description?: string | null;
     reportType?: ReportType;
     startDate?: Date | null;
     endDate?: Date | null;
@@ -139,6 +142,7 @@ export async function createProject(data: {
         data: {
             name: data.name,
             clientId: data.clientId,
+            description: data.description,
             status: EntityStatus.ACTIVE,
             reportType: data.reportType ?? ReportType.TOTAL_HOURS,
             startDate: data.startDate,
@@ -148,6 +152,7 @@ export async function createProject(data: {
             id: true,
             name: true,
             clientId: true,
+            description: true,
             status: true,
             reportType: true,
             startDate: true,
@@ -190,6 +195,7 @@ export async function updateProject(
     data: {
         name?: string;
         clientId?: string;
+        description?: string | null;
         startDate?: Date | null;
         endDate?: Date | null;
     }
@@ -201,6 +207,7 @@ export async function updateProject(
             id: true,
             name: true,
             clientId: true,
+            description: true,
             status: true,
             reportType: true,
             startDate: true,
@@ -246,6 +253,7 @@ export async function updateProjectStatus(id: string, status: EntityStatus) {
             id: true,
             name: true,
             clientId: true,
+            description: true,
             status: true,
             reportType: true,
             startDate: true,
@@ -291,6 +299,7 @@ export async function updateProjectReportType(id: string, reportType: ReportType
             id: true,
             name: true,
             clientId: true,
+            description: true,
             status: true,
             reportType: true,
             startDate: true,
