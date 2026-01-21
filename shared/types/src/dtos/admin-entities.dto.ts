@@ -181,6 +181,7 @@ export interface TaskDto {
     id: string;
     name: string;
     projectId: string;
+    description: string | null;
     status: TaskStatus;
     startDate: string | null;
     endDate: string | null;
@@ -211,6 +212,7 @@ export interface ListTasksResponseDto {
 export interface CreateTaskRequestDto {
     name: string;
     projectId: string;
+    description?: string | null;
     startDate?: string | null;
     endDate?: string | null;
 }
@@ -221,6 +223,7 @@ export interface CreateTaskRequestDto {
 export interface UpdateTaskRequestDto {
     name?: string;
     projectId?: string;
+    description?: string | null;
     startDate?: string | null;
     endDate?: string | null;
 }
