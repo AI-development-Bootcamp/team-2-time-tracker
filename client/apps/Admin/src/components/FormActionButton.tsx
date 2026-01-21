@@ -35,7 +35,8 @@ export const FormActionButton: React.FC<FormActionButtonProps> = ({
     <button
       type={type}
       className="form-action-button"
-      disabled={disabled}
+      disabled={disabled || isLoading}
+      aria-busy={isLoading}
       onClick={onClick}
     >
       <span>{isLoading && loadingLabel ? loadingLabel : label}</span>
