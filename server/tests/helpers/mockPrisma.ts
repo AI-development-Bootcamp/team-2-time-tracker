@@ -215,7 +215,10 @@ export function createMockAbsenceDocument(overrides = {}) {
 /**
  * Create a mock client object
  */
-export function createMockClient(overrides = {}) {
+export function createMockClient(overrides: Record<string, unknown> = {}) {
+    // Extract nested overrides
+    const { _count: countOverrides, ...rest } = overrides;
+
     return {
         id: 'test-client-id',
         name: 'Test Client',
@@ -223,7 +226,11 @@ export function createMockClient(overrides = {}) {
         status: EntityStatus.ACTIVE,
         createdAt: new Date(),
         updatedAt: new Date(),
-        ...overrides,
+        _count: {
+            projects: 0,
+            ...(countOverrides as Record<string, unknown> ?? {}),
+        },
+        ...rest,
     };
 }
 
