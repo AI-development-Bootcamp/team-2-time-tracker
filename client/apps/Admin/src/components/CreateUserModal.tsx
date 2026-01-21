@@ -12,6 +12,7 @@ import { createUserSchema, type CreateUserFormData } from '../schemas/user.schem
 import { usersApi } from '../api/usersApi';
 import { translateError } from '../utils/errorMessages';
 import { ModalIcon } from './ModalIcon';
+import { FormActionButton } from './FormActionButton';
 import './Modal.css';
 import './CreateUserModal.css';
 
@@ -198,14 +199,13 @@ export const CreateUserModal: React.FC<CreateUserModalProps> = ({ onClose, onSuc
             </div>
 
             <div className="user-form__actions user-form__actions--single">
-              <button
-                type="submit"
-                className="user-form__button user-form__button--primary user-form__button--full"
+              <FormActionButton
+                label="צור משתמש חדש"
+                loadingLabel="יוצר משתמש..."
+                icon={Plus}
                 disabled={isSubmitting || !isFormValid}
-              >
-                <Plus size={20} strokeWidth={2.5} />
-                <span>{isSubmitting ? 'יוצר משתמש...' : 'צור משתמש חדש'}</span>
-              </button>
+                isLoading={isSubmitting}
+              />
             </div>
           </form>
         </div>

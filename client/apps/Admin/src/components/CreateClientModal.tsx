@@ -11,6 +11,7 @@ import { createClientSchema, type CreateClientFormData } from '../schemas/client
 import { clientsApi } from '../api/clientsApi';
 import { translateError } from '../utils/errorMessages';
 import { ModalIcon } from './ModalIcon';
+import { FormActionButton } from './FormActionButton';
 import './Modal.css';
 import './CreateUserModal.css';
 
@@ -129,14 +130,13 @@ export const CreateClientModal: React.FC<CreateClientModalProps> = ({ onClose, o
             </div>
 
             <div className="user-form__actions user-form__actions--single">
-              <button
-                type="submit"
-                className="user-form__button user-form__button--primary user-form__button--full"
+              <FormActionButton
+                label="צור לקוח חדש"
+                loadingLabel="יוצר לקוח..."
+                icon={Plus}
                 disabled={isSubmitting || !name?.trim()}
-              >
-                <Plus size={20} strokeWidth={2.5} />
-                <span>{isSubmitting ? 'יוצר לקוח...' : 'צור לקוח חדש'}</span>
-              </button>
+                isLoading={isSubmitting}
+              />
             </div>
           </form>
         </div>

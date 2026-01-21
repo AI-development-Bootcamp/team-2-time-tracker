@@ -13,6 +13,7 @@ import { projectsApi } from '../api/projectsApi';
 import { clientsApi } from '../api/clientsApi';
 import { translateError } from '../utils/errorMessages';
 import { ModalIcon } from './ModalIcon';
+import { FormActionButton } from './FormActionButton';
 import './Modal.css';
 import './CreateUserModal.css';
 
@@ -249,14 +250,13 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ onClose,
             </div>
 
             <div className="user-form__actions user-form__actions--single">
-              <button
-                type="submit"
-                className="user-form__button user-form__button--primary user-form__button--full"
+              <FormActionButton
+                label="צור פרויקט חדש"
+                loadingLabel="יוצר פרויקט..."
+                icon={Plus}
                 disabled={isSubmitting || !name?.trim() || !clientId}
-              >
-                <Plus size={20} strokeWidth={2.5} />
-                <span>{isSubmitting ? 'יוצר פרויקט...' : 'צור פרויקט חדש'}</span>
-              </button>
+                isLoading={isSubmitting}
+              />
             </div>
           </form>
         </div>
