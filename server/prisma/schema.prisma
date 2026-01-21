@@ -242,10 +242,19 @@ model AbsenceDocument {
 // Month Lock Model
 // =========================
 
-enum WorkdayStatus {
-  FULL
-  PARTIAL
-  MISSING
+model MonthLock {
+  id                String           @id @default(uuid())
+  month             DateTime         @unique @db.Date
+  lockedAt          DateTime         @map("locked_at")
+  lockedByAdminId   String           @map("locked_by_admin_id")
+  lockedByAdmin     User             @relation("LockedByAdmin", fields: [lockedByAdminId], references: [id])
+  unlockedAt        DateTime?        @map("unlocked_at")
+  unlockedByAdminId String?          @map("unlocked_by_admin_id")
+  unlockedByAdmin   User?            @relation("UnlockedByAdmin", fields: [unlockedByAdminId], references: [id])
+  workdaySummaries  WorkdaySummary[]
+
+  @@index([month])
+  @@map("month_locks")
 }
 
 model WorkdaySummary {
@@ -325,29 +334,4 @@ model TimeEntry {
   @@map("time_entries")
 }
 
-// =========================
-// Workday Summary Model
-// =========================
 
-model WorkdaySummary {
-  id                 String         @id @default(uuid())
-  userId             String         @map("user_id")
-  user               User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-  workDate           DateTime       @map("work_date") @db.Date
-  targetMinutes      Int            @default(540) @map("target_minutes")
-  workMinutes        Int            @default(0) @map("work_minutes")
-  absenceMinutes     Int            @default(0) @map("absence_minutes")
-  status             WorkdayStatus  @default(MISSING)
-  isLocked           Boolean        @default(false) @map("is_locked")
-  lockedMonthId      String?        @map("locked_month_id")
-  lockedMonth        MonthLock?     @relation(fields: [lockedMonthId], references: [id])
-  isSubmitted        Boolean        @default(false) @map("is_submitted")
-  submittedAt        DateTime?      @map("submitted_at")
-  requiresExactTotal Boolean        @default(false) @map("requires_exact_total")
-  updatedAt          DateTime       @updatedAt @map("updated_at")
-
-  @@unique([userId, workDate])
-  @@index([userId, workDate])
-  @@index([isLocked])
-  @@map("workday_summaries")
-}

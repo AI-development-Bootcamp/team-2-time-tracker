@@ -334,9 +334,6 @@ function AssignmentsPage(): React.JSX.Element {
                 {/* Search */}
                 <div className="assignments-page__search-container">
                     <div className="assignments-page__actions-group">
-                        <button className="assignments-page__create-btn" onClick={() => {/* TODO: Implement create modal */ }}>
-                            יצירה +
-                        </button>
                         <div className="assignments-page__search-wrapper">
                             <Search className="assignments-page__search-icon" size={18} />
                             <input
