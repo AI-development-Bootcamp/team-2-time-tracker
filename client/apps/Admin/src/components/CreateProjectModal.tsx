@@ -7,7 +7,7 @@ import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Plus } from 'lucide-react';
-import { ReportType, EntityStatus } from '@shared/types';
+import { ReportType, EntityStatus, type ClientDto } from '@shared/types';
 import { createProjectSchema, type CreateProjectFormData } from '../schemas/project.schema';
 import { projectsApi } from '../api/projectsApi';
 import { clientsApi } from '../api/clientsApi';
@@ -66,7 +66,7 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ onClose,
       try {
         const clientsData = await clientsApi.getClients();
         const activeClients = clientsData
-          .filter((client) => client.status === EntityStatus.ACTIVE)
+          .filter((client: ClientDto) => client.status === EntityStatus.ACTIVE)
           .sort((a, b) => a.name.localeCompare(b.name, 'he'));
         setClients(activeClients);
       } catch (error) {
