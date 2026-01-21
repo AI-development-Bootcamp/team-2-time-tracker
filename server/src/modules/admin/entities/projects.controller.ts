@@ -7,6 +7,22 @@ import { Request, Response, NextFunction } from 'express';
 import * as projectsService from './projects.service';
 
 /**
+ * List all projects
+ */
+export async function listProjects(_req: Request, res: Response, next: NextFunction) {
+    try {
+        const projects = await projectsService.listProjects();
+
+        res.json({
+            success: true,
+            data: projects,
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
+/**
  * Get a single project by ID
  */
 export async function getProject(req: Request, res: Response, next: NextFunction) {
@@ -28,10 +44,11 @@ export async function getProject(req: Request, res: Response, next: NextFunction
  */
 export async function createProject(req: Request, res: Response, next: NextFunction) {
     try {
-        const { name, clientId, reportType, startDate, endDate } = req.body;
+        const { name, clientId, description, reportType, startDate, endDate } = req.body;
         const project = await projectsService.createProject({
             name,
             clientId,
+            description,
             reportType,
             startDate,
             endDate,
@@ -52,10 +69,11 @@ export async function createProject(req: Request, res: Response, next: NextFunct
 export async function updateProject(req: Request, res: Response, next: NextFunction) {
     try {
         const id = req.params.id as string;
-        const { name, clientId, startDate, endDate } = req.body;
+        const { name, clientId, description, startDate, endDate } = req.body;
         const project = await projectsService.updateProject(id, {
             name,
             clientId,
+            description,
             startDate,
             endDate,
         });

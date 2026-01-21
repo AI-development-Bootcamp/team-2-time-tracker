@@ -44,6 +44,17 @@ function transformProjectWithAssignedUsers(project: any) {
 }
 
 /**
+ * @description Retrieves all projects with client info and assigned users.
+ * @returns {Promise<Array>} Projects list with assignedUsers array
+ * @example
+ * const projects = await listProjects();
+ */
+export async function listProjects() {
+    const projects = await projectsRepo.findAllProjects();
+    return projects.map((project) => transformProjectWithAssignedUsers(project));
+}
+
+/**
  * @description Retrieves a single project by ID.
  * @param {string} id - Project's UUID
  * @returns {Promise<Object>} Project data with assignedUsers array
@@ -100,6 +111,7 @@ export async function getProjectUsers(projectId: string) {
 export async function createProject(data: {
     name: string;
     clientId: string;
+    description?: string | null;
     reportType?: ReportType;
     startDate?: string | null;
     endDate?: string | null;
@@ -131,6 +143,7 @@ export async function createProject(data: {
     const project = await projectsRepo.createProject({
         name: data.name,
         clientId: data.clientId,
+        description: data.description,
         reportType: data.reportType,
         startDate,
         endDate,
@@ -160,6 +173,7 @@ export async function updateProject(
     data: {
         name?: string;
         clientId?: string;
+        description?: string | null;
         startDate?: string | null;
         endDate?: string | null;
     }
@@ -229,6 +243,7 @@ export async function updateProject(
     const updatedProject = await projectsRepo.updateProject(id, {
         name: data.name,
         clientId: data.clientId,
+        description: data.description,
         startDate,
         endDate,
     });
