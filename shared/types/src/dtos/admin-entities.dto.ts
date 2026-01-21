@@ -39,6 +39,7 @@ export interface ListClientsResponseDto {
  */
 export interface CreateClientRequestDto {
     name: string;
+    description?: string ;
 }
 
 /**

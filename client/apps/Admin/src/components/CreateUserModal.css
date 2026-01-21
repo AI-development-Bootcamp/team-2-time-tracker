@@ -25,6 +25,15 @@
   gap: 0.5rem;
 }
 
+/* Remove fieldset border and padding */
+.user-form__field fieldset,
+fieldset.user-form__field {
+  border: none;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+
 .user-form__label {
   font-size: 0.875rem;
   font-weight: 500;

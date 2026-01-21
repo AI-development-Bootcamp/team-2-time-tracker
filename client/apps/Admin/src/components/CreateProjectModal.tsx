@@ -190,31 +190,31 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ onClose,
               )}
             </div>
 
-            <div className="user-form__field">
-              <label className="user-form__label">
+            <fieldset className="user-form__field">
+              <legend className="user-form__label">
                 סוג דיווח <span className="user-form__required">*</span>
-              </label>
-              <div style={{ display: 'flex', gap: '1rem', flexDirection: 'row-reverse' }}>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
+              </legend>
+              <div style={{ display: 'flex', gap: '1rem', flexDirection: 'row' }}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', flexDirection: 'row-reverse' }}>
+                  <span>סה״כ שעות</span>
                   <input
                     type="radio"
                     value={ReportType.TOTAL_HOURS}
                     {...register('reportType')}
                     disabled={isSubmitting}
                   />
-                  <span>סה״כ שעות</span>
                 </label>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', flexDirection: 'row-reverse' }}>
+                  <span>כניסה/יציאה</span>
                   <input
                     type="radio"
                     value={ReportType.ENTRY_EXIT}
                     {...register('reportType')}
                     disabled={isSubmitting}
                   />
-                  <span>כניסה/יציאה</span>
                 </label>
               </div>
-            </div>
+            </fieldset>
 
             <div className="user-form__field">
               <label htmlFor="startDate" className="user-form__label">
