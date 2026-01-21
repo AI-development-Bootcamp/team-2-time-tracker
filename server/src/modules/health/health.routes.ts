@@ -4,10 +4,11 @@
  */
 
 import { Router, Request, Response } from 'express';
+import type { Router as RouterType } from 'express';
 import { S3Client, HeadBucketCommand } from '@aws-sdk/client-s3';
 import { storageConfig } from '../../config/storage';
 
-const router = Router();
+const router: RouterType = Router();
 
 /**
  * @swagger
@@ -19,7 +20,7 @@ const router = Router();
  *       200:
  *         description: Server is running
  */
-router.get('/', (req: Request, res: Response) => {
+router.get('/', (_req: Request, res: Response) => {
     res.json({
         status: 'ok',
         timestamp: new Date().toISOString(),
@@ -38,7 +39,7 @@ router.get('/', (req: Request, res: Response) => {
  *       503:
  *         description: Storage is not available or misconfigured
  */
-router.get('/storage', async (req: Request, res: Response) => {
+router.get('/storage', async (_req: Request, res: Response) => {
     try {
         // Check if storage is configured
         if (!storageConfig.isConfigured) {

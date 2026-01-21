@@ -19,9 +19,12 @@ export * from './dtos/selectors.dto';
 export * from './dtos/pagination.dto';
 export * from './dtos/timeReports.dto';
 export * from './dtos/absences.dto';
+export * from './dtos/admin-entities.dto';
+export * from './dtos/admin-users.dto';
 
 // Schemas
 export * from './zod/auth.schema';
 export * from './zod/timer.schema';
 export * from './zod/timeReports.schema';
 export * from './zod/absences.schema';
+export * from './zod/admin-entities.schema';
