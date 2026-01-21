@@ -66,3 +66,7 @@ client/apps/employee/build_log*.txt
 
 # Screenshots
 Screenshots/
+.claude/settings.local.json
+.claude/settings.json
+nul
+.claude/settings.local.json

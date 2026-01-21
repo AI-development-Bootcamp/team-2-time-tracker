@@ -13,6 +13,12 @@ import React, { useState } from 'react';
 import { TimeEntryDto, GetWorkdayResponseDto } from '@shared/types';
 import './TimeEntryList.css';
 
+// Import icons
+import workdayIcon from '../assets/icons/workday.png';
+import dayoffIcon from '../assets/icons/dayoff.png';
+import halfWorkdayIcon from '../assets/icons/half_workday.png';
+import editIcon from '../assets/icons/edit-2.png';
+
 /**
  * Data structure representing a single day's entries and status.
  */
@@ -53,39 +59,77 @@ export const TimeEntryList: React.FC<TimeEntryListProps> = ({
 
     const formatDate = (dateStr: string) => {
         const date = new Date(dateStr);
-        const dayNames = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'];
+        const dayNames = ["א'", "ב'", "ג'", "ד'", "ה'", "ו'", "ש'"];
         const dayName = dayNames[date.getDay()];
         const day = date.getDate().toString().padStart(2, '0');
         const month = (date.getMonth() + 1).toString().padStart(2, '0');
         const year = date.getFullYear().toString().slice(-2);
-        return `יום ${dayName} ${day}/${month}/${year}`;
+        return `${day}/${month}/${year}, יום ${dayName}`;
     };
 
-    const getDayStatus = (dayData: DayData): { badge: string; color: string; icon: string } => {
+    // Check if day is weekend (Friday or Saturday)
+    const isWeekend = (dateStr: string): boolean => {
+        const date = new Date(dateStr);
+        const day = date.getDay();
+        return day === 5 || day === 6; // Friday or Saturday
+    };
+
+    // Check if day has absence
+    const getAbsenceType = (dayData: DayData): string | null => {
+        const absenceEntry = dayData.entries.find(e =>
+            e.task?.project?.name === 'היעדרות' ||
+            e.id.startsWith('absence-')
+        );
+        if (absenceEntry) {
+            return absenceEntry.task?.name || null;
+        }
+        return null;
+    };
+
+    // Check if it's a half day vacation
+    const isHalfDayVacation = (dayData: DayData): boolean => {
+        const absenceEntry = dayData.entries.find(e =>
+            e.task?.project?.name === 'היעדרות' ||
+            e.id.startsWith('absence-')
+        );
+        if (absenceEntry) {
+            const taskName = absenceEntry.task?.name?.toLowerCase() || '';
+            return taskName.includes('חצי יום') || taskName.includes('חצי-יום');
+        }
+        return false;
+    };
+
+    const getDayStatus = (dayData: DayData): { badge: string; color: string; icon: 'check' | 'warning' | 'x' | 'alert' | 'none'; isDayOff: boolean; isHalfDay: boolean } => {
         const totalMinutes = dayData.entries.reduce((sum, e) => sum + e.durationMinutes, 0);
         const totalHours = Math.floor(totalMinutes / 60);
         const hoursText = `${totalHours} ש'`;
 
+        // Check for weekend
+        if (isWeekend(dayData.date)) {
+            return { badge: "סופ\"ש", color: 'gray', icon: 'x', isDayOff: true, isHalfDay: false };
+        }
+
+        // Check for absence
+        const absenceType = getAbsenceType(dayData);
+        if (absenceType) {
+            const isHalfDay = isHalfDayVacation(dayData);
+            return { badge: absenceType, color: isHalfDay ? 'pink' : 'blue', icon: 'none', isDayOff: true, isHalfDay };
+        }
+
         // If no entries at all
         if (totalMinutes === 0) {
-            return { badge: 'חסר', color: 'red', icon: '!' };
+            return { badge: 'חסר', color: 'red', icon: 'alert', isDayOff: false, isHalfDay: false };
         }
 
         const isSubmitted = dayData.workday?.data?.isSubmitted;
 
-        // Check if submitted
-        if (isSubmitted) {
-            return { badge: hoursText, color: 'green', icon: '✓' };
+        // Check if submitted or 8+ hours
+        if (isSubmitted || totalMinutes >= 480) {
+            return { badge: hoursText, color: 'green', icon: 'check', isDayOff: false, isHalfDay: false };
         }
 
-        // Check hours
-        if (totalMinutes >= 480) { // 8+ hours
-            return { badge: hoursText, color: 'green', icon: '✓' };
-        } else if (totalMinutes >= 240) { // 4+ hours
-            return { badge: hoursText, color: 'yellow', icon: '⚠' };
-        } else {
-            return { badge: hoursText, color: 'yellow', icon: '⚠' };
-        }
+        // Less than 8 hours
+        return { badge: hoursText, color: 'yellow', icon: 'warning', isDayOff: false, isHalfDay: false };
     };
 
     const formatDuration = (minutes: number): string => {
@@ -102,35 +146,97 @@ export const TimeEntryList: React.FC<TimeEntryListProps> = ({
         );
     }
 
+    // Render status icon
+    const renderStatusIcon = (icon: 'check' | 'warning' | 'x' | 'alert' | 'none', color: string) => {
+        if (icon === 'none') return null;
+
+        if (icon === 'check') {
+            return (
+                <span className={`time-entry-group__status-icon time-entry-group__status-icon--${color}`}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                        <circle cx="12" cy="12" r="10" fill="currentColor" />
+                        <path d="M8 12l3 3 5-5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                </span>
+            );
+        }
+
+        if (icon === 'warning') {
+            return (
+                <span className={`time-entry-group__status-icon time-entry-group__status-icon--${color}`}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                        <circle cx="12" cy="12" r="10" fill="currentColor" />
+                        <path d="M12 8v4M12 16h.01" stroke="white" strokeWidth="2" strokeLinecap="round" />
+                    </svg>
+                </span>
+            );
+        }
+
+        if (icon === 'x') {
+            return (
+                <span className={`time-entry-group__status-icon time-entry-group__status-icon--${color}`}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                        <circle cx="12" cy="12" r="10" fill="currentColor" />
+                        <path d="M15 9l-6 6M9 9l6 6" stroke="white" strokeWidth="2" strokeLinecap="round" />
+                    </svg>
+                </span>
+            );
+        }
+
+        if (icon === 'alert') {
+            return (
+                <span className={`time-entry-group__status-icon time-entry-group__status-icon--${color}`}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                        <circle cx="12" cy="12" r="10" fill="currentColor" />
+                        <path d="M12 8v5" stroke="white" strokeWidth="2" strokeLinecap="round" />
+                        <circle cx="12" cy="16" r="1" fill="white" />
+                    </svg>
+                </span>
+            );
+        }
+
+        return null;
+    };
+
     return (
         <div className="time-entry-list">
             {daysData.map((dayData) => {
                 const isExpanded = expandedDates.has(dayData.date);
                 const status = getDayStatus(dayData);
+                const weekend = isWeekend(dayData.date);
 
                 return (
-                    <div key={dayData.date} className="time-entry-group">
+                    <div key={dayData.date} className={`time-entry-group ${weekend ? 'time-entry-group--weekend' : ''}`}>
                         {/* Date Header */}
                         <button
                             className="time-entry-group__header"
                             onClick={() => toggleDate(dayData.date)}
                         >
-                            <div className="time-entry-group__header-left">
-                                <span className="time-entry-group__chevron">
-                                    {isExpanded ? '▼' : '◀'}
+                            {/* Right side in RTL - Calendar icon and Date */}
+                            <div className="time-entry-group__header-right">
+                                {/* Calendar Icon - halfWorkday for half-day absence, dayoff for full-day absence, workday for regular days */}
+                                <span className="time-entry-group__calendar-icon">
+                                    <img
+                                        src={status.isHalfDay ? halfWorkdayIcon : (status.isDayOff ? dayoffIcon : workdayIcon)}
+                                        alt=""
+                                        width="20"
+                                        height="20"
+                                    />
                                 </span>
-                                {status.badge && (
-                                    <span className={`time-entry-group__badge time-entry-group__badge--${status.color}`}>
-                                        {status.badge}
-                                    </span>
-                                )}
-                                {!status.badge && (
-                                    <span className={`time-entry-group__icon time-entry-group__icon--${status.color}`}>
-                                        {status.icon}
-                                    </span>
-                                )}
+                                <span className="time-entry-group__date">{formatDate(dayData.date)}</span>
                             </div>
-                            <span className="time-entry-group__date">{formatDate(dayData.date)}</span>
+                            {/* Left side in RTL - Badge and Chevron */}
+                            <div className="time-entry-group__header-left">
+                                <span className={`time-entry-group__badge time-entry-group__badge--${status.color}`}>
+                                    {renderStatusIcon(status.icon, status.color)}
+                                    {status.badge}
+                                </span>
+                                <span className={`time-entry-group__chevron ${isExpanded ? 'time-entry-group__chevron--expanded' : ''}`}>
+                                    <svg width="12" height="7" viewBox="0 0 12 7" fill="none">
+                                        <path d="M1 1L6 6L11 1" stroke="#848891" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                    </svg>
+                                </span>
+                            </div>
                         </button>
 
                         {/* Entries */}
@@ -138,40 +244,38 @@ export const TimeEntryList: React.FC<TimeEntryListProps> = ({
                             <div className="time-entry-group__entries">
                                 {dayData.entries.map((entry) => (
                                     <div key={entry.id} className="time-entry-item">
-                                        <div className="time-entry-item__main">
-                                            <div className="time-entry-item__left">
-                                                <button
-                                                    className="time-entry-item__edit"
-                                                    onClick={() => onEdit(entry)}
-                                                    aria-label="ערוך"
-                                                >
-                                                    עריכה
-                                                </button>
-                                                <div className="time-entry-item__time-range">
-                                                    {entry.startTime}-{entry.endTime}
-                                                </div>
+                                        <div className="time-entry-item__row">
+                                            <div className="time-entry-item__time-range">
+                                                {entry.startTime}-{entry.endTime}
                                             </div>
-                                            <div className="time-entry-item__right">
-                                                <div className="time-entry-item__task-name">
-                                                    {entry.task.name}
-                                                </div>
-                                            </div>
+                                            <button
+                                                className="time-entry-item__edit"
+                                                onClick={() => onEdit(entry)}
+                                                aria-label="ערוך"
+                                            >
+                                                <img src={editIcon} alt="" width="14" height="14" />
+                                                עריכה
+                                            </button>
                                         </div>
-                                        <div className="time-entry-item__details">
-                                            <div className="time-entry-item__location">
-                                                {entry.location}
+                                        <div className="time-entry-item__row">
+                                            <div className="time-entry-item__task-name">
+                                                {entry.task?.project?.name || entry.task.name}
                                             </div>
                                             <div className="time-entry-item__duration">
                                                 {formatDuration(entry.durationMinutes)}
                                             </div>
                                         </div>
-                                        {entry.description && (
-                                            <div className="time-entry-item__description">
-                                                {entry.description}
-                                            </div>
-                                        )}
                                     </div>
                                 ))}
+                                {/* Add report link inside expanded section */}
+                                {onAddEntry && (
+                                    <button
+                                        className="time-entry-group__add-link"
+                                        onClick={() => onAddEntry(dayData.date)}
+                                    >
+                                        הוספת דיווח
+                                    </button>
+                                )}
                             </div>
                         )}
 
@@ -181,14 +285,10 @@ export const TimeEntryList: React.FC<TimeEntryListProps> = ({
                                 <p className="time-entry-group__empty-text">אין דיווחים ליום זה</p>
                                 {onAddEntry && (
                                     <button
-                                        className="time-entry-group__add-button"
+                                        className="time-entry-group__add-link"
                                         onClick={() => onAddEntry(dayData.date)}
                                     >
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                                            <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" />
-                                            <path d="M12 8v8M8 12h8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                                        </svg>
-                                        <span>הוסף דיווח</span>
+                                        הוספת דיווח
                                     </button>
                                 )}
                             </div>
