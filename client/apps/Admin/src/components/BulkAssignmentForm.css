@@ -1,0 +1,162 @@
+/**
+ * Bulk Assignment Form Styles
+ * RTL-compatible styling for bulk assignment creation
+ */
+
+.bulk-assignment-form__form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.bulk-assignment-form__error {
+    padding: 1rem;
+    background: var(--color-error-light, #fee2e2);
+    color: var(--color-error-dark, #991b1b);
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.bulk-assignment-form__section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.bulk-assignment-form__label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-text-primary, #111827);
+}
+
+.bulk-assignment-form__required {
+    color: var(--color-error, #dc2626);
+}
+
+.bulk-assignment-form__multi-select {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid var(--color-border, #e5e7eb);
+    border-radius: 6px;
+    padding: 0.75rem;
+    background: var(--color-background, #fff);
+}
+
+.bulk-assignment-form__checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.15s;
+}
+
+.bulk-assignment-form__checkbox-label:hover {
+    background: var(--color-surface-hover, #f9fafb);
+}
+
+.bulk-assignment-form__checkbox {
+    width: 1rem;
+    height: 1rem;
+    cursor: pointer;
+}
+
+.bulk-assignment-form__empty {
+    color: var(--color-text-secondary, #666);
+    font-style: italic;
+    text-align: center;
+    padding: 1rem;
+}
+
+.bulk-assignment-form__hint {
+    font-size: 0.75rem;
+    color: var(--color-text-secondary, #666);
+}
+
+.bulk-assignment-form__preview {
+    padding: 1rem;
+    background: var(--color-info-light, #dbeafe);
+    color: var(--color-info-dark, #1e40af);
+    border-radius: 6px;
+    font-size: 0.875rem;
+}
+
+.bulk-assignment-form__actions {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+    margin-top: 1rem;
+}
+
+.bulk-assignment-form__button {
+    padding: 0.625rem 1.5rem;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+}
+
+.bulk-assignment-form__button--primary {
+    background: var(--color-primary, #007bff);
+    color: white;
+}
+
+.bulk-assignment-form__button--primary:hover:not(:disabled) {
+    background: var(--color-primary-dark, #0056b3);
+}
+
+.bulk-assignment-form__button--primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.bulk-assignment-form__button--secondary {
+    background: var(--color-surface, #f3f4f6);
+    color: var(--color-text-primary, #111827);
+}
+
+.bulk-assignment-form__button--secondary:hover:not(:disabled) {
+    background: var(--color-surface-hover, #e5e7eb);
+}
+
+.bulk-assignment-form__confirmation {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 1rem 0;
+}
+
+.bulk-assignment-form__confirmation-text {
+    font-size: 1rem;
+    color: var(--color-text-primary, #111827);
+    text-align: center;
+}
+
+.bulk-assignment-form__confirmation-details {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary, #666);
+    text-align: center;
+}
+
+/* Scrollbar Styling */
+.bulk-assignment-form__multi-select::-webkit-scrollbar {
+    width: 8px;
+}
+
+.bulk-assignment-form__multi-select::-webkit-scrollbar-track {
+    background: var(--color-surface, #f3f4f6);
+    border-radius: 4px;
+}
+
+.bulk-assignment-form__multi-select::-webkit-scrollbar-thumb {
+    background: var(--color-border, #d1d5db);
+    border-radius: 4px;
+}
+
+.bulk-assignment-form__multi-select::-webkit-scrollbar-thumb:hover {
+    background: var(--color-text-secondary, #9ca3af);
+}

@@ -57,7 +57,6 @@ export async function getTaskById(id: string) {
 export async function createTask(data: {
     name: string;
     projectId: string;
-    description?: string | null;
     startDate?: string | null;
     endDate?: string | null;
 }) {
@@ -92,7 +91,6 @@ export async function createTask(data: {
     return tasksRepo.createTask({
         name: data.name,
         projectId: data.projectId,
-        description: data.description,
         startDate,
         endDate,
     });
@@ -179,7 +177,6 @@ export async function updateTask(
     return tasksRepo.updateTask(id, {
         name: data.name,
         projectId: data.projectId,
-        description: data.description,
         startDate,
         endDate,
     });

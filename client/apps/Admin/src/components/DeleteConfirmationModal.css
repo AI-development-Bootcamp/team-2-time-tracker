@@ -1,0 +1,103 @@
+/* DeleteConfirmationModal.css */
+
+.delete-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.delete-modal {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    width: 440px;
+    max-width: 90vw;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    direction: rtl;
+    /* Hebrew */
+}
+
+.delete-modal__content {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 24px;
+    align-items: flex-start;
+}
+
+.delete-modal__icon-wrapper {
+    background-color: #fee2e2;
+    /* Light red/pink */
+    color: #ef4444;
+    /* Red */
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.delete-modal__text {
+    flex: 1;
+}
+
+.delete-modal__title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #111827;
+    margin: 0 0 4px 0;
+}
+
+.delete-modal__description {
+    color: #6b7280;
+    font-size: 0.95rem;
+    margin: 0;
+    line-height: 1.5;
+}
+
+.delete-modal__actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-start;
+    /* Buttons align to start (right in RTL)? Or spread? Design usually cancel/confirm. */
+}
+
+.delete-modal__btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 0.95rem;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+    flex: 1;
+    /* Stretch buttons usually looks good in small modals */
+}
+
+.delete-modal__btn--cancel {
+    background-color: #798394;
+    /* grayish blue from image */
+    color: white;
+}
+
+.delete-modal__btn--cancel:hover {
+    background-color: #636e7f;
+}
+
+.delete-modal__btn--confirm {
+    background-color: #ef4444;
+    /* Red */
+    color: white;
+}
+
+.delete-modal__btn--confirm:hover {
+    background-color: #dc2626;
+}

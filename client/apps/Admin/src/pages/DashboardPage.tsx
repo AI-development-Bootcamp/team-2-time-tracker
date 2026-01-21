@@ -12,7 +12,7 @@ import './DashboardPage.css';
  * @returns {React.JSX.Element} Dashboard page component
  */
 function DashboardPage(): React.JSX.Element {
-    
+
 
 
     return (
@@ -21,10 +21,7 @@ function DashboardPage(): React.JSX.Element {
                 title="ניהול פרויקטים"
                 showAddButton={true}
             />
-            <div className="dashboard-page__content">
-                {/* Future: Table/content goes here */}
-                <p>Content placeholder</p>
-            </div>
+            {/* Content will be added here */}
         </AdminLayout>
     );
 }
