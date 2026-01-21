@@ -19,28 +19,6 @@ const router: Router = Router();
 /**
  * @swagger
  * /admin/projects:
- *   get:
- *     summary: List all projects
- *     tags: [Admin - Projects]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: query
- *         name: clientId
- *         schema:
- *           type: string
- *         description: Filter projects by client ID
- *       - in: query
- *         name: userId
- *         schema:
- *           type: string
- *         description: Filter projects by user ID (returns projects where user is assigned via task assignments)
- */
-router.get('/', authenticate, requireAdmin, projectsController.listProjects);
-
-/**
- * @swagger
- * /admin/projects:
  *   post:
  *     summary: Create a new project
  *     tags: [Admin - Projects]
