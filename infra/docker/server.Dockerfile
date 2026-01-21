@@ -44,4 +44,4 @@ WORKDIR /app/server
 EXPOSE 3000
 
 # Start command - resolve failed migration as applied, then deploy
-CMD ["sh", "-c", "npx prisma migrate resolve --applied 20260121105119_init 2>/dev/null || true && npx prisma migrate deploy && node dist/app.js"]
+CMD ["sh", "-c", "npx prisma migrate resolve --applied 20260121105119_init 2>/dev/null || true && npx prisma migrate deploy && node dist/server/src/app.js"]
