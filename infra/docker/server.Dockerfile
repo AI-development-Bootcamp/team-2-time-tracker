@@ -44,4 +44,5 @@ WORKDIR /app/server
 EXPOSE 3000
 
 # Start command - resolve failed migration as applied, then deploy
-CMD ["sh", "-c", "npx prisma migrate resolve --applied 20260121105119_init 2>/dev/null || true && npx prisma migrate deploy && node dist/server/src/app.js"]
+# Using tsx instead of node to handle ESM module resolution
+CMD ["sh", "-c", "npx prisma migrate resolve --applied 20260121105119_init 2>/dev/null || true && npx prisma migrate deploy && npx tsx dist/server/src/app.js"]
