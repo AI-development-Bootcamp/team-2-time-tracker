@@ -23,12 +23,23 @@ services:
       context: ..
       dockerfile: infra/docker/server.dev.Dockerfile
     container_name: timetracker-server-dev
+
+    env_file:
+      - .env
+
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER:-timetracker}:${POSTGRES_PASSWORD:-password}@postgres:5432/${POSTGRES_DB:-timetracker}
       JWT_SECRET: ${JWT_SECRET:-dev-secret-change-me}
       PORT: 3000
       NODE_ENV: development
       CORS_ORIGIN: http://localhost:5173,http://localhost:5174
+
+      # IDrive E2 Storage Configuration
+      IDRIVE_ACCESS_KEY: ${IDRIVE_ACCESS_KEY}
+      IDRIVE_SECRET_KEY: ${IDRIVE_SECRET_KEY}
+      IDRIVE_BUCKET: ${IDRIVE_BUCKET}
+      IDRIVE_ENDPOINT: ${IDRIVE_ENDPOINT}
+      IDRIVE_REGION: ${IDRIVE_REGION:-eu-central-2}
 
     ports:
       - "3000:3000"

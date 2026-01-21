@@ -29,7 +29,7 @@ interface TokenPayload {
  * @returns {Promise<LoginResponse>} Object containing tokens, expiry, user info, and mustChangePassword flag
  * @throws {UnauthorizedError} When email not found, password incorrect, or account deactivated
  * @example
- * const result = await login('user@example.com', 'Password123!', true);
+ * const result = await login('user@example.com', process.env.DEFAULT_SEED_PASSWORD!, true);
  * // { token: 'eyJ...', refreshToken: 'abc...', expiresIn: 7200, user: {...}, mustChangePassword: false }
  */
 export async function login(email: string, password: string, rememberMe = false) {
@@ -226,7 +226,7 @@ export function verifyAccessToken(token: string): TokenPayload {
  * @param {string} password - Plain text password to hash
  * @returns {Promise<string>} Bcrypt hash of the password
  * @example
- * const hash = await hashPassword('Password123!');
+ * const hash = await hashPassword(process.env.DEFAULT_SEED_PASSWORD!);
  * // '$2b$12$...' (bcrypt hash)
  */
 export async function hashPassword(password: string): Promise<string> {

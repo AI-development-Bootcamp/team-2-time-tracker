@@ -1,4 +1,12 @@
+import { fileConstraints } from './storage';
+
 export const uploadConfig = {
-    maxFileSize: 5 * 1024 * 1024, // 5MB
-    allowedMimeTypes: ['image/jpeg', 'image/png', 'application/pdf'],
+    maxFileSize: fileConstraints.maxFileSize, // 10MB
+    allowedMimeTypes: [...fileConstraints.allowedMimeTypes],
+};
+
+export const hebrewFileErrors = {
+    FILE_TOO_LARGE: 'גודל הקובץ חורג מ-10MB',
+    INVALID_FILE_TYPE: 'סוג קובץ לא נתמך. יש להעלות PDF, JPG או PNG',
+    NO_FILE_UPLOADED: 'לא הועלה קובץ',
 };

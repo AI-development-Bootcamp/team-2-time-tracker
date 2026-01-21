@@ -14,8 +14,8 @@ export const createProjectSchema = z
         clientId: z.string().uuid('Invalid client ID'),
         description: z.string().max(250).optional().nullable(),
         reportType: z.enum(['TOTAL_HOURS', 'ENTRY_EXIT']).optional(),
-        startDate: z.string().date().optional().nullable(),
-        endDate: z.string().date().optional().nullable(),
+        startDate: z.union([z.string().date(), z.null()]).optional(),
+        endDate: z.union([z.string().date(), z.null()]).optional(),
     })
     .refine(
         (data) => {
@@ -38,8 +38,8 @@ export const updateProjectSchema = z
         name: z.string().min(1).max(100).optional(),
         clientId: z.string().uuid().optional(),
         description: z.string().max(250).optional().nullable(),
-        startDate: z.string().date().optional().nullable(),
-        endDate: z.string().date().optional().nullable(),
+        startDate: z.union([z.string().date(), z.null()]).optional(),
+        endDate: z.union([z.string().date(), z.null()]).optional(),
     })
     .refine(
         (data) => {

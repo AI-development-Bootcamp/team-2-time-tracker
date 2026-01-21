@@ -1,12 +1,24 @@
+/// <reference types="node" />
 /**
  * @fileoverview Test setup and global mocks
  */
 
 // Set up test environment variables before any imports that might use them
 // Only set defaults when not already provided (e.g., by CI)
+
+// Track if we're using a mock DATABASE_URL (for tests that need real DB connection)
+const hasRealDatabaseUrl = !!process.env.DATABASE_URL;
+process.env.TEST_HAS_REAL_DATABASE = hasRealDatabaseUrl ? 'true' : 'false';
+
+// DATABASE_URL is needed so db/index.ts can load without throwing
+// (the actual DB calls are mocked, so this URL is never used)
+process.env.DATABASE_URL ??= 'postgresql://mock:mock@localhost:5432/mock_db';
 process.env.JWT_SECRET ??= 'test-jwt-secret-for-testing';
 process.env.JWT_REFRESH_SECRET ??= 'test-jwt-refresh-secret-for-testing';
 process.env.NODE_ENV ??= 'test';
+// Required by env.ts schema validation
+process.env.DEFAULT_SEED_PASSWORD ??= 'test-seed-password';
+process.env.DATABASE_PASSWORD ??= 'test-database-password';
 
 import { vi, beforeEach, afterEach } from 'vitest';
 

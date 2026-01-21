@@ -9,9 +9,9 @@
     justify-content: center;
     gap: var(--spacing-sm);
     font-family: var(--font-family);
-    font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-semibold); /* iOS uses semibold */
     border: none;
-    border-radius: var(--radius-md);
+    border-radius: 10px; /* iOS rounded corners */
     cursor: pointer;
     transition: all var(--transition-fast);
     position: relative;
@@ -29,12 +29,12 @@
 
 /* Variants */
 .button--primary {
-    background-color: var(--color-primary-600);
+    background-color: #2C3E50;
     color: white;
 }
 
 .button--primary:hover:not(:disabled) {
-    background-color: var(--color-primary-700);
+    background-color: #1a252f;
 }
 
 .button--secondary {
@@ -74,23 +74,23 @@
     background-color: #dc2626;
 }
 
-/* Sizes */
+/* Sizes - iOS style */
 .button--sm {
-    height: 2rem;
+    height: 36px;
     padding-inline: var(--spacing-sm);
-    font-size: var(--font-size-sm);
+    font-size: 15px;
 }
 
 .button--md {
-    height: 2.5rem;
+    height: 44px; /* iOS standard touch target */
     padding-inline: var(--spacing-md);
-    font-size: var(--font-size-md);
+    font-size: 17px; /* iOS standard text size */
 }
 
 .button--lg {
-    height: 3rem;
+    height: 50px;
     padding-inline: var(--spacing-lg);
-    font-size: var(--font-size-lg);
+    font-size: 17px;
 }
 
 /* Full Width */
@@ -121,4 +121,18 @@
     to {
         transform: rotate(360deg);
     }
+}
+
+/* Dark mode - iOS style */
+[data-theme="dark"] .button--secondary {
+    background-color: #2c2c2e;
+    color: #ffffff;
+}
+
+[data-theme="dark"] .button--secondary:hover:not(:disabled) {
+    background-color: #3a3a3c;
+}
+
+[data-theme="dark"] .button--ghost:hover:not(:disabled) {
+    background-color: #2c2c2e;
 }
