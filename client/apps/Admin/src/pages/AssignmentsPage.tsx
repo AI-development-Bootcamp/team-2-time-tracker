@@ -15,6 +15,9 @@ import type { TaskAssignmentDto } from '@shared/types';
 import { getAssignments, deleteAssignment } from '../api/assignmentsApi';
 import { AdminLayout } from '../components/AdminLayout';
 import { DashboardHeader } from '../components/DashboardHeader';
+import { EditClientModal } from '../components/EditClientModal';
+import { EditProjectModal } from '../components/EditProjectModal';
+import { EditTaskModal } from '../components/EditTaskModal';
 import './AssignmentsPage.css';
 
 /**
@@ -24,6 +27,7 @@ import './AssignmentsPage.css';
 function AssignmentsPage(): React.JSX.Element {
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [activeMenuId, setActiveMenuId] = useState<string | null>(null);
+    const [editModalState, setEditModalState] = useState<{ type: 'client' | 'project' | 'task', id: string } | null>(null);
     const queryClient = useQueryClient();
 
     // Close menu when clicking outside
@@ -86,6 +90,8 @@ function AssignmentsPage(): React.JSX.Element {
         return Array.from(groups.values());
     }, [assignments]);
 
+    const [editingAssignmentsTaskId, setEditingAssignmentsTaskId] = useState<string | null>(null);
+
     // Icons
     const EditIcon = () => (
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -103,29 +109,49 @@ function AssignmentsPage(): React.JSX.Element {
     // Table columns definition
     const columnHelper = createColumnHelper<GroupedAssignment>();
     const columns = [
-        columnHelper.accessor('assignments', {
-            header: 'שמות העובדים המשוייכים',
-            cell: info => (
-                <div className="assignments-list">
-                    {info.getValue().map((assignment) => (
-                        <span key={assignment.id} className="assignment-badge">
-                            {assignment.userName}
-                        </span>
-                    ))}
-                </div>
-            ),
-        }),
-        columnHelper.accessor('taskName', {
-            header: 'שם המשימה',
+        columnHelper.accessor('clientName', {
+            header: 'שם לקוח',
             cell: info => info.getValue(),
         }),
         columnHelper.accessor('projectName', {
             header: 'שם פרויקט',
             cell: info => info.getValue(),
         }),
-        columnHelper.accessor('clientName', {
-            header: 'שם לקוח',
+        columnHelper.accessor('taskName', {
+            header: 'שם המשימה',
             cell: info => info.getValue(),
+        }),
+        columnHelper.accessor('assignments', {
+            header: 'שמות העובדים המשוייכים',
+            cell: info => {
+                const isEditing = editingAssignmentsTaskId === info.row.original.taskId;
+                return (
+                    <div className="assignments-list">
+                        {info.getValue().map((assignment) => (
+                            <span
+                                key={assignment.id}
+                                className={`assignment-badge ${isEditing ? 'assignment-badge--editing' : ''}`}
+                            >
+                                {assignment.userName}
+                                {isEditing && (
+                                    <button
+                                        className="assignment-badge__remove"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            if (confirm(`האם להסיר את ${assignment.userName} מהמשימה?`)) {
+                                                deleteMutation.mutate(assignment.id);
+                                            }
+                                        }}
+                                        title="הסר עובד"
+                                    >
+                                        ×
+                                    </button>
+                                )}
+                            </span>
+                        ))}
+                    </div>
+                );
+            },
         }),
 
         columnHelper.display({
@@ -133,47 +159,76 @@ function AssignmentsPage(): React.JSX.Element {
             header: 'פעולות',
             cell: ({ row }) => {
                 const isMenuOpen = activeMenuId === row.original.taskId;
+                const isEditing = editingAssignmentsTaskId === row.original.taskId;
 
                 return (
                     <div className="assignments-page__actions">
-                        <div className="assignments-page__menu-container" onClick={(e) => e.stopPropagation()}>
+                        {isEditing ? (
                             <button
-                                className={`assignments-page__action-btn ${isMenuOpen ? 'assignments-page__action-btn--active' : ''}`}
-                                onClick={() => setActiveMenuId(isMenuOpen ? null : row.original.taskId)}
-                                title="ערוך"
+                                className="assignments-page__action-btn assignments-page__action-btn--active"
+                                onClick={() => setEditingAssignmentsTaskId(null)}
+                                title="סיום עריכה"
                             >
-                                <EditIcon />
+                                סיום
                             </button>
-                            {isMenuOpen && (
-                                <div className="assignments-page__dropdown">
-                                    <button
-                                        className="assignments-page__dropdown-item"
-                                        onClick={() => console.log('Edit Client', row.original.clientName)}
-                                    >
-                                        ערוך לקוח
-                                    </button>
-                                    <button
-                                        className="assignments-page__dropdown-item"
-                                        onClick={() => console.log('Edit Project', row.original.projectName)}
-                                    >
-                                        ערוך פרויקט
-                                    </button>
-                                    <button
-                                        className="assignments-page__dropdown-item"
-                                        onClick={() => console.log('Edit Task', row.original.taskName)}
-                                    >
-                                        ערוך משימה
-                                    </button>
-                                    <div className="assignments-page__dropdown-separator" />
-                                    <button
-                                        className="assignments-page__dropdown-item"
-                                        onClick={() => console.log('Edit Assignments', row.original.taskId)}
-                                    >
-                                        ערוך שיוך עובדים
-                                    </button>
-                                </div>
-                            )}
-                        </div>
+                        ) : (
+                            <div className="assignments-page__menu-container" onClick={(e) => e.stopPropagation()}>
+                                <button
+                                    className={`assignments-page__action-btn ${isMenuOpen ? 'assignments-page__action-btn--active' : ''}`}
+                                    onClick={() => setActiveMenuId(isMenuOpen ? null : row.original.taskId)}
+                                    title="ערוך"
+                                >
+                                    <EditIcon />
+                                </button>
+                                {isMenuOpen && (
+                                    <div className="assignments-page__dropdown">
+                                        <button
+                                            className="assignments-page__dropdown-item"
+                                            onClick={() => {
+                                                const clientId = row.original.assignments[0]?.clientId;
+                                                if (clientId) {
+                                                    setEditModalState({ type: 'client', id: clientId });
+                                                }
+                                                setActiveMenuId(null);
+                                            }}
+                                        >
+                                            ערוך לקוח
+                                        </button>
+                                        <button
+                                            className="assignments-page__dropdown-item"
+                                            onClick={() => {
+                                                const projectId = row.original.assignments[0]?.projectId;
+                                                if (projectId) {
+                                                    setEditModalState({ type: 'project', id: projectId });
+                                                }
+                                                setActiveMenuId(null);
+                                            }}
+                                        >
+                                            ערוך פרויקט
+                                        </button>
+                                        <button
+                                            className="assignments-page__dropdown-item"
+                                            onClick={() => {
+                                                setEditModalState({ type: 'task', id: row.original.taskId });
+                                                setActiveMenuId(null);
+                                            }}
+                                        >
+                                            ערוך משימה
+                                        </button>
+                                        <div className="assignments-page__dropdown-separator" />
+                                        <button
+                                            className="assignments-page__dropdown-item"
+                                            onClick={() => {
+                                                setEditingAssignmentsTaskId(row.original.taskId);
+                                                setActiveMenuId(null);
+                                            }}
+                                        >
+                                            ערוך שיוך עובדים
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        )}
                         <button
                             className="assignments-page__action-btn assignments-page__action-btn--delete"
                             onClick={() => handleDeleteTaskAssignments(row.original.taskId)}
@@ -296,6 +351,24 @@ function AssignmentsPage(): React.JSX.Element {
                     </div>
                 )}
             </div>
+            {editModalState?.type === 'client' && (
+                <EditClientModal
+                    clientId={editModalState.id}
+                    onClose={() => setEditModalState(null)}
+                />
+            )}
+            {editModalState?.type === 'project' && (
+                <EditProjectModal
+                    projectId={editModalState.id}
+                    onClose={() => setEditModalState(null)}
+                />
+            )}
+            {editModalState?.type === 'task' && (
+                <EditTaskModal
+                    taskId={editModalState.id}
+                    onClose={() => setEditModalState(null)}
+                />
+            )}
         </AdminLayout>
     );
 }

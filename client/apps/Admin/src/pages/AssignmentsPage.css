@@ -213,6 +213,39 @@
     border-radius: 4px;
     font-size: 0.75rem;
     border: 1px solid var(--color-border, #ddd);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.assignment-badge--editing {
+    border-color: var(--color-primary, #007bff);
+    background-color: var(--color-primary-50, #eff6ff);
+}
+
+.assignment-badge__remove {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background-color: transparent;
+    border: 1px solid currentColor;
+    color: var(--color-error, #dc2626);
+    font-size: 14px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0;
+    opacity: 0.7;
+    transition: all 0.2s;
+}
+
+.assignment-badge__remove:hover {
+    opacity: 1;
+    background-color: var(--color-error, #dc2626);
+    color: white;
+    border-color: var(--color-error, #dc2626);
 }
 
 /* Table Actions */
