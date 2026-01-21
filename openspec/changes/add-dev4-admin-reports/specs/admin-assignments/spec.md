@@ -3,11 +3,15 @@
 ## ADDED Requirements
 
 ### Requirement: List Assignments
-The system SHALL allow admins to view all task-user assignments.
+The system SHALL allow admins to view all task-user assignments with expanded details.
 
 #### Scenario: List all assignments
 - **WHEN** admin requests `GET /admin/assignments`
-- **THEN** response contains all task-user assignments
+- **THEN** response contains all task-user assignments with expanded details:
+  - User information (id, fullName, email)
+  - Task information (id, name)
+  - Project information (id, name)
+  - Client information (id, name)
 
 #### Scenario: Filter by user
 - **WHEN** admin requests assignments with `userId` query parameter
@@ -16,6 +20,14 @@ The system SHALL allow admins to view all task-user assignments.
 #### Scenario: Filter by task
 - **WHEN** admin requests assignments with `taskId` query parameter
 - **THEN** response contains only assignments for that task
+
+#### Scenario: Filter by project
+- **WHEN** admin requests assignments with `projectId` query parameter
+- **THEN** response contains only assignments for tasks belonging to that project
+
+#### Scenario: Search by employee name
+- **WHEN** admin requests assignments with `userName` query parameter (search term)
+- **THEN** response contains only assignments for users whose fullName matches the search term (case-insensitive, partial match)
 
 ### Requirement: Create Assignment
 The system SHALL allow admins to assign tasks to users.

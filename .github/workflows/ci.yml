@@ -7,7 +7,6 @@ on:
   push:
     branches: [main, development]
   pull_request:
-    branches: [main, development]
   workflow_dispatch:
 
 jobs:
@@ -38,3 +37,5 @@ jobs:
 
       - name: Run server unit tests
         run: pnpm --filter server test:unit
+        env:
+          DATABASE_URL: postgresql://dummy:dummy@localhost:5432/dummy

@@ -23,6 +23,7 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 server/logs/*.log
+nul
 
 # OS
 .DS_Store
@@ -36,3 +37,11 @@ Screenshots/
 .idea/
 *.swp
 *.swo
+
+
+# Logs
+nul
+*.log
+logs/
+
+
