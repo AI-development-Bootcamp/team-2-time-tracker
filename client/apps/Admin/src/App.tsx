@@ -6,7 +6,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
 import AuthGuard from './components/AuthGuard';
-import DashboardPage from './pages/DashboardPage';
 import AssignmentsPage from './pages/AssignmentsPage';
 import HourReportPage from './pages/HourReportPage';
 

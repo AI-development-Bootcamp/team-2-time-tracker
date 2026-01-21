@@ -27,8 +27,8 @@ const REPORT_TYPE_MAP = {
 };
 
 const REPORT_TYPE_REVERSE_MAP = {
-    'summary': 'TOTAL_HOURS' as const,
-    'entry-exit': 'ENTRY_EXIT' as const,
+    'summary': ReportType.TOTAL_HOURS,
+    'entry-exit': ReportType.ENTRY_EXIT,
 };
 
 // Define the data structure for the table
@@ -90,7 +90,7 @@ function HourReportPage(): React.JSX.Element {
         },
 
         // Rollback on error
-        onError: (error: any, variables, context) => {
+        onError: (error: any, _variables, context) => {
             if (context?.previousProjects) {
                 queryClient.setQueryData(['projects'], context.previousProjects);
             }
