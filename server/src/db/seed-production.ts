@@ -12,6 +12,7 @@ const SALT_ROUNDS = 12;
  */
 export const seedProductionDatabase = async (): Promise<void> => {
     try {
+        console.log('Running production seed script...');
         // Check if database already has users
         const userCount = await prisma.user.count();
         if (userCount > 1) {
