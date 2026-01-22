@@ -62,6 +62,7 @@ client/apps/employee/src/pages/HomePage.css
 
 # Cleanup Candidates
 server/capture_seed_error.js
+server/scripts/test-db-connection.ts
 client/apps/employee/build_log*.txt
 
 # Screenshots
