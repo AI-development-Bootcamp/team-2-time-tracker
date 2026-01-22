@@ -8,7 +8,8 @@ import { useNavigate } from 'react-router-dom';
 import { AbsenceForm, AbsenceFormData, useToast } from '@client/ui';
 import { useCreateAbsence, useUploadDocument } from '../api/absencesApi';
 import { useAbsenceStore } from '../app/stores/absence.store';
-import { AbsenceType, CreateAbsenceRequestDto } from '@shared/types';
+import { CreateAbsenceRequestDto } from '@shared/types';
+import { mapAbsenceType, formatDate } from '../utils';
 import './AbsencePage.css';
 
 export default function AbsencePage() {
@@ -33,7 +34,8 @@ export default function AbsencePage() {
             console.log('Absence created:', absence);
         },
         onError: (error) => {
-            const errorMessage = typeof error === 'string' ? error : 'שגיאה בשמירת הדיווח';
+            // error is already a Hebrew string from getHebrewErrorMessage
+            const errorMessage = String(error) || 'שגיאה בשמירת הדיווח';
             setCreateAbsenceError(errorMessage);
             toast.error(errorMessage);
         },
@@ -49,7 +51,8 @@ export default function AbsencePage() {
             setUploadSuccess();
         },
         onError: (error) => {
-            const errorMessage = typeof error === 'string' ? error : 'שגיאה בהעלאת המסמך';
+            // error is already a Hebrew string from getHebrewErrorMessage
+            const errorMessage = String(error) || 'שגיאה בהעלאת המסמך';
             setUploadError(errorMessage);
             toast.error(errorMessage);
         },
@@ -116,33 +119,8 @@ export default function AbsencePage() {
             throw new Error('דף זה מיועד לדיווח יום בודד בלבד');
         }
 
-        // Determine absence type and isHalfDay
-        let type: AbsenceType = AbsenceType.VACATION;
-        let isHalfDay = false;
-
-        if (data.absenceType) {
-            if (data.absenceType === 'VACATION_HALF') {
-                type = AbsenceType.VACATION;
-                isHalfDay = true;
-            } else if (data.absenceType === 'VACATION_FULL') {
-                type = AbsenceType.VACATION;
-                isHalfDay = false;
-            } else if (data.absenceType === 'SICK') {
-                type = AbsenceType.SICK;
-                isHalfDay = false;
-            } else if (data.absenceType === 'RESERVES') {
-                type = AbsenceType.RESERVES;
-                isHalfDay = false;
-            }
-        }
-
-        // Format dates as YYYY-MM-DD (backend expects this format)
-        const formatDate = (date: Date): string => {
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
-            return `${year}-${month}-${day}`;
-        };
+        // Determine absence type and isHalfDay using mapping utility
+        const { type, isHalfDay } = mapAbsenceType(data.absenceType);
 
         const startDate = data.singleDate;
         const endDate = data.singleDate;
@@ -171,7 +149,8 @@ export default function AbsencePage() {
     // Get loading and error states from store and mutations
     const { isLoading, error, isUploading } = useAbsenceStore();
     const isSubmitting = createAbsenceMutation.isPending || uploadDocumentMutation.isPending || isLoading;
-    const errorMessage = error || (createAbsenceMutation.error ? String(createAbsenceMutation.error) : '');
+    // Use error from store - it's already set by onError callbacks with Hebrew message
+    const errorMessage = error || '';
 
     return (
         <div className="absence-page">

@@ -14,6 +14,16 @@ export default function LoginPage() {
     const hasRedirectedRef = useRef(false);
     const hasCheckedAuthRef = useRef(false);
 
+    // Clear any stale tokens when arriving at login page from a redirect (e.g., expired session)
+    useEffect(() => {
+        // If we have location state indicating we came from a redirect due to auth failure,
+        // ensure tokens are cleared
+        if (location.state?.from && !isAuthenticated) {
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('refreshToken');
+        }
+    }, [location.state, isAuthenticated]);
+
     // Verify auth state on mount to handle expired tokens from persisted state
     useEffect(() => {
         if (!hasCheckedAuthRef.current) {

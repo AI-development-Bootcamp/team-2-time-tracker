@@ -168,8 +168,13 @@ export const useAuthStore = create<AuthState>()(
 
                 checkAuth: async () => {
                     const token = localStorage.getItem('accessToken');
-                    if (!token) {
-                        set({ isAuthenticated: false, user: null, isLoading: false });
+                    const refreshToken = localStorage.getItem('refreshToken');
+
+                    if (!token || !refreshToken) {
+                        // Clear any partial state
+                        localStorage.removeItem('accessToken');
+                        localStorage.removeItem('refreshToken');
+                        set({ isAuthenticated: false, user: null, token: null, refreshToken: null, isLoading: false });
                         return;
                     }
 
