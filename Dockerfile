@@ -79,4 +79,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD wget --no-verbose --tries=1 --spider http://localhost:3000/api/health || exit 1
 
 # Run migrations, seed production user, then start server using tsx
-CMD ["sh", "-c", "npx prisma db push --skip-generate && npx tsx src/db/seed-production.ts && npx tsx src/app.ts"]
+CMD ["sh", "-c", "npx prisma db push --accept-data-loss && npx tsx src/db/seed-production.ts && npx tsx src/app.ts"]
