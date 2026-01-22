@@ -14,7 +14,7 @@ export const seedProductionDatabase = async (): Promise<void> => {
     try {
         // Check if database already has users
         const userCount = await prisma.user.count();
-        if (userCount > 0) {
+        if (userCount > 1) {
             logger.info('Database already has users. Skipping production seed.');
             return;
         }
