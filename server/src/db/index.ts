@@ -21,19 +21,25 @@ export const prisma =
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
 
 /**
- * @description Initialize the database by running migrations and seeding initial data
+ * @description Initialize the database by running migrations and setting up initial data
  * This function should be called on application startup to ensure:
  * 1. Database schema is up-to-date (via Prisma migrations)
- * 2. Initial seed data exists (admin/employee users)
- * 
- * @param {boolean} runMigrations - Whether to run Prisma migrations (default: true in development)
- * @param {boolean} runSeed - Whether to run database seeding (default: true)
+ * 2. Admin user exists (schema initialization)
+ * 3. (Optional) Mock data for development
+ *
+ * @param {boolean} runMigrations - Whether to run Prisma migrations (default: true)
+ * @param {boolean} runSeed - Whether to initialize schema/admin user (default: true)
+ * @param {boolean} seedMockData - Whether to seed mock data for development (default: false)
  * @returns {Promise<void>}
- * 
+ *
  * @example
- * // In app.ts startup
+ * // In app.ts startup (production) - only creates admin user
  * await initializeDatabase();
- * 
+ *
+ * @example
+ * // Development with mock data
+ * await initializeDatabase({ seedMockData: true });
+ *
  * @example
  * // Skip migrations in production (use manual migrations)
  * await initializeDatabase({ runMigrations: false });
@@ -41,10 +47,12 @@ if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
 export async function initializeDatabase(options?: {
     runMigrations?: boolean;
     runSeed?: boolean;
+    seedMockData?: boolean;
 }): Promise<void> {
     const {
         runMigrations = true, // Run migrations in all environments by default
         runSeed = true,
+        seedMockData: shouldSeedMockData = false, // Mock data seeding is OFF by default
     } = options ?? {};
 
     try {
@@ -85,17 +93,29 @@ export async function initializeDatabase(options?: {
             logger.info('⏭️  Skipping migrations (runMigrations=false)');
         }
 
-        // Step 3: Run database seeding (if enabled)
+        // Step 3: Initialize schema (admin user) - always runs if enabled
         if (runSeed) {
-            logger.info('🌱 Seeding database...');
+            logger.info('🔧 Initializing schema (admin user)...');
 
-            // Dynamically import seed function to avoid circular dependencies
-            const { seedDatabase } = await import('./seed');
-            await seedDatabase();
+            // Dynamically import to avoid circular dependencies
+            const { initializeSchema } = await import('./schema-init');
+            await initializeSchema();
 
-            logger.info('✅ Database seeding completed');
+            logger.info('✅ Schema initialization completed');
         } else {
-            logger.info('⏭️  Skipping seeding (runSeed=false)');
+            logger.info('⏭️  Skipping schema initialization (runSeed=false)');
+        }
+
+        // Step 4: Seed mock data (only if explicitly enabled - for development)
+        if (shouldSeedMockData) {
+            logger.info('🌱 Seeding mock data...');
+
+            const { seedMockData } = await import('./seed-mock-data');
+            await seedMockData();
+
+            logger.info('✅ Mock data seeding completed');
+        } else {
+            logger.info('⏭️  Skipping mock data seeding (seedMockData=false)');
         }
 
         logger.info('🎉 Database initialization completed successfully!');
