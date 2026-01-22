@@ -4,6 +4,8 @@
     "outDir": "./dist",
     "rootDir": "..",
     "noEmit": false,
+    "module": "CommonJS",
+    "moduleResolution": "Node",
     "allowImportingTsExtensions": false,
     "baseUrl": ".",
     "paths": {
