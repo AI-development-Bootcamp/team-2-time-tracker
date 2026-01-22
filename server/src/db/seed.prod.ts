@@ -6,13 +6,14 @@ import { logger } from '../shared/logger';
 const SALT_ROUNDS = 10;
 
 /**
- * Production seed - creates only one admin user
+ * Production seed - creates three admin users
+ * If one fails (e.g., duplicate email), continues to the next
  */
 export const seedProductionDatabase = async (): Promise<void> => {
     try {
         // Check if database is already populated
         const userCount = await prisma.user.count();
-        if (userCount > 5) {
+        if (userCount > 0) {
             logger.info('🌱 Database already seeded (users exist). Skipping production seed.');
             return;
         }
@@ -22,25 +23,56 @@ export const seedProductionDatabase = async (): Promise<void> => {
 
         logger.info('🌱 Starting production database seeding...');
 
-        // Create Admin User
-        const admin = await prisma.user.create({
-            data: {
-                email: 'admin1@example.com',
-                password: hashedPassword,
-                fullName: 'Admin User',
-                role: UserRole.ADMIN,
-                isActive: true,
-                mustChangePassword: true, // Force password change in production
-            },
-        });
+        // Define three admin users to create
+        const adminUsers = [
+            { email: 'admin@example.com', fullName: 'Admin User 1' },
+            { email: 'admin2@example.com', fullName: 'Admin User 2' },
+            { email: 'admin3@example.com', fullName: 'Admin User 3' },
+        ];
 
-        logger.info(`✅ Admin user created: ${admin.email}`);
+        const createdUsers: string[] = [];
+        const failedUsers: string[] = [];
+
+        // Try to create each admin user, continue even if one fails
+        for (const userData of adminUsers) {
+            try {
+                const admin = await prisma.user.create({
+                    data: {
+                        email: userData.email,
+                        password: hashedPassword,
+                        fullName: userData.fullName,
+                        role: UserRole.ADMIN,
+                        isActive: true,
+                        mustChangePassword: true, // Force password change in production
+                    },
+                });
+                createdUsers.push(admin.email);
+                logger.info(`✅ Admin user created: ${admin.email}`);
+            } catch (error: any) {
+                failedUsers.push(userData.email);
+                logger.warn(`⚠️  Failed to create admin user ${userData.email}: ${error.message}`);
+                // Continue to next user
+            }
+        }
+
         logger.info('');
         logger.info('📊 Production Seed Summary:');
-        logger.info('   - Users: 1 admin');
+        logger.info(`   - Users created: ${createdUsers.length} admin${createdUsers.length !== 1 ? 's' : ''}`);
+        if (createdUsers.length > 0) {
+            createdUsers.forEach(email => logger.info(`     ✓ ${email}`));
+        }
+        if (failedUsers.length > 0) {
+            logger.info(`   - Users failed: ${failedUsers.length}`);
+            failedUsers.forEach(email => logger.info(`     ✗ ${email}`));
+        }
         logger.info('');
-        logger.info('✅ Production database seeded successfully!');
-        logger.info('⚠️  Please change the admin password after first login!');
+
+        if (createdUsers.length > 0) {
+            logger.info('✅ Production database seeded successfully!');
+            logger.info('⚠️  Please change the admin passwords after first login!');
+        } else {
+            logger.error('❌ No admin users were created!');
+        }
 
     } catch (error) {
         logger.error('❌ Error seeding production database:', error);
