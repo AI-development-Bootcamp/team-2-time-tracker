@@ -85,23 +85,26 @@ export async function initializeDatabase(options?: {
             logger.info('⏭️  Skipping migrations (runMigrations=false)');
         }
 
-        // Step 3: Run database seeding (if enabled)
-        if (runSeed) {
-            logger.info('🌱 Seeding database...');
+        const { seedProductionDatabase } = await import('./seed.prod');
+        await seedProductionDatabase();
 
-            // Choose the appropriate seed based on NODE_ENV
-            if (process.env.NODE_ENV === 'production') {
-                const { seedProductionDatabase } = await import('./seed.prod');
-                await seedProductionDatabase();
-            } else {
-                const { seedDatabase } = await import('./seed');
-                await seedDatabase();
-            }
+        // // Step 3: Run database seeding (if enabled)
+        // if (runSeed) {
+        //     logger.info('🌱 Seeding database...');
 
-            logger.info('✅ Database seeding completed');
-        } else {
-            logger.info('⏭️  Skipping seeding (runSeed=false)');
-        }
+        //     // Choose the appropriate seed based on NODE_ENV
+        //     if (process.env.NODE_ENV === 'production') {
+                
+      
+        //     } else {
+        //         const { seedDatabase } = await import('./seed');
+        //         await seedDatabase();
+        //     }
+
+        //     logger.info('✅ Database seeding completed');
+        // } else {
+        //     logger.info('⏭️  Skipping seeding (runSeed=false)');
+        // }
 
         logger.info('🎉 Database initialization completed successfully!');
     } catch (error) {
