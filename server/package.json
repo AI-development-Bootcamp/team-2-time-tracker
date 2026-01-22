@@ -16,6 +16,7 @@
     "db:init": "tsx src/db/init.ts",
     "db:migrate": "prisma migrate deploy",
     "db:seed": "cross-env NODE_ENV=development tsx src/db/seed.ts",
+    "db:seed:prod": "node dist/server/src/db/seed-production.js",
     "db:reset": "prisma migrate reset --force && tsx src/db/init.ts",
     "db:studio": "prisma studio"
   },
