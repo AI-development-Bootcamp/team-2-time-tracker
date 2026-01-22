@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import './AddButton.css';
 import { CreateUserModal } from './CreateUserModal';
 import { CreateClientModal } from './CreateClientModal';
@@ -11,6 +12,7 @@ export const AddButton: React.FC = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [activeModal, setActiveModal] = useState<ModalType>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -39,6 +41,11 @@ export const AddButton: React.FC = () => {
 
   const handleCloseModal = () => {
     setActiveModal(null);
+  };
+
+  const handleSuccess = () => {
+    // Invalidate assignments query to refetch data
+    queryClient.invalidateQueries({ queryKey: ['assignments'] });
   };
 
   return (
@@ -86,10 +93,10 @@ export const AddButton: React.FC = () => {
         )}
       </div>
 
-      {activeModal === 'user' && <CreateUserModal onClose={handleCloseModal} />}
-      {activeModal === 'client' && <CreateClientModal onClose={handleCloseModal} />}
-      {activeModal === 'project' && <CreateProjectModal onClose={handleCloseModal} />}
-      {activeModal === 'task' && <CreateTaskModal onClose={handleCloseModal} />}
+      {activeModal === 'user' && <CreateUserModal onClose={handleCloseModal} onSuccess={handleSuccess} />}
+      {activeModal === 'client' && <CreateClientModal onClose={handleCloseModal} onSuccess={handleSuccess} />}
+      {activeModal === 'project' && <CreateProjectModal onClose={handleCloseModal} onSuccess={handleSuccess} />}
+      {activeModal === 'task' && <CreateTaskModal onClose={handleCloseModal} onSuccess={handleSuccess} />}
     </>
   );
 };

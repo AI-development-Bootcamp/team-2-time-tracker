@@ -6,6 +6,7 @@
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Plus } from 'lucide-react';
 import { ReportType, EntityStatus } from '@shared/types';
 import { createProjectSchema, type CreateProjectFormData } from '../schemas/project.schema';
@@ -33,7 +34,7 @@ interface ClientOption {
  * @returns {React.ReactElement} Create project modal component
  */
 export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ onClose, onSuccess }) => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const queryClient = useQueryClient();
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [clients, setClients] = useState<ClientOption[]>([]);
   const [isLoadingClients, setIsLoadingClients] = useState(true);
@@ -57,6 +58,41 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ onClose,
 
   const name = watch('name');
   const clientId = watch('clientId');
+
+  // Create project mutation with optimistic updates
+  const createProjectMutation = useMutation({
+    mutationFn: async (data: any) => {
+      return projectsApi.createProject(data);
+    },
+    onMutate: async (newProjectData) => {
+      // Cancel any outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ['assignments'] });
+
+      // Snapshot previous value
+      const previousAssignments = queryClient.getQueryData(['assignments']);
+
+      // Note: New projects won't immediately appear in assignments
+      // (they need tasks first), but we invalidate for consistency
+
+      return { previousAssignments };
+    },
+    onError: (error: any, _, context) => {
+      // Rollback on error
+      if (context?.previousAssignments) {
+        queryClient.setQueryData(['assignments'], context.previousAssignments);
+      }
+      const hebrewError = translateError(error);
+      setSubmitError(hebrewError);
+    },
+    onSuccess: () => {
+      onSuccess?.();
+      onClose();
+    },
+    onSettled: () => {
+      // Refetch to sync with server
+      queryClient.invalidateQueries({ queryKey: ['assignments'] });
+    },
+  });
 
   /**
    * @description Fetches active clients for the dropdown
@@ -84,29 +120,19 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ onClose,
    * @description Handles form submission
    * @param {CreateProjectFormData} data - Form data
    */
-  async function onSubmit(data: CreateProjectFormData): Promise<void> {
-    setIsSubmitting(true);
+  function onSubmit(data: CreateProjectFormData): void {
     setSubmitError(null);
 
-    try {
-      const requestData = {
-        name: data.name,
-        clientId: data.clientId,
-        description: data.description || undefined,
-        reportType: data.reportType,
-        startDate: data.startDate || null,
-        endDate: data.endDate || null,
-      };
+    const requestData = {
+      name: data.name,
+      clientId: data.clientId,
+      description: data.description || undefined,
+      reportType: data.reportType,
+      startDate: data.startDate || null,
+      endDate: data.endDate || null,
+    };
 
-      await projectsApi.createProject(requestData);
-      onSuccess?.();
-      onClose();
-    } catch (error) {
-      const hebrewError = translateError(error);
-      setSubmitError(hebrewError);
-    } finally {
-      setIsSubmitting(false);
-    }
+    createProjectMutation.mutate(requestData);
   }
 
   return (
@@ -122,7 +148,7 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ onClose,
             onClick={onClose}
             type="button"
             aria-label="סגור"
-            disabled={isSubmitting}
+            disabled={createProjectMutation.isPending}
           >
             ×
           </button>
@@ -144,7 +170,7 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ onClose,
                 type="text"
                 className={`user-form__input ${errors.name ? 'user-form__input--error' : ''}`}
                 {...register('name')}
-                disabled={isSubmitting}
+                disabled={createProjectMutation.isPending}
                 placeholder="הזן שם פרויקט"
               />
               {errors.name && (
@@ -160,7 +186,7 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ onClose,
                 id="clientId"
                 className={`user-form__input ${errors.clientId ? 'user-form__input--error' : ''}`}
                 {...register('clientId')}
-                disabled={isSubmitting || isLoadingClients}
+                disabled={createProjectMutation.isPending || isLoadingClients}
               >
                 <option value="">בחר לקוח</option>
                 {clients.map((client) => (
@@ -182,7 +208,7 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ onClose,
                 id="description"
                 className={`user-form__input ${errors.description ? 'user-form__input--error' : ''}`}
                 {...register('description')}
-                disabled={isSubmitting}
+                disabled={createProjectMutation.isPending}
                 placeholder="הזן תיאור (אופציונלי)"
                 rows={3}
               />
@@ -202,7 +228,7 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ onClose,
                     type="radio"
                     value={ReportType.TOTAL_HOURS}
                     {...register('reportType')}
-                    disabled={isSubmitting}
+                    disabled={createProjectMutation.isPending}
                   />
                 </label>
                 <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', flexDirection: 'row-reverse' }}>
@@ -211,7 +237,7 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ onClose,
                     type="radio"
                     value={ReportType.ENTRY_EXIT}
                     {...register('reportType')}
-                    disabled={isSubmitting}
+                    disabled={createProjectMutation.isPending}
                   />
                 </label>
               </div>
@@ -226,7 +252,7 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ onClose,
                 type="date"
                 className={`user-form__input ${errors.startDate ? 'user-form__input--error' : ''}`}
                 {...register('startDate')}
-                disabled={isSubmitting}
+                disabled={createProjectMutation.isPending}
               />
               {errors.startDate && (
                 <span className="user-form__field-error">{errors.startDate.message}</span>
@@ -242,7 +268,7 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ onClose,
                 type="date"
                 className={`user-form__input ${errors.endDate ? 'user-form__input--error' : ''}`}
                 {...register('endDate')}
-                disabled={isSubmitting}
+                disabled={createProjectMutation.isPending}
               />
               {errors.endDate && (
                 <span className="user-form__field-error">{errors.endDate.message}</span>
@@ -254,8 +280,8 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ onClose,
                 label="צור פרויקט חדש"
                 loadingLabel="יוצר פרויקט..."
                 icon={Plus}
-                disabled={isSubmitting || !name?.trim() || !clientId}
-                isLoading={isSubmitting}
+                disabled={createProjectMutation.isPending || !name?.trim() || !clientId}
+                isLoading={createProjectMutation.isPending}
               />
             </div>
           </form>

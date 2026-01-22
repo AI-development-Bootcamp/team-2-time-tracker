@@ -6,6 +6,7 @@
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Plus } from 'lucide-react';
 import { createTaskSchema, type CreateTaskFormData } from '../schemas/task.schema';
 import { tasksApi } from '../api/tasksApi';
@@ -33,7 +34,7 @@ interface ProjectOption {
  * @returns {React.ReactElement} Create task modal component
  */
 export const CreateTaskModal: React.FC<CreateTaskModalProps> = ({ onClose, onSuccess }) => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const queryClient = useQueryClient();
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [projects, setProjects] = useState<ProjectOption[]>([]);
   const [isLoadingProjects, setIsLoadingProjects] = useState(true);
@@ -56,6 +57,64 @@ export const CreateTaskModal: React.FC<CreateTaskModalProps> = ({ onClose, onSuc
 
   const name = watch('name');
   const projectId = watch('projectId');
+
+  // Create task mutation with optimistic updates
+  const createTaskMutation = useMutation({
+    mutationFn: async (data: any) => {
+      return tasksApi.createTask(data);
+    },
+    onMutate: async (newTaskData) => {
+      // Cancel any outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ['assignments'] });
+
+      // Snapshot previous value
+      const previousAssignments = queryClient.getQueryData(['assignments']);
+
+      // Find the selected project info
+      const selectedProject = projects.find(p => p.id === newTaskData.projectId);
+
+      // Optimistically add new task to assignments
+      if (selectedProject) {
+        queryClient.setQueryData(['assignments'], (old: any) => {
+          if (!old) return old;
+
+          const optimisticAssignment = {
+            id: `task-temp-${Date.now()}`,
+            userId: null,
+            taskId: `temp-${Date.now()}`,
+            createdAt: new Date().toISOString(),
+            userName: null,
+            userEmail: null,
+            taskName: newTaskData.name,
+            projectId: newTaskData.projectId,
+            projectName: selectedProject.name,
+            clientId: null,
+            clientName: selectedProject.clientName,
+          };
+
+          return [...old, optimisticAssignment];
+        });
+      }
+
+      return { previousAssignments };
+    },
+    onError: (error: any, _, context) => {
+      // Rollback on error
+      if (context?.previousAssignments) {
+        queryClient.setQueryData(['assignments'], context.previousAssignments);
+      }
+      const hebrewError = translateError(error);
+      setSubmitError(hebrewError);
+    },
+    onSuccess: () => {
+      onSuccess?.();
+      onClose();
+    },
+    onSettled: () => {
+      // Refetch to sync with server
+      queryClient.invalidateQueries({ queryKey: ['assignments'] });
+    },
+  });
 
   /**
    * @description Fetches active projects for the dropdown
@@ -88,28 +147,18 @@ export const CreateTaskModal: React.FC<CreateTaskModalProps> = ({ onClose, onSuc
    * @description Handles form submission
    * @param {CreateTaskFormData} data - Form data
    */
-  async function onSubmit(data: CreateTaskFormData): Promise<void> {
-    setIsSubmitting(true);
+  function onSubmit(data: CreateTaskFormData): void {
     setSubmitError(null);
 
-    try {
-      const requestData = {
-        name: data.name,
-        projectId: data.projectId,
-        description: data.description || null,
-        startDate: data.startDate || null,
-        endDate: data.endDate || null,
-      };
+    const requestData = {
+      name: data.name,
+      projectId: data.projectId,
+      description: data.description || null,
+      startDate: data.startDate || null,
+      endDate: data.endDate || null,
+    };
 
-      await tasksApi.createTask(requestData);
-      onSuccess?.();
-      onClose();
-    } catch (error) {
-      const hebrewError = translateError(error);
-      setSubmitError(hebrewError);
-    } finally {
-      setIsSubmitting(false);
-    }
+    createTaskMutation.mutate(requestData);
   }
 
   return (
@@ -125,7 +174,7 @@ export const CreateTaskModal: React.FC<CreateTaskModalProps> = ({ onClose, onSuc
             onClick={onClose}
             type="button"
             aria-label="סגור"
-            disabled={isSubmitting}
+            disabled={createTaskMutation.isPending}
           >
             ×
           </button>
@@ -147,7 +196,7 @@ export const CreateTaskModal: React.FC<CreateTaskModalProps> = ({ onClose, onSuc
                 type="text"
                 className={`user-form__input ${errors.name ? 'user-form__input--error' : ''}`}
                 {...register('name')}
-                disabled={isSubmitting}
+                disabled={createTaskMutation.isPending}
                 placeholder="הזן שם משימה"
               />
               {errors.name && (
@@ -163,7 +212,7 @@ export const CreateTaskModal: React.FC<CreateTaskModalProps> = ({ onClose, onSuc
                 id="projectId"
                 className={`user-form__input ${errors.projectId ? 'user-form__input--error' : ''}`}
                 {...register('projectId')}
-                disabled={isSubmitting || isLoadingProjects}
+                disabled={createTaskMutation.isPending || isLoadingProjects}
               >
                 <option value="">בחר פרויקט</option>
                 {projects.map((project) => (
@@ -185,7 +234,7 @@ export const CreateTaskModal: React.FC<CreateTaskModalProps> = ({ onClose, onSuc
                 id="description"
                 className={`user-form__input ${errors.description ? 'user-form__input--error' : ''}`}
                 {...register('description')}
-                disabled={isSubmitting}
+                disabled={createTaskMutation.isPending}
                 placeholder="הזן תיאור (אופציונלי)"
                 rows={3}
               />
@@ -203,7 +252,7 @@ export const CreateTaskModal: React.FC<CreateTaskModalProps> = ({ onClose, onSuc
                 type="date"
                 className={`user-form__input ${errors.startDate ? 'user-form__input--error' : ''}`}
                 {...register('startDate')}
-                disabled={isSubmitting}
+                disabled={createTaskMutation.isPending}
               />
               {errors.startDate && (
                 <span className="user-form__field-error">{errors.startDate.message}</span>
@@ -219,7 +268,7 @@ export const CreateTaskModal: React.FC<CreateTaskModalProps> = ({ onClose, onSuc
                 type="date"
                 className={`user-form__input ${errors.endDate ? 'user-form__input--error' : ''}`}
                 {...register('endDate')}
-                disabled={isSubmitting}
+                disabled={createTaskMutation.isPending}
               />
               {errors.endDate && (
                 <span className="user-form__field-error">{errors.endDate.message}</span>
@@ -231,8 +280,8 @@ export const CreateTaskModal: React.FC<CreateTaskModalProps> = ({ onClose, onSuc
                 label="צור משימה"
                 loadingLabel="יוצר משימה..."
                 icon={Plus}
-                disabled={isSubmitting || !name?.trim() || !projectId}
-                isLoading={isSubmitting}
+                disabled={createTaskMutation.isPending || !name?.trim() || !projectId}
+                isLoading={createTaskMutation.isPending}
               />
             </div>
           </form>
