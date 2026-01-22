@@ -4,7 +4,7 @@ import { UserRole } from '@prisma/client';
 import { logger } from '../shared/logger';
 
 
-const SALT_ROUNDS = 10;
+const SALT_ROUNDS = 12;
 
 /**
  * Production seed - creates only one admin user
