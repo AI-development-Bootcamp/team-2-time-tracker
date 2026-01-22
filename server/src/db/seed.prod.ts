@@ -14,6 +14,7 @@ export const seedProductionDatabase = async (): Promise<void> => {
         // Check if database is already populated
         const userCount = await prisma.user.count();
         if (userCount > 0) {
+        if (userCount > 0) {
             logger.info('🌱 Database already seeded (users exist). Skipping production seed.');
             return;
         }
@@ -23,38 +24,19 @@ export const seedProductionDatabase = async (): Promise<void> => {
 
         logger.info('🌱 Starting production database seeding...');
 
-        // Define three admin users to create
-        const adminUsers = [
-            { email: 'admin@example.com', fullName: 'Admin User 1' },
-            { email: 'admin2@example.com', fullName: 'Admin User 2' },
-            { email: 'admin3@example.com', fullName: 'Admin User 3' },
-        ];
+        // Create Admin User
+        const admin = await prisma.user.create({
+            data: {
+                email: 'admin@example.com',
+                password: hashedPassword,
+                fullName: 'Admin User',
+                role: UserRole.ADMIN,
+                isActive: true,
+                mustChangePassword: true, // Force password change in production
+            },
+        });
 
-        const createdUsers: string[] = [];
-        const failedUsers: string[] = [];
-
-        // Try to create each admin user, continue even if one fails
-        for (const userData of adminUsers) {
-            try {
-                const admin = await prisma.user.create({
-                    data: {
-                        email: userData.email,
-                        password: hashedPassword,
-                        fullName: userData.fullName,
-                        role: UserRole.ADMIN,
-                        isActive: true,
-                        mustChangePassword: true, // Force password change in production
-                    },
-                });
-                createdUsers.push(admin.email);
-                logger.info(`✅ Admin user created: ${admin.email}`);
-            } catch (error: any) {
-                failedUsers.push(userData.email);
-                logger.warn(`⚠️  Failed to create admin user ${userData.email}: ${error.message}`);
-                // Continue to next user
-            }
-        }
-
+        logger.info(`✅ Admin user created: ${admin.email}`);
         logger.info('');
         logger.info('📊 Production Seed Summary:');
         logger.info(`   - Users created: ${createdUsers.length} admin${createdUsers.length !== 1 ? 's' : ''}`);
