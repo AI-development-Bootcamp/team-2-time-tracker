@@ -50,7 +50,7 @@ export const CreateClientModal: React.FC<CreateClientModalProps> = ({ onClose, o
     mutationFn: async (data: any) => {
       return clientsApi.createClient(data);
     },
-    onMutate: async (newClientData) => {
+    onMutate: async () => {
       // Cancel any outgoing refetches
       await queryClient.cancelQueries({ queryKey: ['assignments'] });
 

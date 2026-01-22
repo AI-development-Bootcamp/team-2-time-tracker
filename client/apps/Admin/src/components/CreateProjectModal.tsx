@@ -64,7 +64,7 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ onClose,
     mutationFn: async (data: any) => {
       return projectsApi.createProject(data);
     },
-    onMutate: async (newProjectData) => {
+    onMutate: async () => {
       // Cancel any outgoing refetches
       await queryClient.cancelQueries({ queryKey: ['assignments'] });
 

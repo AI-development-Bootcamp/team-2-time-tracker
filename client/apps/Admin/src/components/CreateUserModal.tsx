@@ -59,7 +59,7 @@ export const CreateUserModal: React.FC<CreateUserModalProps> = ({ onClose, onSuc
     mutationFn: async (data: any) => {
       return usersApi.createUser(data);
     },
-    onMutate: async (newUserData) => {
+    onMutate: async () => {
       // Cancel any outgoing refetches
       await queryClient.cancelQueries({ queryKey: ['assignments'] });
 
