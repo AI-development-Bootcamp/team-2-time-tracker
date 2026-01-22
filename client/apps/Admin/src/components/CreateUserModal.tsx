@@ -6,6 +6,7 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Plus } from 'lucide-react';
 import { UserRole } from '@shared/types';
 import { createUserSchema, type CreateUserFormData } from '../schemas/user.schema';
@@ -27,7 +28,7 @@ interface CreateUserModalProps {
  * @returns {React.ReactElement} Create user modal component
  */
 export const CreateUserModal: React.FC<CreateUserModalProps> = ({ onClose, onSuccess }) => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const queryClient = useQueryClient();
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   const {
@@ -53,32 +54,57 @@ export const CreateUserModal: React.FC<CreateUserModalProps> = ({ onClose, onSuc
 
   const isFormValid = firstName?.trim() && lastName?.trim() && email?.trim() && password?.trim();
 
+  // Create user mutation with optimistic updates
+  const createUserMutation = useMutation({
+    mutationFn: async (data: any) => {
+      return usersApi.createUser(data);
+    },
+    onMutate: async () => {
+      // Cancel any outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ['assignments'] });
+
+      // Snapshot previous value
+      const previousAssignments = queryClient.getQueryData(['assignments']);
+
+      // Note: New users won't immediately appear in assignments
+      // (they need to be assigned to tasks first), but we invalidate for consistency
+
+      return { previousAssignments };
+    },
+    onError: (error: any, _, context) => {
+      // Rollback on error
+      if (context?.previousAssignments) {
+        queryClient.setQueryData(['assignments'], context.previousAssignments);
+      }
+      const hebrewError = translateError(error);
+      setSubmitError(hebrewError);
+    },
+    onSuccess: () => {
+      onSuccess?.();
+      onClose();
+    },
+    onSettled: () => {
+      // Refetch to sync with server
+      queryClient.invalidateQueries({ queryKey: ['assignments'] });
+    },
+  });
+
   /**
    * @description Handles form submission
    * @param {CreateUserFormData} data - Form data
    */
-  async function onSubmit(data: CreateUserFormData): Promise<void> {
-    setIsSubmitting(true);
+  function onSubmit(data: CreateUserFormData): void {
     setSubmitError(null);
 
-    try {
-      // Combine firstName and lastName into fullName for the API
-      const requestData = {
-        fullName: `${data.firstName} ${data.lastName}`,
-        email: data.email,
-        password: data.password,
-        role: data.role,
-      };
+    // Combine firstName and lastName into fullName for the API
+    const requestData = {
+      fullName: `${data.firstName} ${data.lastName}`,
+      email: data.email,
+      password: data.password,
+      role: data.role,
+    };
 
-      await usersApi.createUser(requestData);
-      onSuccess?.();
-      onClose();
-    } catch (error) {
-      const hebrewError = translateError(error);
-      setSubmitError(hebrewError);
-    } finally {
-      setIsSubmitting(false);
-    }
+    createUserMutation.mutate(requestData);
   }
 
   return (
@@ -94,7 +120,7 @@ export const CreateUserModal: React.FC<CreateUserModalProps> = ({ onClose, onSuc
             onClick={onClose}
             type="button"
             aria-label="סגור"
-            disabled={isSubmitting}
+            disabled={createUserMutation.isPending}
           >
             ×
           </button>
@@ -116,7 +142,7 @@ export const CreateUserModal: React.FC<CreateUserModalProps> = ({ onClose, onSuc
                 type="text"
                 className={`user-form__input ${errors.firstName ? 'user-form__input--error' : ''}`}
                 {...register('firstName')}
-                disabled={isSubmitting}
+                disabled={createUserMutation.isPending}
                 placeholder="הזן שם פרטי"
               />
               {errors.firstName && (
@@ -133,7 +159,7 @@ export const CreateUserModal: React.FC<CreateUserModalProps> = ({ onClose, onSuc
                 type="text"
                 className={`user-form__input ${errors.lastName ? 'user-form__input--error' : ''}`}
                 {...register('lastName')}
-                disabled={isSubmitting}
+                disabled={createUserMutation.isPending}
                 placeholder="הזן שם משפחה"
               />
               {errors.lastName && (
@@ -150,7 +176,7 @@ export const CreateUserModal: React.FC<CreateUserModalProps> = ({ onClose, onSuc
                 type="email"
                 className={`user-form__input ${errors.email ? 'user-form__input--error' : ''}`}
                 {...register('email')}
-                disabled={isSubmitting}
+                disabled={createUserMutation.isPending}
                 placeholder="user@example.com"
                 dir="ltr"
               />
@@ -168,7 +194,7 @@ export const CreateUserModal: React.FC<CreateUserModalProps> = ({ onClose, onSuc
                 type="password"
                 className={`user-form__input ${errors.password ? 'user-form__input--error' : ''}`}
                 {...register('password')}
-                disabled={isSubmitting}
+                disabled={createUserMutation.isPending}
                 placeholder="לפחות 8 תווים עם אות גדולה, קטנה וספרה"
                 dir="ltr"
               />
@@ -188,7 +214,7 @@ export const CreateUserModal: React.FC<CreateUserModalProps> = ({ onClose, onSuc
                 id="role"
                 className={`user-form__select ${errors.role ? 'user-form__select--error' : ''}`}
                 {...register('role')}
-                disabled={isSubmitting}
+                disabled={createUserMutation.isPending}
               >
                 <option value={UserRole.EMPLOYEE}>עובד</option>
                 <option value={UserRole.ADMIN}>מנהל</option>
@@ -203,8 +229,8 @@ export const CreateUserModal: React.FC<CreateUserModalProps> = ({ onClose, onSuc
                 label="צור משתמש חדש"
                 loadingLabel="יוצר משתמש..."
                 icon={Plus}
-                disabled={isSubmitting || !isFormValid}
-                isLoading={isSubmitting}
+                disabled={createUserMutation.isPending || !isFormValid}
+                isLoading={createUserMutation.isPending}
               />
             </div>
           </form>

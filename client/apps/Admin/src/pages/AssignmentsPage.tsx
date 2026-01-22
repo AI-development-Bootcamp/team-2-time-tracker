@@ -19,8 +19,8 @@ import { closeTask } from '../api/entitiesApi';
 import { AdminLayout } from '../components/AdminLayout';
 import { DashboardHeader } from '../components/DashboardHeader';
 import { AddButton } from '../components/AddButton';
-import { EditClientModal } from '../components/EditClientModal';
-import { EditProjectModal } from '../components/EditProjectModal';
+import { SelectClientModal } from '../components/SelectClientModal';
+import { SelectProjectModal } from '../components/SelectProjectModal';
 import { EditTaskModal } from '../components/EditTaskModal';
 import { AddEmployeeToTaskModal } from '../components/AddEmployeeToTaskModal';
 import { DeleteConfirmationModal } from '../components/DeleteConfirmationModal';
@@ -33,7 +33,7 @@ import './AssignmentsPage.css';
 function AssignmentsPage(): React.JSX.Element {
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [activeMenuId, setActiveMenuId] = useState<string | null>(null);
-    const [editModalState, setEditModalState] = useState<{ type: 'client' | 'project' | 'task', id: string } | null>(null);
+    const [editModalState, setEditModalState] = useState<{ type: 'select-client' | 'select-project' | 'task', id?: string } | null>(null);
     const [addingEmployeeToTaskId, setAddingEmployeeToTaskId] = useState<string | null>(null);
     const queryClient = useQueryClient();
 
@@ -237,10 +237,7 @@ function AssignmentsPage(): React.JSX.Element {
                                         <button
                                             className="assignments-page__dropdown-item"
                                             onClick={() => {
-                                                const clientId = row.original.assignments[0]?.clientId;
-                                                if (clientId) {
-                                                    setEditModalState({ type: 'client', id: clientId });
-                                                }
+                                                setEditModalState({ type: 'select-client' });
                                                 setActiveMenuId(null);
                                             }}
                                         >
@@ -249,10 +246,7 @@ function AssignmentsPage(): React.JSX.Element {
                                         <button
                                             className="assignments-page__dropdown-item"
                                             onClick={() => {
-                                                const projectId = row.original.assignments[0]?.projectId;
-                                                if (projectId) {
-                                                    setEditModalState({ type: 'project', id: projectId });
-                                                }
+                                                setEditModalState({ type: 'select-project' });
                                                 setActiveMenuId(null);
                                             }}
                                         >
@@ -477,19 +471,17 @@ function AssignmentsPage(): React.JSX.Element {
                     </div>
                 )}
             </div>
-            {editModalState?.type === 'client' && (
-                <EditClientModal
-                    clientId={editModalState.id}
+            {editModalState?.type === 'select-client' && (
+                <SelectClientModal
                     onClose={() => setEditModalState(null)}
                 />
             )}
-            {editModalState?.type === 'project' && (
-                <EditProjectModal
-                    projectId={editModalState.id}
+            {editModalState?.type === 'select-project' && (
+                <SelectProjectModal
                     onClose={() => setEditModalState(null)}
                 />
             )}
-            {editModalState?.type === 'task' && (
+            {editModalState?.type === 'task' && editModalState.id && (
                 <EditTaskModal
                     taskId={editModalState.id}
                     onClose={() => setEditModalState(null)}
