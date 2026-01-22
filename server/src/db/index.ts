@@ -89,9 +89,14 @@ export async function initializeDatabase(options?: {
         if (runSeed) {
             logger.info('🌱 Seeding database...');
 
-            // Dynamically import seed function to avoid circular dependencies
-            const { seedDatabase } = await import('./seed');
-            await seedDatabase();
+            // Choose the appropriate seed based on NODE_ENV
+            if (process.env.NODE_ENV === 'production') {
+                const { seedProductionDatabase } = await import('./seed.prod');
+                await seedProductionDatabase();
+            } else {
+                const { seedDatabase } = await import('./seed');
+                await seedDatabase();
+            }
 
             logger.info('✅ Database seeding completed');
         } else {

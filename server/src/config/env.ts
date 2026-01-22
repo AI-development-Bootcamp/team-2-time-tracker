@@ -5,7 +5,7 @@ dotenv.config();
 
 const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
-  PORT: z.string().default('3000'),
+  PORT: z.string().default('3000').transform((val) => parseInt(val, 10)),
   DATABASE_URL: z.string().optional().refine(
     (val) => {
       // DATABASE_URL is required unless NODE_ENV is 'test'
@@ -21,8 +21,19 @@ const envSchema = z.object({
   JWT_SECRET: z.string().min(1, 'JWT_SECRET is required'),
   JWT_EXPIRES_IN: z.string().default('2h'),
   CORS_ORIGIN: z.string().default('*'),
-  DEFAULT_SEED_PASSWORD: z.string().min(1, 'DEFAULT_SEED_PASSWORD is required'),
-  DATABASE_PASSWORD: z.string().min(1, 'DATABASE_PASSWORD is required'),
+  DEFAULT_SEED_PASSWORD: z.string().optional().refine(
+    (val) => {
+      // DEFAULT_SEED_PASSWORD is required in development for seeding
+      if (process.env.NODE_ENV === 'development' && !val) {
+        return false;
+      }
+      return true;
+    },
+    {
+      message: 'DEFAULT_SEED_PASSWORD is required in development environment',
+    }
+  ),
+  DATABASE_PASSWORD: z.string().optional(),
   // IDrive e2 storage configuration
   IDRIVE_ACCESS_KEY: z.string().optional(),
   IDRIVE_SECRET_KEY: z.string().optional(),

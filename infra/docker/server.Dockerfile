@@ -43,6 +43,7 @@ WORKDIR /app/server
 
 EXPOSE 3000
 
-# Start command - resolve failed migration as applied, then deploy, seed if needed, and start app
+# Start command - resolve failed migration as applied, then deploy and start app
 # Using tsx instead of node to handle ESM module resolution
-CMD ["sh", "-c", "npx prisma migrate resolve --applied 20260121105119_init 2>/dev/null || true && npx prisma migrate deploy && npx tsx dist/server/src/db/seed.prod.js && npx tsx dist/server/src/app.js"]
+# Note: Seeding is handled automatically by app startup based on NODE_ENV
+CMD ["sh", "-c", "npx prisma migrate resolve --applied 20260121105119_init 2>/dev/null || true && npx prisma migrate deploy && npx tsx dist/server/src/app.js"]
