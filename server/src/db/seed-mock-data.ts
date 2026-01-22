@@ -255,13 +255,19 @@ const ABSENCE_NOTES = [
  */
 export const seedMockData = async (): Promise<void> => {
     try {
-        // Check if mock data already exists (check for employees)
-        const employeeCount = await prisma.user.count({
-            where: { role: UserRole.EMPLOYEE },
-        });
+        // Check if database already has any data - skip if not empty
+        const [employeeCount, clientCount, projectCount, taskCount] = await Promise.all([
+            prisma.user.count({ where: { role: UserRole.EMPLOYEE } }),
+            prisma.client.count(),
+            prisma.project.count(),
+            prisma.task.count(),
+        ]);
 
-        if (employeeCount > 0) {
-            logger.info('🌱 Mock data already seeded (employees exist). Skipping.');
+        const hasExistingData = employeeCount > 0 || clientCount > 0 || projectCount > 0 || taskCount > 0;
+
+        if (hasExistingData) {
+            logger.info('🌱 Database is not empty. Skipping mock data seeding.');
+            logger.info(`   - Employees: ${employeeCount}, Clients: ${clientCount}, Projects: ${projectCount}, Tasks: ${taskCount}`);
             return;
         }
 
