@@ -13,6 +13,7 @@ import { useCreateAbsence, useUploadDocument } from '../api/absencesApi';
 import { useAbsenceStore } from '../app/stores/absence.store';
 import { AbsenceType, CreateAbsenceRequestDto } from '@shared/types';
 import { calculateWorkdayCount } from '@client/utils';
+import { formatDate } from '../utils';
 import './AbsenceRangePage.css';
 
 /** Absence type options with Hebrew labels and emojis */
@@ -103,7 +104,8 @@ export default function AbsenceRangePage() {
             console.log('Absence created:', absence);
         },
         onError: (error) => {
-            const errorMessage = typeof error === 'string' ? error : 'שגיאה בשמירת הדיווח';
+            // error is already a Hebrew string from getHebrewErrorMessage
+            const errorMessage = (typeof error === 'string' ? error : String(error)) || 'שגיאה בשמירת הדיווח';
             setCreateAbsenceError(errorMessage);
             toast.error(errorMessage);
         },
@@ -119,7 +121,8 @@ export default function AbsenceRangePage() {
             setUploadSuccess();
         },
         onError: (error) => {
-            const errorMessage = typeof error === 'string' ? error : 'שגיאה בהעלאת המסמך';
+            // error is already a Hebrew string from getHebrewErrorMessage
+            const errorMessage = String(error) || 'שגיאה בהעלאת המסמך';
             setUploadError(errorMessage);
             toast.error(errorMessage);
         },
@@ -133,14 +136,6 @@ export default function AbsenceRangePage() {
         if (!dateRange?.from || !dateRange?.to) {
             throw new Error('תאריכים לא תקינים');
         }
-
-        // Format dates as YYYY-MM-DD (backend expects this format)
-        const formatDate = (date: Date): string => {
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
-            return `${year}-${month}-${day}`;
-        };
 
         return {
             type: data.absenceType as AbsenceType,
@@ -206,7 +201,8 @@ export default function AbsenceRangePage() {
     // Get loading and error states from store and mutations
     const { isLoading, error, isUploading } = useAbsenceStore();
     const isSubmitting = createAbsenceMutation.isPending || uploadDocumentMutation.isPending || isLoading;
-    const errorMessage = error || (createAbsenceMutation.error ? String(createAbsenceMutation.error) : '');
+    // Use error from store - it's already set by onError callbacks with Hebrew message
+    const errorMessage = error || '';
 
     return (
         <div className="absence-range-page">

@@ -153,14 +153,12 @@ export const absencesApi = {
  * ```
  */
 function getHebrewErrorMessage(error: unknown): string {
-    console.log('Error object:', error); // Debug log
-
     if (typeof error === 'object' && error !== null) {
         const axiosError = error as {
             response?: {
                 data?: {
                     message?: string | string[];
-                    error?: string;
+                    error?: string | { code?: string; message?: string };
                     errors?: unknown[];
                 }
             };
@@ -170,7 +168,6 @@ function getHebrewErrorMessage(error: unknown): string {
         // Check for axios error response
         if (axiosError.response?.data) {
             const data = axiosError.response.data;
-            console.log('Error response data:', data); // Debug log
 
             // Handle array of messages (validation errors)
             if (Array.isArray(data.message)) {
@@ -178,7 +175,16 @@ function getHebrewErrorMessage(error: unknown): string {
                 return mapErrorToHebrew(String(firstMessage));
             }
 
-            const apiMessage = data.message || data.error;
+            // Handle nested error object with message property
+            if (data.error && typeof data.error === 'object' && 'message' in data.error) {
+                const errorObj = data.error as { message?: string };
+                if (errorObj.message) {
+                    return mapErrorToHebrew(String(errorObj.message));
+                }
+            }
+
+            // Handle simple error string or message string
+            const apiMessage = data.message || (typeof data.error === 'string' ? data.error : null);
             if (apiMessage) {
                 return mapErrorToHebrew(String(apiMessage));
             }
@@ -213,6 +219,7 @@ function mapErrorToHebrew(message: string): string {
         'Month is locked': 'החודש נעול ואי אפשר לערוך דיווחים',
         'Absence not found': 'ההעדרות לא נמצאה',
         'Overlapping absence': 'קיים דיווח העדרות חופף לתאריכים שנבחרו',
+        'Overlapping absence exists': 'קיים דיווח העדרות חופף לתאריכים שנבחרו',
         'Unauthorized': 'אין הרשאה לבצע פעולה זו',
         'File size exceeds limit': 'גודל הקובץ חורג מהמגבלה (10MB)',
         'Invalid file type': 'סוג קובץ לא נתמך. אפשר להעלות רק PDF, PNG, JPG',

@@ -75,10 +75,12 @@ export const DailyReportPage: React.FC = () => {
         setLoading(true);
         const days: DayData[] = [];
         const allEntries: TimeEntryDto[] = [];
-        const today = new Date();
+
+        // Get the last day of the selected month
+        const lastDayOfMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0);
 
         for (let i = 0; i < 14; i++) {
-            const date = new Date(today);
+            const date = new Date(lastDayOfMonth);
             date.setDate(date.getDate() - i);
             const dateStr = date.toISOString().split('T')[0];
             //maybe create an api call that returns all workdays for a range of dates?
@@ -151,7 +153,7 @@ export const DailyReportPage: React.FC = () => {
         setDaysData(days);
         setEntries(allEntries);
         setLoading(false);
-    }, [setEntries]);
+    }, [currentMonth, setEntries]);
 
     useEffect(() => {
         fetchMultipleDays();
