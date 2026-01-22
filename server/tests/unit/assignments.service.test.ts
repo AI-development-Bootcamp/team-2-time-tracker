@@ -19,6 +19,7 @@ import { NotFoundError, ValidationError } from '../../src/shared/errors';
 // Mock assignments repository
 vi.mock('../../src/modules/admin/assignments/assignments.repo', () => ({
     findAllTaskAssignments: vi.fn(),
+    findAllTasksWithAssignments: vi.fn(),
     createTaskAssignment: vi.fn(),
     bulkCreateTaskAssignments: vi.fn(),
     findTaskAssignmentById: vi.fn(),
@@ -39,22 +40,31 @@ describe('assignments.service', () => {
     describe('listTaskAssignments', () => {
         it('should return list of assignments', async () => {
             const mockAssignment = createMockTaskAssignment();
-            (assignmentsRepo.findAllTaskAssignments as any).mockResolvedValue([mockAssignment]);
+            // Structure expected by findAllTasksWithAssignments: array of tasks with generic assignments
+            const mockTask = {
+                ...mockAssignment.task,
+                assignments: [mockAssignment]
+            };
+
+            (assignmentsRepo.findAllTasksWithAssignments as any).mockResolvedValue([mockTask]);
 
             const result = await assignmentsService.listTaskAssignments({});
 
             expect(result).toHaveLength(1);
             expect(result[0].id).toBe(mockAssignment.id);
-            expect(assignmentsRepo.findAllTaskAssignments).toHaveBeenCalledWith({});
+            expect(assignmentsRepo.findAllTasksWithAssignments).toHaveBeenCalledWith({
+                projectId: undefined,
+                userName: undefined
+            });
         });
 
         it('should pass filters to repository', async () => {
-            const filters = { userId: 'user-1', taskId: 'task-1' };
-            (assignmentsRepo.findAllTaskAssignments as any).mockResolvedValue([]);
+            const filters = { projectId: 'proj-1', userName: 'user' };
+            (assignmentsRepo.findAllTasksWithAssignments as any).mockResolvedValue([]);
 
             await assignmentsService.listTaskAssignments(filters);
 
-            expect(assignmentsRepo.findAllTaskAssignments).toHaveBeenCalledWith(filters);
+            expect(assignmentsRepo.findAllTasksWithAssignments).toHaveBeenCalledWith(filters);
         });
     });
 
