@@ -2,7 +2,7 @@ import { prisma } from './index';
 import bcrypt from 'bcrypt';
 import { UserRole } from '@prisma/client';
 import { logger } from '../shared/logger';
-import { env } from '../config/env';
+
 
 const SALT_ROUNDS = 10;
 
