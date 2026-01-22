@@ -12,7 +12,7 @@ export const seedProductionDatabase = async (): Promise<void> => {
     try {
         // Check if database is already populated
         const userCount = await prisma.user.count();
-        if (userCount > 0) {
+        if (userCount > 5) {
             logger.info('🌱 Database already seeded (users exist). Skipping production seed.');
             return;
         }
@@ -25,7 +25,7 @@ export const seedProductionDatabase = async (): Promise<void> => {
         // Create Admin User
         const admin = await prisma.user.create({
             data: {
-                email: 'admin@example.com',
+                email: 'admin1@example.com',
                 password: hashedPassword,
                 fullName: 'Admin User',
                 role: UserRole.ADMIN,
