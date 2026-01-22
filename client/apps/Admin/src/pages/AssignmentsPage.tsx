@@ -11,9 +11,11 @@ import {
     getCoreRowModel,
     createColumnHelper,
     flexRender,
+    getPaginationRowModel,
 } from '@tanstack/react-table';
 import type { TaskAssignmentDto } from '@shared/types';
 import { getAssignments, deleteAssignment } from '../api/assignmentsApi';
+import { closeTask } from '../api/entitiesApi';
 import { AdminLayout } from '../components/AdminLayout';
 import { DashboardHeader } from '../components/DashboardHeader';
 import { AddButton } from '../components/AddButton';
@@ -25,7 +27,7 @@ import { DeleteConfirmationModal } from '../components/DeleteConfirmationModal';
 import './AssignmentsPage.css';
 
 /**
- * @description Admin assignments management page with table, filters, and delete functionality
+ * @description Admin assignments management page with table, filters, and close functionality
  * @returns {React.JSX.Element} Assignments page component
  */
 function AssignmentsPage(): React.JSX.Element {
@@ -44,22 +46,43 @@ function AssignmentsPage(): React.JSX.Element {
 
     // Fetch all assignments
     const { data: assignments = [], isLoading, error } = useQuery({
-        queryKey: ['assignments', { userName: searchTerm }], // Add search term to query key
+        queryKey: ['assignments', { userName: searchTerm }],
         queryFn: () => getAssignments({
-            userName: searchTerm || undefined // Pass search term to API
+            userName: searchTerm || undefined
         }),
     });
 
-    // Delete mutation
+    // Delete mutation for individual assignment removal
     const deleteMutation = useMutation({
         mutationFn: deleteAssignment,
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['assignments'] });
+        onMutate: async (assignmentId) => {
+            // Cancel any outgoing refetches
+            await queryClient.cancelQueries({ queryKey: ['assignments'] });
+
+            // Snapshot the previous value
+            const previousAssignments = queryClient.getQueryData(['assignments', { userName: searchTerm }]);
+
+            // Optimistically update to remove the assignment
+            queryClient.setQueryData(['assignments', { userName: searchTerm }], (old: any) => {
+                if (!old) return old;
+                return old.filter((assignment: any) => assignment.id !== assignmentId);
+            });
+
+            // Return context with previous data for rollback
+            return { previousAssignments };
         },
-        onError: (error: unknown) => {
+        onError: (error: unknown, _, context) => {
+            // Rollback to previous state on error
+            if (context?.previousAssignments) {
+                queryClient.setQueryData(['assignments', { userName: searchTerm }], context.previousAssignments);
+            }
             const err = error as { response?: { data?: { error?: { message?: string } } } };
             const message = err.response?.data?.error?.message || 'שגיאה במחיקת הקצאה';
             alert(message);
+        },
+        onSettled: () => {
+            // Refetch to ensure sync with server
+            queryClient.invalidateQueries({ queryKey: ['assignments'] });
         },
     });
 
@@ -79,7 +102,7 @@ function AssignmentsPage(): React.JSX.Element {
         const groups = new Map<string, GroupedAssignment>();
 
         assignments.forEach((assignment) => {
-            const key = assignment.taskId; // Group by Task ID
+            const key = assignment.taskId;
             if (!groups.has(key)) {
                 groups.set(key, {
                     taskId: assignment.taskId,
@@ -89,15 +112,18 @@ function AssignmentsPage(): React.JSX.Element {
                     assignments: []
                 });
             }
-            groups.get(key)!.assignments.push(assignment);
+            // Only add assignment to the array if it has a userId (skip placeholder assignments)
+            if (assignment.userId) {
+                groups.get(key)!.assignments.push(assignment);
+            }
         });
 
         return Array.from(groups.values());
     }, [assignments]);
 
     const [editingAssignmentsTaskId, setEditingAssignmentsTaskId] = useState<string | null>(null);
-    const [deleteConfirmationTaskId, setDeleteConfirmationTaskId] = useState<string | null>(null);
-    const [isDeleting, setIsDeleting] = useState(false);
+    const [closeConfirmationTaskId, setCloseConfirmationTaskId] = useState<string | null>(null);
+    const [isClosing, setIsClosing] = useState(false);
 
     // Icons
     const EditIcon = () => (
@@ -132,9 +158,16 @@ function AssignmentsPage(): React.JSX.Element {
             header: 'שמות העובדים המשוייכים',
             cell: info => {
                 const isEditing = editingAssignmentsTaskId === info.row.original.taskId;
+                const assignmentsList = info.getValue();
+
                 return (
                     <div className="assignments-list">
-                        {info.getValue().map((assignment) => (
+                        {assignmentsList.length === 0 && !isEditing && (
+                            <span className="assignment-badge assignment-badge--empty">
+                                אין עובדים משוייכים
+                            </span>
+                        )}
+                        {assignmentsList.map((assignment) => (
                             <span
                                 key={assignment.id}
                                 className={`assignment-badge ${isEditing ? 'assignment-badge--editing' : ''}`}
@@ -250,8 +283,8 @@ function AssignmentsPage(): React.JSX.Element {
                         )}
                         <button
                             className="assignments-page__action-btn assignments-page__action-btn--delete"
-                            onClick={() => handleDeleteTaskAssignments(row.original.taskId)}
-                            title="מחק הכל"
+                            onClick={() => handleCloseTask(row.original.taskId)}
+                            title="סגור משימה"
                         >
                             <DeleteIcon />
                         </button>
@@ -266,55 +299,48 @@ function AssignmentsPage(): React.JSX.Element {
         data: groupedAssignments,
         columns,
         getCoreRowModel: getCoreRowModel(),
+        getPaginationRowModel: getPaginationRowModel(),
+        initialState: {
+            pagination: {
+                pageSize: 14,
+            },
+        },
     });
 
-    // Handle delete click - open modal
-    const handleDeleteTaskAssignments = (taskId: string) => {
-        setDeleteConfirmationTaskId(taskId);
+    // Handle close task click - open modal
+    const handleCloseTask = (taskId: string) => {
+        setCloseConfirmationTaskId(taskId);
     };
 
-    // Confirm delete execution
-    const confirmDeleteTaskAssignments = async () => {
-        if (!deleteConfirmationTaskId) return;
+    // Confirm close execution
+    const confirmCloseTask = async () => {
+        if (!closeConfirmationTaskId) return;
 
-        const taskId = deleteConfirmationTaskId;
-        const group = groupedAssignments.find(g => g.taskId === taskId);
+        const taskId = closeConfirmationTaskId;
+        setIsClosing(true);
 
-        if (group) {
-            setIsDeleting(true);
-            try {
-                // Execute all deletes in parallel
-                const results = await Promise.allSettled(
-                    group.assignments.map(a => deleteAssignment(a.id))
-                );
+        try {
+            // Optimistically remove from UI
 
-                const successes = results.filter(r => r.status === 'fulfilled').length;
-                const failures = results.filter(r => r.status === 'rejected');
 
-                // Invalidate assignments to refresh UI (once)
-                await queryClient.invalidateQueries({ queryKey: ['assignments'] });
+            queryClient.setQueryData(['assignments', { userName: searchTerm }], (old: any) => {
+                if (!old) return old;
+                return old.filter((assignment: any) => assignment.taskId !== taskId);
+            });
 
-                if (failures.length > 0) {
-                    // Extract error messages
-                    const errorMessages = failures.map((f: any) => {
-                        return f.reason?.response?.data?.error?.message || 'שגיאה לא ידועה';
-                    });
+            // Call API to close task
+            await closeTask(taskId);
 
-                    // Check specifically for time entries error
-                    const hasTimeEntriesError = errorMessages.some(msg => msg.includes('time entries'));
-
-                    if (hasTimeEntriesError) {
-                        alert(`נמחקו ${successes} הקצאות.\n${failures.length} הקצאות נכשלו כי קיימים דיווחי שעות עבורן (לא ניתן למחוק).`);
-                    } else {
-                        alert(`הפעולה הושלמה חלקית. ${successes} נמחקו, ${failures.length} נכשלו.`);
-                    }
-                }
-            } finally {
-                setIsDeleting(false);
-                setDeleteConfirmationTaskId(null);
-            }
-        } else {
-            setDeleteConfirmationTaskId(null);
+            // Refetch to get fresh data from server
+            await queryClient.invalidateQueries({ queryKey: ['assignments'] });
+        } catch (error: any) {
+            // On error, refetch to restore correct state
+            await queryClient.invalidateQueries({ queryKey: ['assignments'] });
+            const message = error.response?.data?.error?.message || 'שגיאה בסגירת המשימה';
+            alert(message);
+        } finally {
+            setIsClosing(false);
+            setCloseConfirmationTaskId(null);
         }
     };
 
@@ -330,11 +356,10 @@ function AssignmentsPage(): React.JSX.Element {
             </div>
 
             <div className="assignments-page">
-                {/* Filters */}
-                {/* Search */}
                 {/* Search */}
                 <div className="assignments-page__search-container">
                     <div className="assignments-page__actions-group">
+                        <AddButton />
                         <div className="assignments-page__search-wrapper">
                             <Search className="assignments-page__search-icon" size={18} />
                             <input
@@ -345,7 +370,6 @@ function AssignmentsPage(): React.JSX.Element {
                                 className="assignments-page__search-input"
                             />
                         </div>
-                        <AddButton />
                     </div>
                 </div>
 
@@ -406,6 +430,52 @@ function AssignmentsPage(): React.JSX.Element {
                         </table>
                     </div>
                 )}
+
+                {/* Pagination */}
+                {!isLoading && !error && groupedAssignments.length > 0 && (
+                    <div className="assignments-page__pagination">
+                        <button
+                            onClick={() => table.firstPage()}
+                            disabled={!table.getCanPreviousPage()}
+                            className="assignments-page__pagination-btn"
+                        >
+                            ‹‹
+                        </button>
+                        <button
+                            onClick={() => table.previousPage()}
+                            disabled={!table.getCanPreviousPage()}
+                            className="assignments-page__pagination-btn"
+                        >
+                            ‹
+                        </button>
+
+                        {Array.from({ length: table.getPageCount() }, (_, i) => i + 1).map(pageNum => (
+                            <button
+                                key={pageNum}
+                                onClick={() => table.setPageIndex(pageNum - 1)}
+                                className={`assignments-page__pagination-btn ${table.getState().pagination.pageIndex === pageNum - 1 ? 'active' : ''
+                                    }`}
+                            >
+                                {pageNum}
+                            </button>
+                        ))}
+
+                        <button
+                            onClick={() => table.nextPage()}
+                            disabled={!table.getCanNextPage()}
+                            className="assignments-page__pagination-btn"
+                        >
+                            ›
+                        </button>
+                        <button
+                            onClick={() => table.lastPage()}
+                            disabled={!table.getCanNextPage()}
+                            className="assignments-page__pagination-btn"
+                        >
+                            ››
+                        </button>
+                    </div>
+                )}
             </div>
             {editModalState?.type === 'client' && (
                 <EditClientModal
@@ -436,13 +506,13 @@ function AssignmentsPage(): React.JSX.Element {
                 />
             )}
 
-            {deleteConfirmationTaskId && (
+            {closeConfirmationTaskId && (
                 <DeleteConfirmationModal
-                    title="מחיקת משימה"
-                    description="האם אתה בטוח שברצונך למחוק משימה זו?"
-                    onConfirm={confirmDeleteTaskAssignments}
-                    onClose={() => setDeleteConfirmationTaskId(null)}
-                    isLoading={isDeleting}
+                    title="סגירת משימה"
+                    description="האם אתה בטוח שברצונך לסגור משימה זו? המשימה לא תוצג יותר ברשימה."
+                    onConfirm={confirmCloseTask}
+                    onClose={() => setCloseConfirmationTaskId(null)}
+                    isLoading={isClosing}
                 />
             )}
         </AdminLayout>

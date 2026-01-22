@@ -127,3 +127,15 @@ export async function updateTask(id: string, data: UpdateTaskRequestDto): Promis
     const response = await httpClient.put<TaskResponseDto>(`/admin/tasks/${id}`, data);
     return response.data.data;
 }
+
+/**
+ * @description Close a task (set status to CLOSED)
+ * @param {string} id - Task ID
+ * @returns {Promise<TaskDto>} Updated task
+ */
+export async function closeTask(id: string): Promise<TaskDto> {
+    const response = await httpClient.put<TaskResponseDto>(`/admin/tasks/${id}/status`, {
+        status: 'CLOSED',
+    });
+    return response.data.data;
+}

@@ -76,6 +76,73 @@ export async function findAllTaskAssignments(filters?: {
 }
 
 /**
+ * @description Find all tasks with their assignments (including tasks with no assignments)
+ * @param {Object} [filters] - Optional filters
+ * @param {string} [filters.projectId] - Filter by project ID
+ * @param {string} [filters.userName] - Search by user full name (case-insensitive, partial match)
+ * @returns {Promise<Array>} List of tasks with their assignments
+ */
+export async function findAllTasksWithAssignments(filters?: {
+    projectId?: string;
+    userName?: string;
+}) {
+    return prisma.task.findMany({
+        where: {
+            status: 'OPEN', // Only fetch open tasks
+            projectId: filters?.projectId,
+            // If userName filter is provided, only include tasks that have at least one assignment matching
+            assignments: filters?.userName
+                ? {
+                    some: {
+                        user: {
+                            fullName: {
+                                contains: filters.userName,
+                                mode: 'insensitive',
+                            },
+                        },
+                    },
+                }
+                : undefined,
+        },
+        orderBy: { createdAt: 'desc' },
+        select: {
+            id: true,
+            name: true,
+            projectId: true,
+            createdAt: true,
+            project: {
+                select: {
+                    id: true,
+                    name: true,
+                    clientId: true,
+                    client: {
+                        select: {
+                            id: true,
+                            name: true,
+                        },
+                    },
+                },
+            },
+            assignments: {
+                select: {
+                    id: true,
+                    userId: true,
+                    taskId: true,
+                    createdAt: true,
+                    user: {
+                        select: {
+                            id: true,
+                            fullName: true,
+                            email: true,
+                        },
+                    },
+                },
+            },
+        },
+    });
+}
+
+/**
  * @description Find a task assignment by ID
  * @param {string} id - Assignment ID
  * @returns {Promise<Object|null>} Task assignment or null

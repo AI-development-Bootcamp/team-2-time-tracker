@@ -84,28 +84,53 @@ export const AddEmployeeToTaskModal: React.FC<AddEmployeeToTaskModalProps> = ({
     // Bulk assign mutation
     const assignMutation = useMutation({
         mutationFn: async () => {
-            // Need assignedByAdminId. In a real app this comes from auth context/token.
-            // For now, assuming the backend might infer it or we pass a placeholder if stricter validation isn't enforcing it from body vs token.
-            // Actually `bulkCreateAssignments` payload requires `assignedByAdminId` in the DTO, but the controller extracts it from `req.user`.
-            // Let's check `assignmentsApi.ts`. It takes `BulkCreateTaskAssignmentsRequestDto`.
-            // If the backend extracts it, maybe we don't need to send it, OR we send a dummy and backend overwrites.
-            // The service requires it. The controller `assignments.controller.ts` line 108 passes `assignedByAdminId` from `req.user`.
-            // So we can pass any string or empty string if the DTO requires it, but the controller effectively ignores the body value for that field?
-            // Wait, the controller calls service with `assignedByAdminId` from `req.user`.
-            // The `bulkCreateAssignments` implementation in `assignmentsApi.ts` sends data as is.
-            // Let's assume we need to send *something* to satisfy TS, but backend uses token.
-            // IMPORTANT: `BulkCreateTaskAssignmentsRequestDto` likely requires it. Use a placeholder.
-
             return bulkCreateAssignments({
                 taskIds: [taskId],
                 userIds: Array.from(selectedUserIds),
             });
         },
+        onMutate: async () => {
+            // Cancel any outgoing refetches
+            await queryClient.cancelQueries({ queryKey: ['assignments'] });
+
+            // Snapshot the previous value
+            const previousAssignments = queryClient.getQueryData(['assignments']);
+
+            // Get selected users data for optimistic update
+            const selectedUsers = usersData?.users?.filter(u => selectedUserIds.has(u.id)) || [];
+
+            // Optimistically add new assignments
+            queryClient.setQueryData(['assignments'], (old: any) => {
+                if (!old) return old;
+
+                // Create optimistic assignment records
+                const newAssignments = selectedUsers.map(user => ({
+                    id: `temp-${Date.now()}-${user.id}`, // Temporary ID
+                    userId: user.id,
+                    taskId: taskId,
+                    createdAt: new Date().toISOString(),
+                    userName: user.fullName,
+                    userEmail: user.email,
+                    taskName: taskName || '',
+                    projectName: projectName || '',
+                    clientName: clientName || '',
+                }));
+
+                return [...old, ...newAssignments];
+            });
+
+            // Return context with previous data for rollback
+            return { previousAssignments };
+        },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['assignments'] });
             onClose();
         },
-        onError: (error: any) => {
+        onError: (error: any, _, context) => {
+            // Rollback to previous state on error
+            if (context?.previousAssignments) {
+                queryClient.setQueryData(['assignments'], context.previousAssignments);
+            }
             alert(error.response?.data?.message || 'שגיאה בשיוך העובדים');
         },
     });

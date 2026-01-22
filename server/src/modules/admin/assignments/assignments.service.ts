@@ -24,22 +24,63 @@ export async function listTaskAssignments(filters?: {
     projectId?: string;
     userName?: string;
 }) {
-    const assignments = await assignmentsRepo.findAllTaskAssignments(filters);
+    // Fetch all tasks with their assignments (including tasks with no assignments)
+    const tasks = await assignmentsRepo.findAllTasksWithAssignments({
+        projectId: filters?.projectId,
+        userName: filters?.userName,
+    });
 
-    // Transform to match DTO structure
-    return assignments.map((assignment) => ({
-        id: assignment.id,
-        userId: assignment.userId,
-        taskId: assignment.taskId,
-        createdAt: assignment.createdAt.toISOString(),
-        userName: assignment.user.fullName,
-        userEmail: assignment.user.email,
-        taskName: assignment.task.name,
-        projectId: assignment.task.projectId,
-        projectName: assignment.task.project.name,
-        clientId: assignment.task.project.clientId,
-        clientName: assignment.task.project.client.name,
-    }));
+    // Flatten the structure: convert tasks with assignments into individual assignment records
+    const assignments: any[] = [];
+
+    for (const task of tasks) {
+        if (task.assignments.length === 0) {
+            // Task has no assignments - create a placeholder record
+            assignments.push({
+                id: `task-${task.id}`, // Use a special ID format for tasks without assignments
+                userId: null,
+                taskId: task.id,
+                createdAt: task.createdAt.toISOString(),
+                userName: null,
+                userEmail: null,
+                taskName: task.name,
+                projectId: task.projectId,
+                projectName: task.project.name,
+                clientId: task.project.clientId,
+                clientName: task.project.client.name,
+            });
+        } else {
+            // Task has assignments - add each one
+            for (const assignment of task.assignments) {
+                assignments.push({
+                    id: assignment.id,
+                    userId: assignment.userId,
+                    taskId: assignment.taskId,
+                    createdAt: assignment.createdAt.toISOString(),
+                    userName: assignment.user.fullName,
+                    userEmail: assignment.user.email,
+                    taskName: task.name,
+                    projectId: task.projectId,
+                    projectName: task.project.name,
+                    clientId: task.project.clientId,
+                    clientName: task.project.client.name,
+                });
+            }
+        }
+    }
+
+    // Apply additional filters if needed
+    let filteredAssignments = assignments;
+
+    if (filters?.userId) {
+        filteredAssignments = filteredAssignments.filter(a => a.userId === filters.userId);
+    }
+
+    if (filters?.taskId) {
+        filteredAssignments = filteredAssignments.filter(a => a.taskId === filters.taskId);
+    }
+
+    return filteredAssignments;
 }
 
 /**
@@ -337,3 +378,4 @@ export async function bulkCreateTaskAssignments(data: {
         count: transformed.length,
     };
 }
+// Force reload
